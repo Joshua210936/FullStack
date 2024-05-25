@@ -113,7 +113,7 @@ body {
     cursor: pointer;
 }
 
-button {
+.formbutton {
     width: 100%;
     height: 45px;
     background: #007bff;
@@ -126,6 +126,6 @@ button {
     transition: background 0.3s;
 }
 
-button:hover {
+.formbutton:hover {
     background: #0056b3;
 }
