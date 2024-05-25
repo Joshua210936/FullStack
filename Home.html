@@ -4,42 +4,69 @@
         <title>Sigma Properties</title>
         <!---Bootstrap-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        
         <!--CSS file-->
-        <link rel="stylesheet" href="css/SigmaProperties.css">
+        <link rel="stylesheet" href="css/navbar.css">
+        <script src="navbar.js" defer></script>
     </head>
     <body>
-        <!--Navbar-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav">
-                <li class="nav-item active">
-                  <a class="nav-link" href="Home.html">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="AboutUs.html">About Us</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">View properties</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Buy/Sell properties</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Find a property agent</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="ContactUs.html">Contact Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Login/Signup</a>
-                </li>
-              </ul>
+        <!--Guest Navbar-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <a href="home.html"><img src="images/logo.png" width="100" height="50"></a>
+            <div class="header collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <div class="dropdown" data-dropdown>
+                            <button class="nav-link" data-dropdown-button>Properties &#x25BE;</button>
+                            <div class="dropdown-menu information-grid">
+                                <div>
+                                <!-- <div class="dropdown-heading"></div> -->
+                                <div class="dropdown-links">
+                                    <a href="#" class="nav-link">Buying</a>
+                                    <a href="#" class="nav-link">Selling</a>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dropdown" data-dropdown>
+                            <button class="nav-link" data-dropdown-button>Property Agents &#x25BE;</button>
+                            <div class="dropdown-menu information-grid">
+                            <div>
+                                <!-- <div class="dropdown-heading"></div> -->
+                                <div class="dropdown-links">
+                                <a href="#" class="nav-link">Find Agents</a>
+                                <a href="#" class="nav-link">Schedule</a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dropdown" data-dropdown>
+                            <button class="nav-link" data-dropdown-button>Contact Us &#x25BE;</button>
+                            <div class="dropdown-menu information-grid">
+                            <div>
+                                <!-- <div class="dropdown-heading"></div> -->
+                                <div class="dropdown-links">
+                                <a href="#" class="nav-link">FAQ</a>
+                                <a href="FeedbackForm.html" class="nav-link">Feedback Form</a>
+                                <a href="#" class="nav-link">Property Agent Registration</a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="AboutUs.html"><button class="nav-link" data-dropdown-button>About Us</button></a>
+                    </li>
+                </ul>
             </div>
-          </nav>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+                <a href="Login.html"><button class="login-btn btn btn-light my-2 my-sm-0" data-dropdown-button>Login</button></a>
+                <a href="Register.html"><button class="login-btn btn btn-light my-2 my-sm-0" data-dropdown-button>Sign Up</button></a>
+        </nav>
     </body>
 </html>
