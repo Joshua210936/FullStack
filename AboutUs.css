@@ -1,3 +1,8 @@
+/* Standard template css lines */
+.active{
+  text-decoration: underline;
+}
+/* End of standard template css lines  */
 img {
     max-width: 400px; 
     height: auto;
@@ -22,8 +27,4 @@ h2{
 
 .centerButton{
   text-align: center;
-}
-
-.active{
-  text-decoration: underline;
 }
