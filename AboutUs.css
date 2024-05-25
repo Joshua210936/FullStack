@@ -1,4 +1,29 @@
 img {
-    max-width: 200px; 
-    height: auto; 
+    max-width: 400px; 
+    height: auto;
   }
+
+#AboutUsContainer{
+    background-color: #CDEEFF;
+}
+
+.row{
+  padding: 2% !important;
+
+}
+
+h2{
+  font-weight: bold;
+}
+
+#SellerContainer{
+  padding-right: 10%;
+}
+
+.centerButton{
+  text-align: center;
+}
+
+.active{
+  text-decoration: underline;
+}
