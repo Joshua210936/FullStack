@@ -2,4 +2,8 @@
 .active{
     text-decoration: underline;
   }
+
+.centerButton{
+    text-align: center;
+}
 /* End of standard template css lines  */

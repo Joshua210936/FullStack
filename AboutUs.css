@@ -2,6 +2,10 @@
 .active{
   text-decoration: underline;
 }
+
+.centerButton{
+  text-align: center;
+}
 /* End of standard template css lines  */
 img {
     max-width: 400px; 
@@ -23,8 +27,4 @@ h2{
 
 #SellerContainer{
   padding-right: 10%;
-}
-
-.centerButton{
-  text-align: center;
 }
