@@ -76,6 +76,10 @@ app.get('/findAgents', function(req, res){
     res.render('Property Agent/findAgents', {layout:'main'});
 });
 
+app.get('/schedule', function(req, res){
+    res.render('schedule', {layout:'main'});
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });
