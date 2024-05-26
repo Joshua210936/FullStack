@@ -1,0 +1,125 @@
+.wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    flex: 1;
+    background-color: lightblue;
+    padding-top: 20px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+
+
+.sidebar ul li a {
+    align-content: center;
+    height: 60px;
+    color: black;
+    text-decoration: none;
+    display: block;
+    padding-left: 50px;
+}
+
+.sidebar ul li a:hover {
+    background-color: #87cefa;
+    font-weight: bold;
+}
+
+.bannercontainer {
+    margin: 0 auto;
+    padding: 30px;
+    width: 80%;
+    background-color: rgba(248, 248, 248, 0.959);
+}
+
+.sort {
+    margin-left: 20px;
+    display: flex;
+    width: 50%;
+    gap: 20px;
+}
+
+.bannertable {
+    width: 100%;
+}
+
+.bannertable tr {
+    height: 50px;
+}
+
+.bannertable tr:nth-child(even) {
+    background-color: #CDEEFF;
+}
+
+.bannertable tr:nth-child(odd) {
+    background-color: #cdeeffa2;
+}
+
+.bannertable th {
+    background-color: #73cbf7;
+}
+
+.bannerimg {
+    padding:10px;
+    width:100px;
+    height:100px;
+}
+
+.tab {
+    width:80%;
+    margin:0 auto;
+    overflow: hidden;
+    border-bottom: 1px solid #ccc;
+}
+
+.tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+.tab button:hover {
+    background-color: #ddd;
+}
+
+
+.tabcontent {
+    width:80%;
+    margin:0 auto;
+    display:none;
+
+}
+
+.tab button.active {
+    background-color: #73cbf7;
+}
+.tabcontent.show {
+    display: block;
+    background-color: white;
+}
+
+.tabcontent table{
+    width:100%;
+}
+.tabcontent table tr{
+    height:50px;
+}
+
+.tabcontent table tr:nth-child(even){
+    background-color: #CDEEFF;
+}
+
+.tabcontent table tr:nth-child(odd){
+    background-color: #cdeeffa2;
+}
+.tabcontent table th{
+    background-color: #73cbf7;
+}
