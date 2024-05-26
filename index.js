@@ -19,6 +19,10 @@ app.get('/', function(req, res){
     res.render('index', {layout:'main'});
 });
 
+app.get('/aboutUs', function(req, res){
+    res.render('About Us/aboutUs', {layout:'main'});
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`);
 });
