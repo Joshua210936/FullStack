@@ -40,5 +40,9 @@
 .center-rating{
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; 
+}
+
+.feedbackForm{
+  background-color: white;
 }
