@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Sigma Properties</title>
+        <!---Bootstrap-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        
+        <!--CSS file-->
+        <link rel="stylesheet" href="css/AgentListProperty.css">
+        <link rel="stylesheet" href="css/navbar.css">
+
+        <script src="navbar.js" defer></script>
+    </head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a href="home.html"><img src="images/logo.png" width="100" height="50"></a>
+        <div class="header collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <div class="dropdown" data-dropdown>
+                        <button class="nav-link" data-dropdown-button>Properties &#x25BE;</button>
+                        <div class="dropdown-menu information-grid">
+                            <div>
+                            <!-- <div class="dropdown-heading"></div> -->
+                            <div class="dropdown-links">
+                                <a href="#" class="nav-link">Buying</a>
+                                <a href="#" class="nav-link">Selling</a>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="dropdown" data-dropdown>
+                        <button class="nav-link" data-dropdown-button>Property Agents &#x25BE;</button>
+                        <div class="dropdown-menu information-grid">
+                        <div>
+                            <!-- <div class="dropdown-heading"></div> -->
+                            <div class="dropdown-links">
+                            <a href="#" class="nav-link">Find Agents</a>
+                            <a href="#" class="nav-link">Schedule</a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="dropdown" data-dropdown>
+                        <button class="nav-link" data-dropdown-button>Contact Us &#x25BE;</button>
+                        <div class="dropdown-menu information-grid">
+                        <div>
+                            <!-- <div class="dropdown-heading"></div> -->
+                            <div class="dropdown-links">
+                            <a href="#" class="nav-link">FAQ</a>
+                            <a href="ContactUs.html" class="nav-link">Feedback Form</a>
+                            <a href="AgentRegistration.html" class="nav-link">Property Agent Registration</a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="AboutUs.html"><button class="nav-link" data-dropdown-button>About Us</button></a>
+                </li>
+            </ul>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+            <a href="Login.html"><button class="login-btn btn btn-light my-2 my-sm-0" data-dropdown-button>Login</button></a>
+            <a href="userRegister.html"><button class="login-btn btn btn-light my-2 my-sm-0" data-dropdown-button>Sign Up</button></a>
+    </nav>
+    <br>
+
+    <div class="property-listing-page">
+        <div class="listing-box">
+            <div class="form-header">
+                <h1>Property Listing Form</h1>
+            </div>
+            <form>
+                <!-- First Section -->
+                <div class="input-group">
+                    <label for="property-type">Property Type</label>
+                    <select id="property-type">
+                        <option value="" disabled selected>Select property type</option>
+                        <option value="HDB">HDB</option>
+                        <option value="Condominium">Condominium</option>
+                        <option value="Landed">Landed</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="date-available">Date Available</label>
+                    <input type="date" id="date-available">
+                </div>
+                <div class="input-group">
+                    <label for="bedrooms">Bedrooms</label>
+                    <input type="range" id="bedrooms" min="1" max="10" oninput="updateCounter('bedrooms', this.value)">
+                    <div class="range-counter" id="bedrooms-counter">5</div>
+                </div>
+                <div class="input-group">
+                    <label for="bathrooms">Bathrooms</label>
+                    <input type="range" id="bathrooms" min="1" max="10" oninput="updateCounter('bathrooms', this.value)">
+                    <div class="range-counter" id="bathrooms-counter">5</div>
+                </div>
+                <div class="input-group">
+                    <label for="square-footage">Square Footage</label>
+                    <input type="number" id="square-footage" placeholder="Enter square footage" >
+                </div>
+                <div class="input-group">
+                    <label for="year-built">Year Built</label>
+                    <input type="number" id="year-built" placeholder="Enter year built">
+                </div>
+                <div class="input-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" placeholder="Enter property description"></textarea>
+                </div>
+
+                <!-- Second Section -->
+                <div class="form-header">
+                    <h2>More Details</h2>
+                </div>
+                <div class="input-group">
+                    <label for="price">Price</label>
+                    <input type="number" id="price" placeholder="Enter price" >
+                </div>
+                <div class="input-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" placeholder="Enter location">
+                </div>
+                <div class="input-group">
+                    <label for="zip-code">Zip Code</label>
+                    <input type="text" id="zip-code" placeholder="Enter zip code">
+                </div>
+                <div class="input-group">
+                    <label for="property-pictures">Upload pictures of property</label>
+                    <input type="file" id="property-pictures" multiple accept="image/*" onchange="previewImages()" required>
+                </div>
+                <div id="image-preview"></div>
+                <button class="formbutton" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+ <script>
+    function updateCounter(id, value) {
+        document.getElementById(id + '-counter').textContent = value;
+    }
+
+    function previewImages() {
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = '';
+        const files = document.getElementById('property-pictures').files;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'image-container';
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '150px';
+                img.style.margin = '10px';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Remove';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.addEventListener('click', function() {
+                    imgContainer.remove(); // Remove the image container
+                });
+
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(deleteBtn);
+                preview.appendChild(imgContainer);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+</body>
+</html>
