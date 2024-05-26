@@ -57,6 +57,10 @@ app.get('/contactUs', function(req, res){
     res.render('Contact Us/contactUs', {layout:'main'});
 });
 
+app.get('/feedbackForm', function(req, res){
+    res.render('Contact Us/feedbackForm', {layout:'main'});
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });
