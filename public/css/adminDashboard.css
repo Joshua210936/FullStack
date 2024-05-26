@@ -1,0 +1,102 @@
+.wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    flex: 1;
+    background-color: lightblue;
+    padding-top: 20px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+
+
+.sidebar ul li a {
+    align-content: center;
+    height:60px;
+    color: black;
+    text-decoration: none;
+    display: block;
+    padding-left:50px;
+}
+
+.sidebar ul li a:hover {
+    background-color: #87cefa;
+    font-weight:bold;
+}
+
+.main-content {
+    flex: 5;
+    padding: 20px;
+}
+
+.container .row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.container .row2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.container .row2 img{
+    width:100%;
+    heighT:100%;
+}
+
+.container .row .item {
+    background-color: #f2f2f2;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.dashboardbox {
+    height:140px;
+    padding:20px;
+    padding-left:2px;
+    padding-right:2px;
+    border-radius:10px;
+}
+
+.dashboard-bg1 {
+    background-color: rgb(139, 231, 139);
+}
+.dashboard-bg2 {
+    background-color: rgb(41, 205, 247);
+}
+.dashboard-bg3 {
+    background-color: rgb(231, 139, 226);
+}
+.dashboard-bg4 {
+    background-color: rgb(231, 225, 139);
+}
+
+.icons {
+    height:50px;
+    width:50px;
+    border-radius:50%;
+    background-color:white;
+
+}
+
+
+img.topagent {
+    display: block;
+    margin: 0 auto;
+    width:75px;
+    height:75px;
+}
+
+

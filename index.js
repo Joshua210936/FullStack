@@ -88,6 +88,10 @@ app.get('/schedule', function(req, res){
     res.render('schedule', {layout:'main'});
 });
 
+app.get('/adminDashboard', function(req, res){
+    res.render('Dashboard/adminDashboard', {layout:'main'});
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });
