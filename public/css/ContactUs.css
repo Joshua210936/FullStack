@@ -1,0 +1,25 @@
+/* Standard template css lines */
+.active{
+    text-decoration: underline;
+}
+
+.centerButton{
+    text-align: center;
+}
+/* End of standard template css lines  */
+
+#WeWantToHearFromYouContainer{
+    background-color: #CDEEFF;
+}
+
+.row{
+    padding: 2% !important;
+}
+
+h2{
+    font-weight: bold;
+}
+
+.card-header{
+    text-align: center;
+}
