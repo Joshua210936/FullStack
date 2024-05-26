@@ -69,7 +69,7 @@ app.get('/userAccount', (req,res) => { // User Login page
 });
 
 app.get('/adminAccount', (req, res) => { // User Registration page
-    res.render('Profile/adminAccountManagement', {layout:'userMain'});
+    res.render('Profile/adminAccountManagement', {layout:'adminMain'});
 });
 
 app.get('/aboutUs', function(req, res){
@@ -85,7 +85,7 @@ app.get('/feedbackForm', function(req, res){
 });
 
 app.get('/agentListProperty', function(req, res){
-    res.render('Property Agent/agentListProperty', {layout:'main'});
+    res.render('Property Agent/agentListProperty', {layout:'userMain'});
 });
 
 app.get('/findAgents', function(req, res){
@@ -93,11 +93,15 @@ app.get('/findAgents', function(req, res){
 });
 
 app.get('/schedule', function(req, res){
-    res.render('schedule', {layout:'main'});
+    res.render('schedule', {layout:'userMain'});
 });
 
 app.get('/adminDashboard', function(req, res){
     res.render('Dashboard/adminDashboard', {layout:'adminMain'});
+});
+
+app.get('/adminAgentsView', function(req, res){
+    res.render('adminAgentsView', {layout:'adminMain'});
 });
 
 app.listen(port, ()=>{
