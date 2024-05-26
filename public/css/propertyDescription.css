@@ -108,7 +108,6 @@
 }
 
 .contactbuttons{
-    border-top:1px solid;
     margin-top:25px;
     margin-bottom:25px;
     text-align: center;
@@ -116,4 +115,122 @@
 
 .fa-star{
     color:rgb(255, 217, 0);
+}
+
+.contactrow{
+    border-top:1px solid;
+}
+
+.contactrow:hover{
+    background-color:#bce7fd
+}
+
+.contactbuttonclick{
+    color:black;
+}
+
+.contactbuttonclick:hover{
+    color:black;
+}
+
+.details_table {
+    table-layout: fixed;
+    margin-right:auto;
+    margin-left: auto;
+    width: 100%;
+    background-color:#edf9ff;
+}
+
+.details_table th {
+    width: 150px; /* Adjust this value to control the width */
+    text-align: left; /* Ensure text alignment is appropriate */
+    padding: 8px; /* Add some padding for better appearance */
+}
+
+.details_table td {
+    text-align: left;
+    padding: 8px; /* Match padding for consistency */
+}
+
+.mapfilter {
+    border: 1px solid;
+    height:10%;
+    width:100%;
+    margin-left:auto;
+    margin-right:auto;
+    text-align: center;
+}
+
+.map{
+    width:100%;
+    height:30rem;
+}
+
+.property-type {
+    list-style-type: none;
+    margin: 25px 0 0 0;
+    padding: 0;
+    text-align:center;
+  }
+  
+  .property-type li {
+    float: left;
+    margin: 0 5px 0 0;
+    width: 100px;
+    height: 40px;
+    position: relative;
+  }
+  
+  .property-type label,
+  .property-type input {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .property-type input[type="radio"] {
+    opacity: 0.01;
+    z-index: 100;
+  }
+  
+  .property-type input[type="radio"]:checked+label,
+  .Checked+label {
+    background: white;
+  }
+  
+  .property-type label {
+    padding: 5px;
+    border: 1px solid #CCC;
+    cursor: pointer;
+    z-index: 90;
+    border-radius: 28px;
+  }
+  
+  .property-type label:hover {
+    background: #DDD;
+  }
+
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.schedule_button{
+    border: solid 1px;
+    border-radius:20px;
+    background-color:white;
+    width:8rem;
+    padding:5px;
+    margin-top:10px;
+    color:black;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+    text-align:center;
+}
+
+.schedule_button:hover{
+    background-color:#f6f6f6;
 }
