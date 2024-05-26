@@ -56,6 +56,14 @@ app.get('/', function(req, res){
     res.render('index', {layout:'main'});
 });
 
+app.get('/login', (req,res) => { // User Login page
+    res.render('Login/userlogin', {layout:'main'});
+});
+
+app.get('/register', (req, res) => { // User Registration page
+    res.render('Login/userReg', {layout:'main'});
+});
+
 app.get('/aboutUs', function(req, res){
     res.render('About Us/aboutUs', {layout:'main'});
 });

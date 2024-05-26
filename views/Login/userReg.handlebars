@@ -1,0 +1,45 @@
+<head>
+    <!--CSS !-->
+    <link rel="stylesheet" href="/css/userRegister.css">
+</head>
+
+<!--Registration Container-->
+<div class="register-page">
+    <div class="logo">Sigma Properties</div>
+    <div class="illustration"></div>
+    <div class="register-box">
+        <div class="welcome-text">Create an Account</div>
+        <form>
+            <div class="input-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" placeholder="Enter your first name">
+            </div>
+            <div class="input-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" placeholder="Enter your last name">
+            </div>
+            <div class="input-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" placeholder="Enter your phone number">
+            </div>
+            <div class="input-group">
+                <label for="email">Gmail</label>
+                <input type="email" id="email" placeholder="Enter your email">
+            </div>
+            <div class="input-group">
+                <label for="birthday">Birthday</label>
+                <input type="date" id="birthday">
+            </div>
+            <div class="input-group position-relative">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password">
+                <div class="password-visibility-toggle" onclick="togglePasswordVisibility()"></div>
+            </div>
+            <div class="input-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm your password">
+            </div>
+            <button type="submit" class="formbutton" onclick="window.location.href='/login'">Register</button>
+        </form>
+    </div>
+</div>
