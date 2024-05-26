@@ -38,6 +38,10 @@ app.get('/propertyDescription', function(req, res){ //propertyDescription page
     res.render('propertyDescription', {layout:'main'})
 });
 
+app.get('/sellHouse',function(req,res){ //buyHouse page
+    res.render('sellHouse',{layout:'main'})
+});
+
 // app.use(express.static("public"));
 
 let port = 3001;
@@ -88,6 +92,10 @@ app.get('/agentListProperty', function(req, res){
     res.render('Property Agent/agentListProperty', {layout:'userMain'});
 });
 
+app.get('/propertyAgentProfile', function(req, res){
+    res.render('Property Agent/propertyAgentProfile', {layout:'userMain'});
+});
+
 app.get('/findAgents', function(req, res){
     res.render('Property Agent/findAgents', {layout:'main'});
 });
@@ -104,12 +112,16 @@ app.get('/adminAgentsView', function(req, res){
     res.render('adminAgentsView', {layout:'adminMain'});
 });
 
+
 app.get('/adminFeedback', function(req, res){
     res.render('Contact Us/adminFeedback', {layout:'adminMain'});
 });
 
 app.get('/advertisement', function(req, res){
     res.render('advertisement', {layout:'adminMain'});
+});
+app.get('/adminPropertiesView', function(req, res){
+    res.render('adminPropertiesView', {layout:'adminMain'});
 });
 
 app.listen(port, ()=>{
