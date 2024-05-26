@@ -65,5 +65,8 @@
 }
 
 .agentbox{
-    
+    border:solid 1px;
+    height:30rem;
+    width:20rem;
+    background-color: #CDEEFF;
 }
