@@ -4,6 +4,8 @@ const bodyParser = require("body-parser"); //imported body-parser
 
 const exphbs = require('express-handlebars');
 
+const flash = require('connect-flash');
+
 const app = express();
 
 const path = require('path');
@@ -11,6 +13,8 @@ const path = require('path');
 app.use(bodyParser.urlencoded({extended:true})); //part of body-parser import
 
 app.use(express.static(path.join(__dirname, '/public'))); 
+
+app.use(flash());
 
 app.engine('handlebars', exphbs.engine({ //part of handlebars setup
     layoutsDir:__dirname+'/views/layouts',
@@ -52,6 +56,14 @@ app.get('/', function(req, res){
     res.render('index', {layout:'main'});
 });
 
+app.get('/login', (req,res) => { // User Login page
+    res.render('Login/userlogin', {layout:'main'});
+});
+
+app.get('/register', (req, res) => { // User Registration page
+    res.render('Login/userReg', {layout:'main'});
+});
+
 app.get('/aboutUs', function(req, res){
     res.render('About Us/aboutUs', {layout:'main'});
 });
@@ -70,6 +82,10 @@ app.get('/agentListProperty', function(req, res){
 
 app.get('/findAgents', function(req, res){
     res.render('Property Agent/findAgents', {layout:'main'});
+});
+
+app.get('/schedule', function(req, res){
+    res.render('schedule', {layout:'main'});
 });
 
 app.listen(port, ()=>{

@@ -46,3 +46,8 @@
 .feedbackForm{
   background-color: white;
 }
+
+.feedback-form-img {
+  max-width: 400px; 
+  height: auto;
+}
