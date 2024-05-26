@@ -6,8 +6,6 @@ const exphbs = require('express-handlebars');
 
 const app = express();
 
-const exphbs = require('express-handlebars')
-
 const path = require('path');
 
 app.use(bodyParser.urlencoded({extended:true})); //part of body-parser import
