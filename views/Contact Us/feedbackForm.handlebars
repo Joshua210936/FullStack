@@ -21,16 +21,28 @@
             <p>Rating: <span id="current-rating">0</span>/5</p>
         </div>
     </div>
-    <div class="container-fluid feedbackForm">
+    <div class="row">
+        <div class="col-6 col-md-4"></div>
+        <div class="col-6 col-md-6"> <div class="container-fluid feedbackForm">
         <div class="form-group">
-            <label for="email">What prompted you to visit our feedback form today</label>
-            <input type="email" name="email" class="form-control" required>
+            <label for="inputGroupSelect01">What prompted you to visit our feedback form today?</label>
+            <div class="input-group mb-3">
+                <select class="custom-select" id="inputGroupSelect01" required>
+                    <option selected>Choose...</option>
+                    <option value="Report an issue">Report an issue</option>
+                    <option value="Provide feedback">Provide feedback</option>
+                    <option value="Other">Other</option>
+                </select>
+        </div>
         </div>
         <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" name="password" class="form-control" required>
+            <label for="Description">Description</label>
+            <input type="text" name="Description" class="form-control" required>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-6 col-md-6"></div>
+    </div>
     </form>
     </div>
     <br>
