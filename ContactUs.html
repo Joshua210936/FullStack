@@ -8,6 +8,7 @@
         <!--CSS file-->
         <link rel="stylesheet" href="css/ContactUs.css">
         <link rel="stylesheet" href="css/navbar.css">
+        <link rel="stylesheet" href="css/footer.css">
 
         <script src="navbar.js" defer></script>
     </head>
@@ -24,7 +25,7 @@
                               <div>
                               <!-- <div class="dropdown-heading"></div> -->
                               <div class="dropdown-links">
-                                  <a href="#" class="nav-link">Buying</a>
+                                  <a href="buyHouse.html" class="nav-link">Buying</a>
                                   <a href="#" class="nav-link">Selling</a>
                               </div>
                               </div>
@@ -61,7 +62,18 @@
                       </div>
                   </li>
                   <li class="nav-item">
-                      <a href="AboutUs.html"><button class="nav-link" data-dropdown-button>About Us</button></a>
+                    <div class="dropdown" data-dropdown>
+                        <button class="nav-link" data-dropdown-button>About Us &#x25BE;</button>
+                        <div class="dropdown-menu information-grid">
+                        <div>
+                            <!-- <div class="dropdown-heading"></div> -->
+                            <div class="dropdown-links">
+                            <a href="AboutUs.html" class="nav-link">Who We Are</a>
+                            <a href="#" class="nav-link">Privacy Policy</a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
                   </li>
               </ul>
           </div>
@@ -98,5 +110,45 @@
             <br>
           </div>
           <br>
+          <footer class="footer">
+            <div class="container footer-container">
+                <div class="row footer-row">
+                    <div class="footer-col">
+                        <h4>company</h4>
+                        <ul>
+                            <li><a href="#">about us</a></li>
+                            <li><a href="#">privacy policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>get help</h4>
+                        <ul>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Feedback</a></li>
+                            <li><a href="#">Agent Registration</a></li>
+                            <li><a href="#">payment options</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>services</h4>
+                        <ul>
+                            <li><a href="#">buying properties</a></li>
+                            <li><a href="#">selling properties</a></li>
+                            <li><a href="#">property agent list</a></li>
+                            <li><a href="#">schedule</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>follow us</h4>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </body>
 </html>

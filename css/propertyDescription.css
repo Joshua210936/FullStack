@@ -1,0 +1,8 @@
+.gradient{
+    background-image: linear-gradient(white, #CDEEFF);
+    padding-bottom:20px;
+}
+
+.title{
+    text-align: center;
+}
