@@ -38,6 +38,10 @@ app.get('/propertyDescription', function(req, res){ //propertyDescription page
     res.render('propertyDescription', {layout:'main'})
 });
 
+app.get('/sellHouse',function(req,res){ //buyHouse page
+    res.render('sellHouse',{layout:'main'})
+});
+
 // app.use(express.static("public"));
 
 let port = 3001;
