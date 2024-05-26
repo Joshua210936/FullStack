@@ -70,7 +70,7 @@ body {
 
 .agents-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
     width: 100%;
     padding: 0;
@@ -158,8 +158,8 @@ body {
 
 .regions {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
 }
 
 .region {
@@ -176,7 +176,7 @@ body {
 
 .region img {
     width: 100%;
-    height: 100px;
+    height: 120px;
     object-fit: cover;
 }
 
@@ -186,4 +186,3 @@ body {
     font-weight: 500;
     color: #2c3e50;
 }
-
