@@ -99,4 +99,22 @@ img.topagent {
     height:75px;
 }
 
+.sub-nav {
+    display: none; /* Hide the sub-navigation by default */
+    list-style-type: none; /* Remove default list styles */
+}
+
+.sidebar ul li:hover .sub-nav {
+    display: block;
+}
+
+.sub-nav li {
+    background-color: lightgray; /* Example background color */
+    padding: 5px 10px; /* Example padding */
+}
+
+.sub-nav li:hover {
+    background-color: gray; /* Example background color on hover */
+}
+
 
