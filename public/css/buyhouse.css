@@ -74,6 +74,7 @@
 .close-button {
     color: #aaa;
     float: right;
+    margin-right:auto;
     font-size: 28px;
     font-weight: bold;
 }

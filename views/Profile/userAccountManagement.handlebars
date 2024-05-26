@@ -1,0 +1,14 @@
+<h1>Account Management</h1>
+{{#if message}}
+  <p class="message">{{message}}</p>
+{{/if}}
+<form action="/account" method="post" class="account-form">
+  <label for="username">Username</label>
+  <input type="text" id="username" name="username" value="{{user.username}}" required>
+
+  <label for="email">Email</label>
+  <input type="email" id="email" name="email" value="{{user.email}}" required>
+
+  <button type="submit">Update Account</button>
+</form>
+<p>Account created on: {{user.createdAt}}</p>
