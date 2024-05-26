@@ -104,6 +104,14 @@ app.get('/adminAgentsView', function(req, res){
     res.render('adminAgentsView', {layout:'adminMain'});
 });
 
+app.get('/adminFeedback', function(req, res){
+    res.render('Contact Us/adminFeedback', {layout:'adminMain'});
+});
+
+app.get('/advertisement', function(req, res){
+    res.render('advertisement', {layout:'adminMain'});
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });
