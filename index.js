@@ -64,6 +64,14 @@ app.get('/register', (req, res) => { // User Registration page
     res.render('Login/userReg', {layout:'main'});
 });
 
+app.get('/userAccount', (req,res) => { // User Login page
+    res.render('Profile/userAccountManagement', {layout:'userMain'});
+});
+
+app.get('/adminAccount', (req, res) => { // User Registration page
+    res.render('Profile/adminAccountManagement', {layout:'userMain'});
+});
+
 app.get('/aboutUs', function(req, res){
     res.render('About Us/aboutUs', {layout:'main'});
 });
