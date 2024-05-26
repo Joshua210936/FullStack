@@ -4,6 +4,8 @@ const bodyParser = require("body-parser"); //imported body-parser
 
 const exphbs = require('express-handlebars');
 
+const flash = require('connect-flash');
+
 const app = express();
 
 const path = require('path');
@@ -11,6 +13,8 @@ const path = require('path');
 app.use(bodyParser.urlencoded({extended:true})); //part of body-parser import
 
 app.use(express.static(path.join(__dirname, '/public'))); 
+
+app.use(flash());
 
 app.engine('handlebars', exphbs.engine({ //part of handlebars setup
     layoutsDir:__dirname+'/views/layouts',
