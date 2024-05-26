@@ -20,7 +20,8 @@ body {
     gap: 2rem;
 }
   
-  .nav-link {
+  .nav-link,
+  .link-button {
     background: none;
     border: none;
     text-decoration: none;
@@ -32,7 +33,8 @@ body {
   }
   
   .dropdown.active > .nav-link,
-  .nav-link:hover {
+  .nav-link:hover,
+  .link-button:hover {
     color: black;
   }
   
