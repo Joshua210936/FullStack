@@ -1,0 +1,134 @@
+<head>
+    <title>Browse Houses</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="/css/buyhouse.css">
+    <script src="buyHouse.js" defer></script>
+</head> 
+ 
+ 
+ 
+ <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                  
+                </div>
+                <div class="col-sm">
+                    <form>
+                        <div class="search">
+                            <span class="search-icon material-symbols-outlined">search</span>
+                            <input class="search-input" type="search" placeholder="Search Location">
+                            <button class="filter-icon" ><span class="material-symbols-outlined">tune</span>  </button>
+                        </div> 
+                    </form>
+                    <div class="buyitem">
+                        <a href="propertyDescription.html">
+                            <div class="houseimg">
+                                <img src="images/hdb1.jpg" class="buyitemimage">
+                            </div>
+                            <div class="housedesc">
+                                <h2 class="desctext">212B Punggol Walk</h2>
+                                <p class="desctext">212B Punggol Walk</p>
+                                <p class="desctext">S$ 650,000</p>
+                                <div>
+                                    3 Bedroom - 2 Bathroom - 1000 sqft - S$650 psf
+                                </div>
+                                <div>
+                                    HDB - Built: 2014 - Resale
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm">
+                </div>
+              </div>
+        </div>
+
+        <!-- this is the popup for filter -->
+        <div class="modal" id="filterModal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <form>
+                    <h2>Filter</h2>
+                    <div class="input-group">
+                        <label for="property-type">Property Type:</label>
+                        <ul id="property-type" class="property-type clearfix">
+                            <li>
+                                <input type="radio" id="hdb" name="property-type" value="HDB" />
+                                <label for="hdb">HDB</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="condo" name="property-type" value="Condo" />
+                                <label for="condo">Condo</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="landed" name="property-type" value="Landed" />
+                                <label for="landed">Landed</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row align-items-center">
+                            <div class="col-auto">
+                                <label for="min" class="col-form-label">Price Range:</label>
+                                <br>
+                                <br>
+                                <br>
+                            </div>
+                            <div class="col">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input type="text" id="min" name="Minimum" placeholder="Min" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <label for="max" class="col-form-label">to</label>
+                            </div>
+                            <div class="col">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input type="text" id="max" name="Maximum" placeholder="Max" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="bedroom">Bedroom:</label>
+                        <ul id="bedroom" class="property-type clearfix">
+                            <li>
+                                <input type="radio" id="studio" name="bedroom" value="Studio" />
+                                <label for="studio">Studio</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="1bedroom" name="bedroom" value="1Bedroom" />
+                                <label for="1bedroom">1</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="2bedroom" name="bedroom" value="2Bedroom" />
+                                <label for="2bedroom">2</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="3bedroom" name="bedroom" value="3Bedroom" />
+                                <label for="3bedroom">3</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="4bedroom" name="bedroom" value="4Bedroom" />
+                                <label for="4bedroom">4</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="5bedroom" name="bedroom" value="5Bedroom" />
+                                <label for="5bedroom">5</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="input-group form-group formbutton">
+                        <button type="submit">Apply Filters</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

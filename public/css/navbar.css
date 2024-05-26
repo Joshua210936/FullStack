@@ -3,6 +3,11 @@ body {
     margin-top:70px;
   }
 
+  .gradient{
+    background-image: linear-gradient(white, #CDEEFF);
+    padding-bottom:20px;
+}
+
 .navbar {
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
 }
