@@ -27,8 +27,11 @@ app.get('/',function(req,res){ //home page
 });
 
 app.get('/buyHouse',function(req,res){ //buyHouse page
-    res.render('buyHouse',{
-        layout:'main',})
+    res.render('buyHouse',{layout:'main'})
+});
+
+app.get('/propertyDescription', function(req, res){ //propertyDescription page
+    res.render('propertyDescription', {layout:'main'})
 });
 
 // app.use(express.static("public"));
@@ -56,6 +59,8 @@ app.get('/aboutUs', function(req, res){
 app.get('/contactUs', function(req, res){
     res.render('Contact Us/contactUs', {layout:'main'});
 });
+
+
 
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
