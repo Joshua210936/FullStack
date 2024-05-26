@@ -92,6 +92,10 @@ app.get('/agentListProperty', function(req, res){
     res.render('Property Agent/agentListProperty', {layout:'userMain'});
 });
 
+app.get('/propertyAgentProfile', function(req, res){
+    res.render('Property Agent/propertyAgentProfile', {layout:'userMain'});
+});
+
 app.get('/findAgents', function(req, res){
     res.render('Property Agent/findAgents', {layout:'main'});
 });
