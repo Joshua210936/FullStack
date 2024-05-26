@@ -2,13 +2,22 @@ const express = require('express');
 
 const app = express();
 
+const exphbs = require('express-handlebars')
+
 app.use(express.static("public"));
 
 let port = 3001;
 
-app.get('/', (req, res)=> {
-    res.sendFile(__dirname+"/public/Home.html");
-})
+app.engine('handlebars', exphbs.engine({
+    layoutsDir:__dirname+'/views/layouts',
+    partialsDir:__dirname+'/views/partials/'
+}));
+
+app.set('view engine', 'handlebars');
+
+app.get('/', function(req, res){
+    res.render('index', {layout:'main'});
+});
 
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`);
