@@ -144,3 +144,46 @@ button:hover {
         text-align: center;
     }
 }
+
+.browse-by-region {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.browse-by-region h2 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.regions {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.region {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.region:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.region img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+}
+
+.region p {
+    margin: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
