@@ -64,6 +64,14 @@ app.get('/feedbackForm', function(req, res){
     res.render('Contact Us/feedbackForm', {layout:'main'});
 });
 
+app.get('/agentListProperty', function(req, res){
+    res.render('Property Agent/agentListProperty', {layout:'main'});
+});
+
+app.get('/findAgents', function(req, res){
+    res.render('Property Agent/findAgents', {layout:'main'});
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });

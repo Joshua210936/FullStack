@@ -1,0 +1,93 @@
+ <head>
+    <link rel="stylesheet" href="css/FindAgent.css">
+</head>
+<div class="agents-listing-page">
+    <div class="form-header">
+        <h1>Find Property Agents</h1>
+    </div>
+    <div class="filters">
+        <form id="filter-form">
+            <div class="filter-group">
+                <label for="sort">Sort By:</label>
+                <select id="sort" name="sort">
+                    <option value="recommended">Recommended</option>
+                    <option value="buyingHighToLow">Active Listings for Buying (High to Low)</option>
+                    <option value="sellingHighToLow">Active Listings for Selling (High to Low)</option>
+                    <option value="ratings">Ratings</option>
+                </select>
+            </div>
+            <button type="button" onclick="sortAgents()">Sort</button>
+        </form>
+    </div>
+    <section class="agents-list" id="agents-list">
+    <div class="agent" >
+        <img src="images/agent1.jpg" alt="Chia Jyh Kwang Alan">
+        <div class="agent-info">
+            <h3>Kwang Alan</h3>
+            <p>ERA REALTY NETWORK PTE LTD</p>
+            <button>View Profile</button>
+        </div>
+    </div>
+    <div class="agent">
+        <img src="images/agent2.jpg" alt="Betty Low">
+        <div class="agent-info">
+            <h3>Marcos Lee</h3>
+            <p>ERA REALTY NETWORK PTE LTD</p>
+            <button>View Profile</button>
+        </div>
+    </div>
+    <div class="agent">
+        <img src="images/agent3.jpg" alt="Nicole Chan">
+        <div class="agent-info">
+            <h3>Nicole Chan</h3>
+            <p>PROPNEX REALTY PTE LTD</p>
+            <button>View Profile</button>
+        </div>
+    </div>
+ 
+</section>
+
+    </section>
+</div>
+
+
+    <script>
+      function sortAgents() {
+    const sortCriteria = document.getElementById('sort').value;
+
+    const agentsContainer = document.getElementById('agents-list');
+    const agents = Array.from(agentsContainer.getElementsByClassName('agent'));
+
+    agents.sort((a, b) => {
+        const aValue = getSortValue(a, sortCriteria);
+        const bValue = getSortValue(b, sortCriteria);
+
+        if (sortCriteria === 'buyingHighToLow' || sortCriteria === 'sellingHighToLow') {
+            return bValue - aValue;
+        } else if (sortCriteria === 'ratings') {
+            return bValue - aValue;
+        } else {
+            // Default to alphabetical sorting for 'recommended'
+            return aValue.localeCompare(bValue);
+        }
+    });
+
+    // Reorder agents in the container
+    agents.forEach(agent => agentsContainer.appendChild(agent));
+}
+
+function getSortValue(agentElement, sortCriteria) {
+    switch (sortCriteria) {
+        case 'recommended':
+            return agentElement.getAttribute('data-recommended');
+        case 'buyingHighToLow':
+            return parseInt(agentElement.getAttribute('data-active-listings-buying'));
+        case 'sellingHighToLow':
+            return parseInt(agentElement.getAttribute('data-active-listings-selling'));
+        case 'ratings':
+            return parseFloat(agentElement.getAttribute('data-ratings'));
+        default:
+            return ''; // Default case
+    }
+}
+    </script>
