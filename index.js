@@ -23,6 +23,10 @@ app.get('/aboutUs', function(req, res){
     res.render('About Us/aboutUs', {layout:'main'});
 });
 
+app.get('/contactUs', function(req, res){
+    res.render('Contact Us/contactUs', {layout:'main'});
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`);
 });
