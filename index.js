@@ -97,7 +97,7 @@ app.get('/schedule', function(req, res){
 });
 
 app.get('/adminDashboard', function(req, res){
-    res.render('Dashboard/adminDashboard', {layout:'main'});
+    res.render('Dashboard/adminDashboard', {layout:'adminMain'});
 });
 
 app.listen(port, ()=>{
