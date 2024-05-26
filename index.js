@@ -112,6 +112,10 @@ app.get('/adminAgentsView', function(req, res){
     res.render('adminAgentsView', {layout:'adminMain'});
 });
 
+app.get('/adminPropertiesView', function(req, res){
+    res.render('adminPropertiesView', {layout:'adminMain'});
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });
