@@ -4,7 +4,9 @@
         <title>Sigma Properties</title>
         <!---Bootstrap-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
+
         <!--CSS file-->
         <link rel="stylesheet" href="ContactUs.css">
     </head>
@@ -49,15 +51,14 @@
               <div class="col-sm-6 col-md-6 col-lg-6">
                 <h2>We want to hear from you!</h2>
                 <br>
-                <p>
-                    At Sigma Properties, we’re dedicated to guiding you through the exciting journey of finding your ideal home. Your insights and inquiries pave the way to a seamless property search experience.
-
-                    Help us the property search experience today
-                </p>
+                <p>At Sigma Properties, we’re dedicated to guiding you through the exciting journey of finding your ideal home. Your insights and inquiries pave the way to a seamless property search experience.</p>
+                <br>
+                <p>Help us improve your property search experience today</p>
                 <br>
                 <div class="centerButton">
                     <a class="btn btn-dark" href="FeedbackForm.html" role="button">Fill out a feedback form</a>
-                  </div>
+                </div>
+                <br>
               </div>
               <div class="col-sm-6 col-md-6 offset-md-6 col-lg-6 offset-lg-0 text-center">
                 <img src="https://partners-hr.com/hubfs/feedback-meeting-business.jpg" alt="Feedback image">
@@ -66,5 +67,70 @@
             <br>
           </div>
           <br>
+          <!--FAQ-->
+          <hr>
+          <section class="faq-section">
+            <div class="container">
+               <div class="row">
+                   <div class="col-md-6 offset-md-3">
+                       <div class="faq-title text-center pb-3">
+                           <h2>Frequently Asked Questions</h2>
+                       </div>
+                   </div>
+                   <div class="col-md-8 offset-md-2">
+                       <div class="faq" id="accordion">
+                           <div class="card">
+                               <div class="card-header" id="faqHeading-1">
+                                   <div class="mb-0">
+                                       <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-1" data-area-expanded="true" data-area-controls="faqCollapse-1">
+                                           <p>How do I start the buying process?</p>
+                                       </h5>
+                                   </div>
+                               </div>
+                               <div id="faqCollapse-1" class="collapse" aria-labelledby="faqHeading-1" data-parent="#accordion">
+                                   <div class="card-body">
+                                        <p>You can start by browsing our extensive listings to discover properties that match your preferences and needs.</p>
+                                        <p> 
+                                            While optional, we recommend partnering with a property agent on our website to facilitate a smoother process. 
+                                            They can offer valuable insights and guidance every step of the way.
+                                        </p>
+                                        <p>Once you’ve found a property you’re interested in, either you or your agent can reach out to the seller to negotiate the price and arrange viewings.</p>
+                                        <p>If you’re satisfied with the property and terms, proceed with the purchase to make the property yours.</p>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="card">
+                               <div class="card-header" id="faqHeading-2">
+                                   <div class="mb-0">
+                                       <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-2" data-area-expanded="true" data-area-controls="faqCollapse-2">
+                                           <p>What are the additional costs involved in purchasing a property?</p>
+                                       </h5>
+                                   </div>
+                               </div>
+                               <div id="faqCollapse-2" class="collapse" aria-labelledby="faqHeading-2" data-parent="#accordion">
+                                   <div class="card-body">
+                                       <p> When purchasing a property through our marketplace, buyers can rejoice in the fact that there are no additional fees charged by us. The seller is responsible for a 2% fee on the base price of the property, ensuring a transparent and buyer-friendly transaction. Please note that while our platform does not impose any extra charges on buyers, standard property purchasing costs such as stamp duty, legal fees, and mortgage-related expenses still apply and are handled externally.</p>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="card">
+                               <div class="card-header" id="faqHeading-3">
+                                   <div class="mb-0">
+                                       <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-3" data-area-expanded="true" data-area-controls="faqCollapse-3">
+                                           <p>Why do we use it?</p>
+                                       </h5>
+                                   </div>
+                               </div>
+                               <div id="faqCollapse-3" class="collapse" aria-labelledby="faqHeading-3" data-parent="#accordion">
+                                   <div class="card-body">
+                                       <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda voluptatibus quo ea, quos veritatis quasi consequuntur ducimus, esse voluptas commodi exercitationem debitis dolorem? Fugiat voluptatem molestias quos quibusdam eum ipsa!</p>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+            </div>
+          </section>
     </body>
 </html>

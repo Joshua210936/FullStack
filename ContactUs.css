@@ -14,4 +14,12 @@
 
 .row{
     padding: 2% !important;
-  }
+}
+
+h2{
+    font-weight: bold;
+}
+
+.card-header{
+    text-align: center;
+}
