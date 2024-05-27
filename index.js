@@ -42,13 +42,8 @@ app.get('/sellHouse',function(req,res){ //buyHouse page
     res.render('sellHouse',{layout:'main'})
 });
 
-// app.use(express.static("public"));
-
 let port = 3001;
 
-// app.get('/', (req, res)=> {
-//     res.sendFile(__dirname+"/public/Home.html")
-// });
 app.engine('handlebars', exphbs.engine({
     layoutsDir:__dirname+'/views/layouts',
     partialsDir:__dirname+'/views/partials/'
@@ -125,7 +120,7 @@ app.get('/adminUsersView', function(req, res){
 });
 
 app.get('/advertisement', function(req, res){
-    res.render('advertisement', {layout:'adminMain'});
+    res.render('Advertisements/advertisement', {layout:'adminMain'});
 });
 
 app.get('/adminFeedback', function(req, res){
@@ -134,6 +129,14 @@ app.get('/adminFeedback', function(req, res){
 
 app.get('/adminPropertiesView', function(req, res){
     res.render('adminPropertiesView', {layout:'adminMain'});
+});
+
+app.get('/addAdvertisement', function(req, res){
+    res.render('Advertisements/addAdvertisement', {layout:'adminMain'});
+});
+
+app.get('/registerPropertyAgent', function(req, res){
+    res.render('agentRegister', {layout:'adminMain'});
 });
 
 app.listen(port, ()=>{

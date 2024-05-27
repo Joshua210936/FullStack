@@ -21,13 +21,13 @@ function openTab(evt, tabName) {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    const mainContent = document.getElementById('container');
+    const mainContent = document.getElementById('feedbackcontainer');
 
     const issuesContent = ` 
     <h1 class="text-center">Issues</h1>
     <div class="search">
         <span class="search-icon material-symbols-outlined">search</span>
-        <input class="search-input" type="search" placeholder="Search Agent">
+        <input class="search-input" type="search" placeholder="Filter feedback">
         <button class="filter-icon"><span class="material-symbols-outlined">tune</span> </button>
     </div>
     <div class="tab">

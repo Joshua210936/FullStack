@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.getElementById('bannercontainer');
 
     const bannersContent = ` 
-    <h1 class="text-center">Manage Banners(<a href="/addNewBanner">add new</a>)</h1>
+    <h1 class="text-center">Manage Banners(<a href="/addAdvertisement">add new</a>)</h1>
     <div>
 
         <div class="d-flex">
