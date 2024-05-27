@@ -113,7 +113,7 @@ app.get('/adminAgentsView', function(req, res){
 });
 
 app.get('/advertisement', function(req, res){
-    res.render('advertisement', {layout:'adminMain'});
+    res.render('Advertisements/advertisement', {layout:'adminMain'});
 });
 
 app.get('/adminFeedback', function(req, res){
