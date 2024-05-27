@@ -1,0 +1,49 @@
+<div class="container">
+  <h1>My Agent Profile</h1>
+
+  <div class="section">
+    <h2>Agency Details</h2>
+    <form action="/profile" method="post" class="profile-form">
+      <label for="first-name">First name</label>
+      <input type="text" id="first-name" name="firstName" value="{{user.firstName}}" required>
+      <br>
+      <label for="last-name">Last name</label>
+      <input type="text" id="last-name" name="lastName" value="{{user.lastName}}" required>
+      <br>
+      <label for="agency-license-number">Agency License Number</label>
+      <input type="text" id="agency-license-number" name="agencyLicenseNumber" required>
+    </form>
+  </div>
+  <br>
+  <div class="section">
+    <h2>Contact Details</h2>
+        <form action="/profile/contact" method="post" class="contact-form">
+            <label for="mobile-number">Mobile Number</label>
+            <div id="mobile-number">
+                <span>+65</span>
+                <input type="text" name="mobile" placeholder="e.g. 91234567" value="{{user.mobile}}" required>
+            </div>
+            <p>Verified numbers can help with a faster response from agents.</p>
+            <br>
+            <label for="email-address">Email address</label>
+            <input type="email" id="email-address" name="email" value="{{user.email}}" required>
+            <br>
+            <div class="about-me">
+                <label for="about-me" class="about-me">About Me</label>
+                <textarea id="about-me" name="aboutMe" rows="4" placeholder="Tell us about yourself">{{user.aboutMe}}</textarea>
+            </div>
+            <br>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+  <br>
+  <div class="section">
+    <h2>Delete Account</h2>
+    <p>Before proceeding, please take note of the following:</p>
+    <ul>
+      <li>All your saved data, including Shortlists, Enquiries, Saved Searches, and Hidden Listings, will be permanently lost across all your devices.</li>
+      <li>You cannot create a new account with the same email id.</li>
+    </ul>
+    <button type="button" class="delete-account-button">Delete Account</button>
+  </div>
+</div>
