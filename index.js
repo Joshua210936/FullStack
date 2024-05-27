@@ -42,13 +42,8 @@ app.get('/sellHouse',function(req,res){ //buyHouse page
     res.render('sellHouse',{layout:'main'})
 });
 
-// app.use(express.static("public"));
-
 let port = 3001;
 
-// app.get('/', (req, res)=> {
-//     res.sendFile(__dirname+"/public/Home.html")
-// });
 app.engine('handlebars', exphbs.engine({
     layoutsDir:__dirname+'/views/layouts',
     partialsDir:__dirname+'/views/partials/'
