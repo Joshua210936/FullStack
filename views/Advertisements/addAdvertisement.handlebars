@@ -1,0 +1,16 @@
+<head>
+        <link rel="stylesheet" href="css/addAdvertisement.css">
+</head>
+
+<div class="container-fluid addNewAdvertisement">
+    <h1>Add New Advertisement</h1>
+    <form action="/submit-advertisement" method="POST" enctype="multipart/form-data">
+        <label for="bannerImage">Banner Image:</label>
+        <input type="file" id="bannerImage" name="bannerImage" accept="image/*" required>
+        <br>
+        <label for="bannerLink">Banner Link:</label>
+        <input type="url" id="bannerLink" name="bannerLink" placeholder="https://example.com" required>
+        <br>
+        <input type="submit" value="Upload Advertisement">
+    </form>
+</div>

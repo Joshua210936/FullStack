@@ -124,6 +124,14 @@ app.get('/adminPropertiesView', function(req, res){
     res.render('adminPropertiesView', {layout:'adminMain'});
 });
 
+app.get('/addAdvertisement', function(req, res){
+    res.render('Advertisements/addAdvertisement', {layout:'adminMain'});
+});
+
+app.get('/registerPropertyAgent', function(req, res){
+    res.render('agentRegister', {layout:'adminMain'});
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });
