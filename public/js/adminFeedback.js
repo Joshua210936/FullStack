@@ -28,8 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="search">
         <span class="search-icon material-symbols-outlined">search</span>
         <input class="search-input" type="search" placeholder="Filter feedback">
-        <button class="filter-icon"><span class="material-symbols-outlined">tune</span> </button>
+        <button class="filter-icon"><span class="material-symbols-outlined">tune</span> </button> 
     </div>
+    <p class="text-center">Average feedback: 4 stars</p>
+    <p class="text-center">3 unreviewed feedback</p>
     <div class="tab">
         <button class="tablinks" onclick="openTab(event, 'Completed')">Completed</button>
         <button class="tablinks" onclick="openTab(event, 'Pending')">Pending</button>
