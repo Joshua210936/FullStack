@@ -21,6 +21,19 @@ function openTab(evt, tabName) {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('toggleButton');
+
+    button.addEventListener('click', () => {
+        if (button.classList.contains('active')) {
+            button.classList.remove('active');
+            button.classList.add('inactive');
+            button.textContent = 'Inactive';
+        } else {
+            button.classList.remove('inactive');
+            button.classList.add('active');
+            button.textContent = 'Active';
+        }
+    });
     const mainContent = document.getElementById('bannercontainer');
 
     const bannersContent = ` 
@@ -59,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <th>Show from</th>
                             <th>Show until</th>
                             <th>Group</th>
-                            <th colspan="2">Actions</th>
+                            <th colspan="3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <td>27 April 2024</td>
                             <td>28 May 2024</td>
                             <td>Uncategorized</td>
+                            <td>  <button id="toggleButton" class="active">Active</button></td>
                             <td><button class="btn btn-info">Edit</button></td>
                             <td><button class="btn btn-danger">Delete</button></td>
                         </tr>
@@ -82,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <td>20 April 2024</td>
                             <td>20 June 2024</td>
                             <td>Sidebar Tower</td>
+                            <td>  <button id="toggleButton" class="active">Active</button></td>
                             <td><button class="btn btn-info">Edit</button></td>
                             <td><button class="btn btn-danger">Delete</button></td>
                         </tr>
@@ -99,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <th>Show from</th>
                             <th>Show until</th>
                             <th>Group</th>
-                            <th colspan="2">Actions</th>
+                            <th colspan="3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -111,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <td>27 April 2024</td>
                             <td>14 May 2024</td>
                             <td>Uncategorized</td>
+                            <td>  <button id="toggleButton" class="inactive">Inactive</button></td>
                             <td><button class="btn btn-info">Edit</button></td>
                             <td><button class="btn btn-danger">Delete</button></td>
                         </tr>

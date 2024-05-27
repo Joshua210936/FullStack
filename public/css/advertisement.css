@@ -123,3 +123,19 @@
 .tabcontent table th{
     background-color: #73cbf7;
 }
+
+button.active {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button.inactive {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
