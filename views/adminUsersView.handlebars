@@ -1,0 +1,80 @@
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="css/adminUserView.css">
+    <script src="js/adminAgentView.js"></script>
+</head>
+<div class="tabbed-groups">
+    <h1 class="text-center">Users</h1>
+    <div class="search">
+        <span class="search-icon material-symbols-outlined">search</span>
+        <input class="search-input" type="search" placeholder="Search User">
+        <button class="filter-icon"><span class="material-symbols-outlined">tune</span></button>
+    </div>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'approved')">Approved Users</button>
+        <button class="tablinks" onclick="openTab(event, 'unapproved')">Unapproved Users</button>
+    </div>
+
+    <div id="approved" class="tabcontent">
+        <!-- Content for Approved Users tab -->
+        <table>
+            <!-- Table for Approved Users -->
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>User 1</td>
+                    <td>user1@example.com</td>
+                    <td>Approved</td>
+                </tr>
+                <tr>
+                    <td>User 4</td>
+                    <td>user4@example.com</td>
+                    <td>Approved</td>
+                </tr>
+                <tr>
+                    <td>User 5</td>
+                    <td>user5@example.com</td>
+                    <td>Approved</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="unapproved" class="tabcontent">
+        <!-- Content for Unapproved Users tab -->
+        <table>
+            <!-- Table for Unapproved Users -->
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>User 2</td>
+                    <td>user2@example.com</td>
+                    <td>Unapproved</td>
+                </tr>
+                <tr>
+                    <td>User 3</td>
+                    <td>user3@example.com</td>
+                    <td>Unapproved</td>
+                </tr>
+                <tr>
+                    <td>User 6</td>
+                    <td>user6@example.com</td>
+                    <td>Unapproved</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>

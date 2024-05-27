@@ -59,8 +59,16 @@ app.get('/login', (req,res) => { // User Login page
     res.render('Login/userlogin', {layout:'main'});
 });
 
+app.get('/agentLogin', (req,res) => { // User Login page
+    res.render('Login/agentLogin', {layout:'main'});
+});
+
 app.get('/register', (req, res) => { // User Registration page
     res.render('Login/userReg', {layout:'main'});
+});
+
+app.get('/agentRegister', (req, res) => { // User Registration page
+    res.render('Login/agentReg', {layout:'main'});
 });
 
 app.get('/userAccount', (req,res) => { // User Login page
@@ -105,6 +113,10 @@ app.get('/adminDashboard', function(req, res){
 
 app.get('/adminAgentsView', function(req, res){
     res.render('adminAgentsView', {layout:'adminMain'});
+});
+
+app.get('/adminUsersView', function(req, res){
+    res.render('adminUsersView', {layout:'adminMain'});
 });
 
 app.get('/advertisement', function(req, res){

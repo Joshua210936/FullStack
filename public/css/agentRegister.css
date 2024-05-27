@@ -12,7 +12,7 @@ body {
     z-index: 10;
 }
 
-.login-page {
+.register-page {
     display: flex;
     width: 100%;
     max-width: 1440px;
@@ -24,13 +24,15 @@ body {
     justify-content: center;
 }
 
-.login-page .logo {
+.logo {
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 20px;
 }
 
-.login-page .illustration {
+.form
+
+.illustration {
     width: 100%;
     max-width: 600px;
     height: auto;
@@ -39,7 +41,7 @@ body {
     background-size: cover;
 }
 
-.login-page .login-box {
+.registration-box {
     width: 100%;
     max-width: 505px;
     background: white;
@@ -52,42 +54,42 @@ body {
     align-items: center;
 }
 
-.login-page .welcome-text {
+.welcome-text {
     font-size: 25px;
     font-weight: 300;
     margin-bottom: 20px;
 }
 
-.login-page .sign-in-text {
+.sign-up-text {
     text-align: center;
     margin-bottom: 40px;
 }
 
-.login-page .sign-in-text h2 {
+.sign-up-text h2 {
     font-size: 31px;
     font-weight: 500;
     margin: 0;
 }
 
-.login-page .sign-in-text p {
+.sign-up-text p {
     font-size: 16px;
     font-weight: 400;
     margin-top: 8px;
 }
 
-.login-page .input-group {
+.input-group {
     margin-bottom: 20px;
     width: 100%;
 }
 
-.login-page .input-group label {
+.input-group label {
     display: block;
     font-size: 16px;
     font-weight: 400;
     margin-bottom: 8px;
 }
 
-.login-page .input-group input {
+.input-group input {
     width: 100%;
     height: 45px;
     padding: 0 27px;
@@ -98,11 +100,11 @@ body {
     border-radius: 6px;
 }
 
-.login-page .position-relative {
+.position-relative {
     position: relative;
 }
 
-.login-page .password-visibility-toggle {
+.password-visibility-toggle {
     position: absolute;
     width: 21px;
     height: 21px;
@@ -112,33 +114,10 @@ body {
     cursor: pointer;
 }
 
-.login-page .options {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 30px;
-}
-
-.login-page .options label {
-    font-size: 14px;
-    font-weight: 300;
-}
-
-.login-page .options a {
-    font-size: 14px;
-    font-weight: 300;
-    color: #007bff;
-    text-decoration: none;
-}
-
-.login-page .options a:hover {
-    text-decoration: underline;
-}
-
-.login-page .formbutton {
+.formbutton {
     width: 100%;
     height: 45px;
-    background: #007bff;
+    background: #5d00ff;
     border: none;
     border-radius: 6px;
     font-size: 16px;
@@ -146,27 +125,8 @@ body {
     color: white;
     cursor: pointer;
     transition: background 0.3s;
-    margin-bottom: 20px;
 }
 
-.login-page .formbutton:hover {
-    background: #0056b3;
-}
-
-.login-page .register-button {
-    width: 100%;
-    height: 45px;
-    background: #007bff;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 500;
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s;
-    margin-bottom: 20px;
-}
-
-.login-page .register-button:hover {
+.formbutton:hover {
     background: #0056b3;
 }
