@@ -75,8 +75,8 @@ app.get('/userAccount', (req,res) => { // User Login page
     res.render('Profile/userAccountManagement', {layout:'userMain'});
 });
 
-app.get('/adminAccount', (req, res) => { // User Registration page
-    res.render('Profile/adminAccountManagement', {layout:'adminMain'});
+app.get('/agentAccount', (req, res) => { // User Registration page
+    res.render('Profile/agentAccountManagement', {layout:'userMain'});
 });
 
 app.get('/aboutUs', function(req, res){
