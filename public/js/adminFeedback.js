@@ -412,5 +412,5 @@ const othersContent =  `
     });
 
     // Load default content
-    mainContent.innerHTML = issuesContent;
+    mainContent.innerHTML = allFeedbackContent;
 });
