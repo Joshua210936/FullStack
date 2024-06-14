@@ -6,6 +6,9 @@ const exphbs = require('express-handlebars');
 
 const flash = require('connect-flash');
 
+const fullstackDB = require('./config/DBConnection');
+fullstackDB.setUpDB(false);
+
 const app = express();
 
 const path = require('path');
