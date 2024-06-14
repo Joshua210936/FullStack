@@ -12,6 +12,7 @@ fullstackDB.setUpDB(false);
 const app = express();
 
 const path = require('path');
+const Feedback = require('./models/Feedback');
 
 app.use(bodyParser.urlencoded({extended:true})); //part of body-parser import
 
@@ -92,6 +93,12 @@ app.get('/contactUs', function(req, res){
 
 app.get('/feedbackForm', function(req, res){
     res.render('Contact Us/feedbackForm', {layout:'main'});
+});
+
+app.post('/feedbackForm', function(req, res){
+    console.log("test");
+    let {Name, Email, VisitReason, Description} = req.body;
+    console.log(Rating, Name, Email, VisitReason, Description);
 });
 
 app.get('/agentListProperty', function(req, res){

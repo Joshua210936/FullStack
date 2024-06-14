@@ -6,7 +6,7 @@
 </head>
 <br>
 <div class="feedbackForm">
-    <form action="/user/login" method="post"></form>
+    <form action="/feedbackForm" method="post">
         <div class="center-rating">
             <div class="rating-box">
                 <header>How was your experience?</header>
@@ -18,7 +18,7 @@
                     <i class="fa-solid fa-star"></i>
                 </div>
                 <br>
-                <p>Rating: <span id="current-rating">0</span>/5</p>
+                <p>Rating: <span id="current-rating" >0</span>/5</p>
             </div>
         </div>
         <div class="container">
@@ -30,9 +30,9 @@
                     <label for="Email">Email</label>
                     <input type="email" name="Email" class="form-control" required>
                     <br>
-                    <label for="inputGroupSelect01">What prompted you to visit our feedback form today?</label>
+                    <label for="visitReason">What prompted you to visit our feedback form today?</label>
                     <div class="input-group mb-3">
-                        <select class="custom-select" id="inputGroupSelect01" required>
+                        <select class="custom-select" id="visitReason" name="VisitReason" required>
                             <option selected>Choose...</option>
                             <option value="Report an issue">Report an issue</option>
                             <option value="Provide feedback">Provide feedback</option>
@@ -49,8 +49,8 @@
                 </div>
             </div>
         </div>
+        </form>
     </div>
-    </form>
     </div>
     <br>
 </div>
