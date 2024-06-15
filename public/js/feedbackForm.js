@@ -22,5 +22,5 @@
  });
 
  function updateRatingDisplay(rating) {
-	document.getElementById("current-rating").textContent = rating;
+	document.getElementById("current-rating").value = rating;
   }

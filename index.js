@@ -95,10 +95,34 @@ app.get('/feedbackForm', function(req, res){
     res.render('Contact Us/feedbackForm', {layout:'main'});
 });
 
-app.post('/feedbackForm', function(req, res){
-    console.log("test");
-    let {Name, Email, VisitReason, Description} = req.body;
-    console.log(Rating, Name, Email, VisitReason, Description);
+app.post('/feedbackForm', function (req, res) {
+    let { Name, Email, VisitReason, Description, Rating } = req.body;
+
+    let date_time = new Date();
+    let date = ("0" + date_time.getDate()).slice(-2);
+    let month = ("0" + (date_time.getMonth() + 1)).slice(-2);
+    let year = date_time.getFullYear();
+    let FeedbackDate = year + "-" + month + "-" + date;
+
+    let Status = "Pending";
+
+    Feedback.create({ 
+        feedback_type: VisitReason, 
+        feedback_name: Name, 
+        feedback_email: Email, 
+        feedback_date: FeedbackDate, 
+        feedback_rating: Rating, 
+        feedback_description: Description, 
+        feedback_status: Status 
+    })
+    .then(result => {
+        console.log('Insert successful:', result);
+        res.render('Contact Us/contactUs', { layout: 'main' });
+    })
+    .catch(err => {
+        console.error('Insert failed:', err);
+        res.status(500).send('Error occurred: ' + err.message);
+    });
 });
 
 app.get('/agentListProperty', function(req, res){

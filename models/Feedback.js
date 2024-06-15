@@ -2,7 +2,7 @@ const sequelize = require('sequelize');
 
 const db = require('../config/DBConfig');
 
-const Feedback = db.define('user', {
+const Feedback = db.define('feedback', {
     feedback_type: {
         type : sequelize.STRING
     },
