@@ -1,18 +1,17 @@
+// Required libraries
 const express = require('express');
-
 const bodyParser = require("body-parser"); //imported body-parser
-
 const exphbs = require('express-handlebars');
-
 const flash = require('connect-flash');
-
+const moment = require('moment');
 const fullstackDB = require('./config/DBConnection');
 fullstackDB.setUpDB(false);
-
 const app = express();
-
 const path = require('path');
 const Feedback = require('./models/Feedback');
+
+//Imported helpers
+const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 
 app.use(bodyParser.urlencoded({extended:true})); //part of body-parser import
 
@@ -22,7 +21,8 @@ app.use(flash());
 
 app.engine('handlebars', exphbs.engine({ //part of handlebars setup
     layoutsDir:__dirname+'/views/layouts',
-    partialsDir:__dirname+'/views/partials'
+    partialsDir:__dirname+'/views/partials',
+    helpers: handlebarFunctions
 }));
 
 //sets apps to use handlebars engine
@@ -47,11 +47,6 @@ app.get('/sellHouse',function(req,res){ //buyHouse page
 });
 
 let port = 3001;
-
-app.engine('handlebars', exphbs.engine({
-    layoutsDir:__dirname+'/views/layouts',
-    partialsDir:__dirname+'/views/partials/'
-}));
 
 app.set('view engine', 'handlebars');
 
@@ -97,13 +92,7 @@ app.get('/feedbackForm', function(req, res){
 
 app.post('/feedbackForm', function (req, res) {
     let { Name, Email, VisitReason, Description, Rating } = req.body;
-
-    let date_time = new Date();
-    let date = ("0" + date_time.getDate()).slice(-2);
-    let month = ("0" + (date_time.getMonth() + 1)).slice(-2);
-    let year = date_time.getFullYear();
-    let FeedbackDate = year + "-" + month + "-" + date;
-
+    let FeedbackDate = moment().format('YYYY/MM/DD');
     let Status = "Pending";
 
     Feedback.create({ 
@@ -158,7 +147,16 @@ app.get('/advertisement', function(req, res){
 });
 
 app.get('/adminFeedback', function(req, res){
-    res.render('Contact Us/adminFeedback', {layout:'adminMain'});
+    Feedback.findAll({
+        order: [
+            ['feedback_date', 'DESC']
+        ],
+        raw:true
+    })
+    .then((feedback)=>{
+        console.log(feedback)
+        res.render('Contact Us/adminFeedback', {layout:'adminMain', feedback:feedback});
+    })
 });
 
 app.get('/adminPropertiesView', function(req, res){

@@ -3,6 +3,11 @@ const sequelize = require('sequelize');
 const db = require('../config/DBConfig');
 
 const Feedback = db.define('feedback', {
+    feedback_id: {
+        type: sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     feedback_type: {
         type : sequelize.STRING
     },

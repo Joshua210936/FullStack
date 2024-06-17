@@ -133,3 +133,32 @@
 .feedback {
     display:block;
 }
+
+.feedbackTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.feedbackTable th,
+.feedbackTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.feedbackTable th {
+    background-color: #f2f2f2;
+    color: black;
+}
+
+.feedback-item {
+    background-color: #f9f9f9;
+}
+
+.feedback-item:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.feedbackTable tr:hover {
+    background-color: #ddd;
+}
