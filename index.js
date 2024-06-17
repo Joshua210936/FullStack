@@ -1,23 +1,25 @@
 // Required libraries
 const express = require('express');
-const bodyParser = require("body-parser"); //imported body-parser
+const bodyParser = require("body-parser"); 
 const exphbs = require('express-handlebars');
 const flash = require('connect-flash');
 const moment = require('moment');
-const fullstackDB = require('./config/DBConnection');
-fullstackDB.setUpDB(false);
 const app = express();
 const path = require('path');
+const methodOverride = require('method-override');
+
+//Database
+const fullstackDB = require('./config/DBConnection');
+fullstackDB.setUpDB(false);
 const Feedback = require('./models/Feedback');
 
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 
-app.use(bodyParser.urlencoded({extended:true})); //part of body-parser import
-
+app.use(bodyParser.urlencoded({extended:true})); 
 app.use(express.static(path.join(__dirname, '/public'))); 
-
 app.use(flash());
+app.use(methodOverride('_method'));
 
 app.engine('handlebars', exphbs.engine({ //part of handlebars setup
     layoutsDir:__dirname+'/views/layouts',
