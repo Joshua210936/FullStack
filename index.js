@@ -12,6 +12,7 @@ const methodOverride = require('method-override');
 const fullstackDB = require('./config/DBConnection');
 fullstackDB.setUpDB(false);
 const Feedback = require('./models/Feedback');
+const Listed_Properties = require('./models/Listed_Properties');
 
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
@@ -116,8 +117,33 @@ app.post('/feedbackForm', function (req, res) {
     });
 });
 
+
 app.get('/agentListProperty', function(req, res){
     res.render('Property Agent/agentListProperty', {layout:'userMain'});
+});
+
+app.post('/agentListProperty', function(req,res){
+    let{ propertyType, dateAvailable, bedrooms, bathrooms, squarefootage, yearBuilt, name, description, price, location, propertyPictures} = req.body;
+    
+    Listed_Properties.create({
+        Property_Type: propertyType,
+        Date_Available: dateAvailable,
+        Property_Bedrooms: bedrooms,
+        Property_Bathrooms: bathrooms,
+        Square_Footage: squarefootage,
+        Year_Built: yearBuilt,
+        Property_Name: name,
+        Property_Description: description,
+        Property_Price: price,
+        Property_Address: location,
+        Property_Image: propertyPictures
+    })
+    .then(property => {
+        res.status(201).send({ message: 'Property listed successfully!', property });
+      })
+    .catch(err => {
+    res.status(400).send({ message: 'Error listing property', error: err });
+    });
 });
 
 app.get('/propertyAgentProfile', function(req, res){
