@@ -181,6 +181,19 @@ app.get('/registerPropertyAgent', function(req, res){
     res.render('agentRegister', {layout:'adminMain'});
 });
 
+app.put('/saveFeedback/:id', (req, res) => { 
+    let feedback_status = 'saved';
+    Feedback.update({
+        feedback_status
+    },{
+        where:{
+            feedback_id:req.params.id
+        }
+    }).then((video)=>{
+        res.redirect("/adminFeedback");
+    }).catch(err=>console.log(err))
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });

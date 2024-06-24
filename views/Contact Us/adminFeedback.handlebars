@@ -50,8 +50,13 @@
                         <td>{{this.feedback_status}}</td>
                         <td>
                             {{#ifEquals this.feedback_status "Pending"}}
-                                <button type="button" class="btn btn-primary" href="/adminViewFeedback">View</button>
-                                <button type="submit" class="btn btn-primary" href="/admin/markFeedback">Mark as completed</button>
+                                <button type="button" class="btn btn-primary" href="/admin/ViewFeedback">View</button>
+                                <form action="/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post" id="saveFeedback">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <button type="submit" class="btn btn-primary">
+                                        Save
+                                    </button>
+                                </form>
                             {{else}}
                                 <button type="submit" class="btn btn-primary">View</button>
                             {{/ifEquals}}
