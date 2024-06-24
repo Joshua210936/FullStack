@@ -3,7 +3,6 @@ const express = require('express');
 const bodyParser = require("body-parser"); 
 const exphbs = require('express-handlebars');
 const flash = require('connect-flash');
-const moment = require('moment');
 const app = express();
 const path = require('path');
 const methodOverride = require('method-override');
@@ -14,8 +13,19 @@ fullstackDB.setUpDB(false);
 const Feedback = require('./models/Feedback');
 const Listed_Properties = require('./models/Listed_Properties');
 
+//Routers
+const guestRoute = require("./routes/guest_routes");
+const userRoute = require("./routes/user_routes");
+const adminRoute = require("./routes/admin_routes");
+
+
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
+
+//routers
+app.use('/', guestRoute);
+app.use('/user', userRoute);
+app.use('/admin', adminRoute);
 
 app.use(bodyParser.urlencoded({extended:true})); 
 app.use(express.static(path.join(__dirname, '/public'))); 
@@ -89,34 +99,6 @@ app.get('/contactUs', function(req, res){
     res.render('Contact Us/contactUs', {layout:'main'});
 });
 
-app.get('/feedbackForm', function(req, res){
-    res.render('Contact Us/feedbackForm', {layout:'main'});
-});
-
-app.post('/feedbackForm', function (req, res) {
-    let { Name, Email, VisitReason, Description, Rating } = req.body;
-    let FeedbackDate = moment().format('YYYY/MM/DD');
-    let Status = "Pending";
-
-    Feedback.create({ 
-        feedback_type: VisitReason, 
-        feedback_name: Name, 
-        feedback_email: Email, 
-        feedback_date: FeedbackDate, 
-        feedback_rating: Rating, 
-        feedback_description: Description, 
-        feedback_status: Status 
-    })
-    .then(result => {
-        console.log('Insert successful:', result);
-        res.render('Contact Us/contactUs', { layout: 'main' });
-    })
-    .catch(err => {
-        console.error('Insert failed:', err);
-        res.status(500).send('Error occurred: ' + err.message);
-    });
-});
-
 
 app.get('/agentListProperty', function(req, res){
     res.render('Property Agent/agentListProperty', {layout:'userMain'});
@@ -177,7 +159,7 @@ app.get('/advertisement', function(req, res){
 app.get('/adminFeedback', function(req, res){
     Feedback.findAll({
         order: [
-            ['feedback_date', 'DESC']
+            ['feedback_id', 'DESC']
         ],
         raw:true
     })

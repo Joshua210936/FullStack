@@ -50,8 +50,8 @@
                         <td>{{this.feedback_status}}</td>
                         <td>
                             {{#ifEquals this.feedback_status "Pending"}}
-                                <button type="submit" class="btn btn-primary">View</button>
-                                <button type="submit" class="btn btn-primary">Mark as completed</button>
+                                <button type="button" class="btn btn-primary" href="/adminViewFeedback">View</button>
+                                <button type="submit" class="btn btn-primary" href="/admin/markFeedback">Mark as completed</button>
                             {{else}}
                                 <button type="submit" class="btn btn-primary">View</button>
                             {{/ifEquals}}
