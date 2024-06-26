@@ -79,6 +79,31 @@ app.get('/register', (req, res) => { // User Registration page
     res.render('Login/userReg', {layout:'main'});
 });
 
+app.post('/register', function(req, res) {
+    let { firstName, lastName, phoneNumber, gmail, birthday, password, confirmPassword } = req.body;
+
+    // Check if password and confirmPassword match
+    if (password !== confirmPassword) {
+        return res.status(400).send({ message: 'Passwords do not match' });
+    }
+
+    Users.create({
+        customer_fName: firstName,
+        customer_lName: lastName,
+        customer_phone: phoneNumber,
+        customer_email: gmail,
+        customer_Birthday: birthday,
+        customer_Password: password,
+        customer_cPassword: confirmPassword
+    })
+    .then(user => {
+        res.status(201).send({ message: 'User registered successfully!', user });
+    })
+    .catch(err => {
+        res.status(400).send({ message: 'Error registering user', error: err });
+    });
+});
+
 app.get('/agentRegister', (req, res) => { // User Registration page
     res.render('Login/agentReg', {layout:'main'});
 });
