@@ -1,4 +1,5 @@
 const mySQLDB = require('./DBConfig');
+const user = require('../models/custUser');
 const feedback = require('../models/Feedback');
 const listed_properties = require('../models/Listed_Properties');
 

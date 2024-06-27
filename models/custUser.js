@@ -2,31 +2,31 @@ const sequelize = require('sequelize');
 
 const db = require('../config/DBConfig');
 
-const Feedback = db.define('customer', {
-    customer_id: {
+const Customer = db.define('customer', {
+    Customer_id: {
         type: sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    customer_fName: {
+    Customer_fName: {
         type : sequelize.STRING
     },
-    customer_lName: {
+    Customer_lName: {
         type: sequelize.STRING
     },
-    customer_phone: {
+    Customer_Phone: {
         type: sequelize.INTEGER
     },
-    customer_email: {
+    Customer_Email: {
         type: sequelize.STRING
     },
-    customer_Birthday: {
+    Customer_Birthday: {
         type: sequelize.DATE
     },
-    customer_Password: {
+    Customer_Password: {
         type: sequelize.STRING
     },
-    customer_cPassword: {
+    Customer_cPassword: {
         type: sequelize.STRING
     }
 });
