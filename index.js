@@ -21,6 +21,7 @@ const adminRoute = require("./routes/admin_routes");
 
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
+const Customer = require('./models/custUser.js');
 
 //routers
 app.use('/', guestRoute);
@@ -71,6 +72,30 @@ app.get('/login', (req,res) => { // User Login page
     res.render('Login/userlogin', {layout:'main'});
 });
 
+app.post('/login', function(req, res) {
+    let { email, password } = req.body;
+
+    Customer.findOne({
+        where: {
+            Customer_Email: email
+        }
+    })
+    .then(user => {
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        if (user.Customer_Password !== password) {
+            return res.status(401).send({ message: 'Invalid password' });
+        }
+
+        res.status(200).send({ message: 'Login successful!', user });
+    })
+    .catch(err => {
+        res.status(400).send({ message: 'Error logging in', error: err });
+    });
+});
+
 app.get('/agentLogin', (req,res) => { // User Login page
     res.render('Login/agentLogin', {layout:'main'});
 });
@@ -88,13 +113,13 @@ app.post('/register', function(req, res) {
     }
 
     Users.create({
-        customer_fName: firstName,
-        customer_lName: lastName,
-        customer_phone: phoneNumber,
-        customer_email: gmail,
-        customer_Birthday: birthday,
-        customer_Password: password,
-        customer_cPassword: confirmPassword
+        Customer_fName: firstName,
+        Customer_lName: lastName,
+        Customer_Phone: phoneNumber,
+        Customer_Email: gmail,
+        Customer_Birthday: birthday,
+        Customer_Password: password,
+        Customer_cPassword: confirmPassword
     })
     .then(user => {
         res.status(201).send({ message: 'User registered successfully!', user });
