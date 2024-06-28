@@ -10,6 +10,9 @@ const methodOverride = require('method-override');
 //Database
 const fullstackDB = require('./config/DBConnection');
 fullstackDB.setUpDB(false);
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+const Users = require('./models/custUser');
 const Feedback = require('./models/Feedback');
 const Listed_Properties = require('./models/Listed_Properties');
 
