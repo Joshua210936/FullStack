@@ -10,11 +10,13 @@ const methodOverride = require('method-override');
 //Database
 const fullstackDB = require('./config/DBConnection');
 fullstackDB.setUpDB(false);
+const db = require('./config/db');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-const Users = require('./models/custUser');
+const Customer = require('./models/custUser');
 const Feedback = require('./models/Feedback');
 const Listed_Properties = require('./models/Listed_Properties');
+
 
 //Routers
 const guestRoute = require("./routes/guest_routes");
@@ -24,7 +26,7 @@ const adminRoute = require("./routes/admin_routes");
 
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
-const Customer = require('./models/custUser.js');
+const { password } = require('./config/db.js');
 
 //routers
 app.use('/', guestRoute);
@@ -35,6 +37,26 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname, '/public'))); 
 app.use(flash());
 app.use(methodOverride('_method'));
+
+// Can you guys check if these codes are needed
+const options = {
+    host: db.host,
+    port: db.port,
+    user: db.username,
+    password: db.password,
+    database: db.database
+}
+const sessionStore = new MySQLStore(options);
+
+app.use(session({
+    key: 'session_cookie_name',
+    secret: 'session_cookie_secret',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false
+}));
+// The codes end here
+
 
 app.engine('handlebars', exphbs.engine({ //part of handlebars setup
     layoutsDir:__dirname+'/views/layouts',
@@ -71,6 +93,7 @@ app.get('/', function(req, res){
     res.render('index', {layout:'main'});
 });
 
+// User Login and Registration
 app.get('/login', (req,res) => { // User Login page
     res.render('Login/userlogin', {layout:'main'});
 });
@@ -97,10 +120,6 @@ app.post('/login', function(req, res) {
     .catch(err => {
         res.status(400).send({ message: 'Error logging in', error: err });
     });
-});
-
-app.get('/agentLogin', (req,res) => { // User Login page
-    res.render('Login/agentLogin', {layout:'main'});
 });
 
 app.get('/register', (req, res) => { // User Registration page
@@ -130,6 +149,11 @@ app.post('/register', function(req, res) {
     .catch(err => {
         res.status(400).send({ message: 'Error registering user', error: err });
     });
+});
+
+// Agent Login and Registration
+app.get('/agentLogin', (req,res) => { // User Login page
+    res.render('Login/agentLogin', {layout:'main'});
 });
 
 app.get('/agentRegister', (req, res) => { // User Registration page
