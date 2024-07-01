@@ -127,14 +127,14 @@ app.get('/register', (req, res) => { // User Registration page
 });
 
 app.post('/register', function(req, res) {
-    let { firstName, lastName, phoneNumber, gmail, birthday, password, confirmPassword } = req.body;
+    let { firstName, lastName, phoneNumber, email, birthday, password, confirmPassword } = req.body;
 
     // Check if password and confirmPassword match
     if (password !== confirmPassword) {
         return res.status(400).send({ message: 'Passwords do not match' });
     }
 
-    Users.create({
+    Customer.create({
         Customer_fName: firstName,
         Customer_lName: lastName,
         Customer_Phone: phoneNumber,
