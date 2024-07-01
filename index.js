@@ -13,7 +13,6 @@ fullstackDB.setUpDB(false);
 const db = require('./config/db');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-const Customer = require('./models/custUser');
 const Feedback = require('./models/Feedback');
 const Listed_Properties = require('./models/Listed_Properties');
 
@@ -123,32 +122,8 @@ app.post('/login', function(req, res) {
 });
 
 app.get('/register', (req, res) => { // User Registration page
+    console.log("In register page")
     res.render('Login/userReg', {layout:'main'});
-});
-
-app.post('/register', function(req, res) {
-    let { firstName, lastName, phoneNumber, email, birthday, password, confirmPassword } = req.body;
-
-    // Check if password and confirmPassword match
-    if (password !== confirmPassword) {
-        return res.status(400).send({ message: 'Passwords do not match' });
-    }
-
-    Customer.create({
-        Customer_fName: firstName,
-        Customer_lName: lastName,
-        Customer_Phone: phoneNumber,
-        Customer_Email: email,
-        Customer_Birthday: birthday,
-        Customer_Password: password,
-        Customer_cPassword: confirmPassword
-    })
-    .then(user => {
-        res.status(201).send({ message: 'User registered successfully!', user });
-    })
-    .catch(err => {
-        res.status(400).send({ message: 'Error registering user', error: err });
-    });
 });
 
 // Agent Login and Registration
