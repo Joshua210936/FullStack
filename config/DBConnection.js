@@ -2,6 +2,8 @@ const mySQLDB = require('./DBConfig');
 const user = require('../models/custUser');
 const feedback = require('../models/Feedback');
 const listed_properties = require('../models/Listed_Properties');
+const agent = require('../models/Agent');
+const schedule = require('../models/schedule');
 
 const setUpDB = (drop) => {
     mySQLDB.authenticate()
