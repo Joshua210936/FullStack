@@ -138,7 +138,7 @@ app.post('/register', function(req, res) {
         Customer_fName: firstName,
         Customer_lName: lastName,
         Customer_Phone: phoneNumber,
-        Customer_Email: gmail,
+        Customer_Email: email,
         Customer_Birthday: birthday,
         Customer_Password: password,
         Customer_cPassword: confirmPassword
