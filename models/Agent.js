@@ -28,8 +28,16 @@ const Agent = db.define('agent', {
     },
     agent_bio: {
         type: sequelize.STRING
-    }
-    
+    },
+    agent_image: {
+        type: sequelize.STRING
+    },
+    agent_password: {
+        type: sequelize.STRING
+    },
+    agent_confirmpassword: {
+        type: sequelize.STRING
+    },    
 });
 
 module.exports = Agent;

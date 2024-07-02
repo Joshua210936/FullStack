@@ -18,6 +18,7 @@ const Listed_Properties = require('./models/Listed_Properties');
 
 
 
+
 //Routers
 const guestRoute = require("./routes/guest_routes");
 const userRoute = require("./routes/user_routes");
@@ -135,6 +136,8 @@ app.get('/agentLogin', (req,res) => { // User Login page
 app.get('/agentRegister', (req, res) => { // User Registration page
     res.render('Login/agentReg', {layout:'main'});
 });
+
+
 
 app.get('/userAccount', (req,res) => { // User Login page
     res.render('Profile/userAccountManagement', {layout:'userMain'});

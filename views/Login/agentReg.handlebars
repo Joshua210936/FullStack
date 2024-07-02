@@ -28,8 +28,21 @@
             </div>
             <div class="input-group">
                 <label for="agency-license">Agency License Number</label>
-                <input type="text" id="agency-license">
+                <input type="text" id="agency_license">
             </div>
+             <div class="input-group">
+                <label for="agency-license">Agency Registration Number</label>
+                <input type="text" id="agency_registration">
+            </div>
+             </div>
+             <div class="input-group">
+                <label for="agency-license">Agent Bio</label>
+                <textarea type ="text" id="bio"></textarea>
+            </div>
+            <div class="input-group">
+                    <label for="agentPictures">Upload profile picture</label>
+                    <input type="file" id="agentPictures" name="agentPictures" multiple accept="image/*" >
+                </div>
             <div class="input-group position-relative">
                 <label for="password">Password</label>
                 <input type="password" id="password" placeholder="Enter your password">
@@ -39,7 +52,7 @@
                 <label for="confirmPassword">Confirm Password</label>
                 <input type="password" id="confirmPassword" placeholder="Confirm your password">
             </div>
-            <button type="button" class="formbutton" onclick="window.location.href='/agentLogin'">Register</button>
+            <button type="submit" class="formbutton" onclick="window.location.href='/agentLogin'">Register</button>
         </form>
     </div>
 </div>
