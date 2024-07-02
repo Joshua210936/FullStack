@@ -15,6 +15,7 @@ const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const Feedback = require('./models/Feedback');
 const Listed_Properties = require('./models/Listed_Properties');
+const Agent = require('./models/Agent');
 
 
 
@@ -135,6 +136,30 @@ app.get('/agentLogin', (req,res) => { // User Login page
 
 app.get('/agentRegister', (req, res) => { // User Registration page
     res.render('Login/agentReg', {layout:'main'});
+});
+
+app.post('/agentRegister', function(req,res){
+    let{ firstName, lastName, phone, email, agency_license, agency_registration, bio, agentPictures, password, confirmPassword} = req.body;
+    
+    Agent.create({
+        agent_firstName: firstName,
+        agent_lastName: lastName,
+        agent_phoneNumber: phone,
+        agent_email: email,
+        agent_licenseNo: agency_license,
+        agent_registrationNo: agency_registration,
+        agent_bio: bio,
+        agent_image: agentPictures,
+        agent_password: password,
+        agent_confirmpassword: confirmPassword,
+        
+    })
+    .then(agent => {
+        res.status(201).send({ message: 'Agent registered successfully!', agent });
+      })
+    .catch(err => {
+    res.status(400).send({ message: 'Error registering agent', error: err });
+    });
 });
 
 
