@@ -108,16 +108,16 @@ app.post('/login', function(req, res) {
             Customer_Email: email
         }
     })
-    .then(user => {
-        if (!user) {
+    .then(customer => {
+        if (!customer) {
             return res.status(404).send({ message: 'User not found' });
         }
 
-        if (user.Customer_Password !== password) {
+        if (customer.Customer_Password !== password) {
             return res.status(401).send({ message: 'Invalid password' });
         }
 
-        res.status(200).send({ message: 'Login successful!', user });
+        res.status(200).send({ message: 'Login successful!', customer });
     })
     .catch(err => {
         res.status(400).send({ message: 'Error logging in', error: err });
