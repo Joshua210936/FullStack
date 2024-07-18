@@ -37,7 +37,10 @@ const Agent = db.define('agent', {
     },
     agent_confirmpassword: {
         type: sequelize.STRING
-    },    
+    },   
+    status: {
+        type: sequelize.STRING
+    } 
 });
 
 module.exports = Agent;

@@ -1,61 +1,46 @@
 <head>
-    <link rel="stylesheet" href="/css/agentSetprofile.css">
-    <title>Agent Profile Setup - Sigma Properties</title>
+    <!--CSS !-->
+    <link rel="stylesheet" href="/css/userRegister.css">
 </head>
-<body>
-    <div class="container">
-        <aside class="sidebar">
-            <div class="profile-section">
-                <img src="{{agent.agent_image}}" alt="Profile Picture" class="profile-picture">
-                <h2>{{agent.agent_firstName}} {{agent.agent_lastName}}</h2>
+
+<!--Registration Container-->
+<div class="register-page">
+    <div class="logo">Sigma Properties</div>
+    <div class="illustration"></div>
+    <div class="register-box">
+        <div class="welcome-text">Create an Agent Account</div>
+        <form method="post">
+            <div class="input-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" placeholder="Enter your first name">
             </div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#">My Profile</a></li>
-                    <li><a href="#">Manage Listings</a></li>
-                    <li><a href="#">Appointment</a></li>
-                </ul>
-            </nav>
-        </aside>
-        <main class="main-content">
-            <div class="register-box">
-                <div class="welcome-text">Set Up Your Agent Profile</div>
-                <form action="/agentSetprofile" method="post" enctype="multipart/form-data">
-                    <div class="input-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="{{agent.agent_firstName}}">
-                    </div>
-                    <div class="input-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" value="{{agent.agent_lastName}}">
-                    </div>
-                    <div class="input-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="{{agent.agent_phoneNumber}}">
-                    </div>
-                    <div class="input-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Enter your email" value="{{agent.agent_email}}">
-                    </div>
-                    <div class="input-group">
-                        <label for="agency_license">Agency License Number</label>
-                        <input type="text" id="agency_license" name="agency_license" placeholder="Enter your agency license number" value="{{agent.agent_licenseNo}}">
-                    </div>
-                    <div class="input-group">
-                        <label for="agency_registration">Agency Registration Number</label>
-                        <input type="text" id="agency_registration" name="agency_registration" placeholder="Enter your agency registration number" value="{{agent.agent_registrationNo}}">
-                    </div>
-                    <div class="input-group">
-                        <label for="bio">Agent Bio</label>
-                        <textarea id="bio" name="bio" placeholder="Write a short bio about yourself">{{agent.agent_bio}}</textarea>
-                    </div>
-                    <div class="input-group">
-                        <label for="agentPictures">Upload Profile Picture</label>
-                        <input type="file" id="agentPictures" name="agentPictures" accept="image/*">
-                    </div>
-                    <button type="submit" class="formbutton">Update Profile</button>
-                </form>
+            <div class="input-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Enter your last name">
             </div>
-        </main>
+            <div class="input-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+            </div>
+            <div class="input-group">
+                <label for="email">Gmail</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email">
+            </div>
+            <div class="input-group">
+                <label for="agency-license">Agency License Number</label>
+                <input type="text" id="agency_license" name="agency_license" placeholder="Enter your agent license number">
+            </div>
+             
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password">
+                <div class="password-visibility-toggle" onclick="togglePasswordVisibility()"></div>
+            </div>
+            <div class="input-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password">
+            </div>
+            <button type="submit" class="formbutton" onclick="window.location.href='/agentLogin'">Register</button>
+        </form>
     </div>
-</body>
+</div>

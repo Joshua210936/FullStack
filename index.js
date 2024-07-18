@@ -140,7 +140,7 @@ app.get('/agentRegister', (req, res) => { // User Registration page
 });
 
 app.post('/agentRegister', function(req,res){
-    let{ firstName, lastName, phone, email, agency_license, agency_registration, bio, agentPictures, password, confirmPassword} = req.body;
+    let{ firstName, lastName, phone, email, agency_license, agency_registration, bio, agentPictures, password, confirmPassword, status} = req.body;
     
     Agent.create({
         agent_firstName: firstName,
@@ -153,6 +153,7 @@ app.post('/agentRegister', function(req,res){
         agent_image: agentPictures,
         agent_password: password,
         agent_confirmpassword: confirmPassword,
+        status: status
         
     })
     .then(agent => {
@@ -237,9 +238,50 @@ app.get('/adminDashboard', function(req, res){
     res.render('Dashboard/adminDashboard', {layout:'adminMain'});
 });
 
-app.get('/adminAgentsView', function(req, res){
-    res.render('adminAgentsView', {layout:'adminMain'});
+
+app.get('/adminAgentsView', function (req, res) {
+    Agent.findAll()
+        .then(agents => {
+            res.render('adminAgentsView', {
+                layout: 'adminmain',
+                agents: agents.map(agent => {
+                    agent = agent.get({ plain: true });
+
+                    return agent;
+                })
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching agent:', err);
+            res.status(500).send('Internal Server Error');
+        });
 });
+
+// POST route to approve an agent
+app.post('/approveAgent/:id', async (req, res) => {
+    const agentId = req.params.id;
+
+    try {
+        // Find the agent by ID
+        const agent = await Agent.findByPk(agentId);
+
+        if (!agent) {
+            return res.status(404).json({ error: 'Agent not found' });
+        }
+
+        // Update the agent's status to 'approved'
+        agent.status = 'approved';
+        await agent.save();
+
+        res.status(200).json({ message: 'Agent approved successfully', agent });
+    } catch (error) {
+        console.error('Error approving agent:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
 
 app.get('/adminUsersView', function(req, res){
     res.render('adminUsersView', {layout:'adminMain'});
