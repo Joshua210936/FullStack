@@ -30,6 +30,7 @@ const adminRoute = require("./routes/admin_routes");
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 const { password } = require('./config/db.js');
 
+
 //routers
 app.use('/', guestRoute);
 app.use('/user', userRoute);
@@ -164,6 +165,11 @@ app.post('/agentRegister', function(req,res){
 
 
 
+app.get('/agentSetprofile', (req,res) => { // User Login page
+    res.render('Property Agent/agentSetprofile', {layout:'userMain'});
+});
+
+  
 app.get('/userAccount', (req,res) => { // User Login page
     res.render('Profile/userAccountManagement', {layout:'userMain'});
 });
@@ -208,6 +214,12 @@ app.post('/agentListProperty', function(req,res){
     res.status(400).send({ message: 'Error listing property', error: err });
     });
 });
+
+
+
+
+
+
 
 app.get('/propertyAgentProfile', function(req, res){
     res.render('Property Agent/propertyAgentProfile', {layout:'userMain'});
