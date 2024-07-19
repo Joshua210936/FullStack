@@ -51,37 +51,19 @@
             <button type="button" onclick="sortAgents()" class="agentform-buttonsubmit">Sort</button>
         </form>
     </div>
-    <section class="agents-list" id="agents-list">
-    <div class="agent" >
-        <img src="images/agent1.jpg" alt="Chia Jyh Kwang Alan">
-        <div class="agent-info">
-            <h3>Kwang Alan</h3>
-            <p>ERA REALTY NETWORK PTE LTD</p>
-            <a href="/propertyAgentProfile"><button class="agentform-buttonsubmit">View Profile</button></a>
-            <a href="/../schedule" class="agentform-buttonschedule">Schedule Appointment</a>
+      <section class="agents-list" id="agents-list">
+        {{#each agents}}
+        <div class="agent">
+            <div class="agent-info">
+                <h3>{{this.agent_firstName}} {{this.agent_lastName}}</h3>
+                <p>Agent License Number: {{this.agent_licenseNo}}</p>
+                <a href="/agent-profile/{{this.id}}"><button class="agentform-buttonsubmit">View Profile</button></a>
+                <a href="/schedule" class="agentform-buttonschedule">Schedule Appointment</a>
+            </div>
         </div>
-    </div>
-    <div class="agent">
-        <img src="images/agent2.jpg" alt="Marcos Lee">
-        <div class="agent-info">
-            <h3>Marcos Lee</h3>
-            <p>ERA REALTY NETWORK PTE LTD</p>
-            <a href="/propertyAgentProfile"><button class="agentform-buttonsubmit">View Profile</button></a>
-            <a href="/../schedule" class="agentform-buttonschedule">Schedule Appointment</a>
-        </div>
-    </div>
-    <div class="agent">
-        <img src="images/agent3.jpg" alt="Nicole Chan">
-        <div class="agent-info">
-            <h3>Nicole Chan</h3>
-            <p>PROPNEX REALTY PTE LTD</p>
-            <a href="/propertyAgentProfile"><button class="agentform-buttonsubmit">View Profile</button></a>
-            <a href="/../schedule" class="agentform-buttonschedule">Schedule Appointment</a>
-
-        </div>
-    </div>
- 
-</section>
+        {{/each}}
+    </section>
+</body>
 
     </section>
 </div>

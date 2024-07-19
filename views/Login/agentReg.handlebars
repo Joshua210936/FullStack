@@ -9,37 +9,38 @@
     <div class="illustration"></div>
     <div class="register-box">
         <div class="welcome-text">Create an Agent Account</div>
-        <form>
+        <form method="post">
             <div class="input-group">
                 <label for="firstName">First Name</label>
-                <input type="text" id="firstName" placeholder="Enter your first name">
+                <input type="text" id="firstName" name="firstName" placeholder="Enter your first name">
             </div>
             <div class="input-group">
                 <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" placeholder="Enter your last name">
+                <input type="text" id="lastName" name="lastName" placeholder="Enter your last name">
             </div>
             <div class="input-group">
                 <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" placeholder="Enter your phone number">
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
             </div>
             <div class="input-group">
                 <label for="email">Gmail</label>
-                <input type="email" id="email" placeholder="Enter your email">
+                <input type="email" id="email" name="email" placeholder="Enter your email">
             </div>
             <div class="input-group">
                 <label for="agency-license">Agency License Number</label>
-                <input type="text" id="agency-license">
+                <input type="text" id="agency_license" name="agency_license" placeholder="Enter your agent license number">
             </div>
-            <div class="input-group position-relative">
+             
+            <div class="input-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your password">
+                <input type="password" id="password" name="password" placeholder="Enter your password">
                 <div class="password-visibility-toggle" onclick="togglePasswordVisibility()"></div>
             </div>
             <div class="input-group">
                 <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" placeholder="Confirm your password">
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password">
             </div>
-            <button type="button" class="formbutton" onclick="window.location.href='/agentLogin'">Register</button>
+            <button type="submit" class="formbutton" onclick="window.location.href='/agentLogin'">Register</button>
         </form>
     </div>
 </div>

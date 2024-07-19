@@ -55,10 +55,13 @@ router.post('/register', function(req, res) {
         Customer_cPassword: confirmPassword
     })
     .then(user => {
-        res.status(201).send({ message: 'User registered successfully!', user });
+        console.log('User registered:');
+        //res.status(201).send({ message: 'User registered successfully!', user });
+        // Redirect to login page
+        res.redirect('/login');
     })
     .catch(err => {
-        res.status(400).send({ message: 'Error registering user', error: err });
+        // res.status(400).send({ message: 'Error registering user', error: err });
     });
 });
 

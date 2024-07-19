@@ -1,80 +1,63 @@
 <head>
+    <title>Admin Agents View</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="css/adminAgentView.css">
-    <script src="js/adminAgentView.js"></script>
-
+    <link rel="stylesheet" href="/css/adminAgentView.css">
+    <script src="/js/adminAgentView.js" defer></script>
 </head>
-<div class="tabbed-groups">
-    <h1 class="text-center">Agents</h1>
-     <div class="search">
-                            <span class="search-icon material-symbols-outlined">search</span>
-                            <input class="search-input" type="search" placeholder="Search Agent">
-                            <button class="filter-icon" ><span class="material-symbols-outlined">tune</span>  </button>
-                        </div> 
-    <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'approved')">Approved Agents</button>
-        <button class="tablinks" onclick="openTab(event, 'unapproved')">Unapproved Agents</button>
+<body>
+    <div class="tabbed-groups">
+        <h1 class="text-center">Agents</h1>
+        <div class="search">
+            <span class="search-icon material-symbols-outlined">search</span>
+            <input class="search-input" type="search" placeholder="Search Agent">
+            <button class="filter-icon"><span class="material-symbols-outlined">tune</span></button>
+        </div>
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'unapproved')">Unapproved Agents</button>
+            <button class="tablinks" onclick="openTab(event, 'approved')">Approved Agents</button>
+        </div>
+
+        <div id="unapproved" class="tabcontent">
+            <!-- Content for Unapproved Agents tab -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="unapprovedAgentsTable">
+                    <!-- Unapproved agents will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="approved" class="tabcontent">
+            <!-- Content for Approved Agents tab -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="approvedAgentsTable">
+                    <!-- Approved agents will be populated here -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div id="approved" class="tabcontent">
-        <!-- Content for Approved Agents tab -->
-        <table>
-            <!-- Table for Approved Agents -->
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Agent 1</td>
-                    <td>agent1@example.com</td>
-                    <td>Approved</td>
-                </tr>
-                  <tr>
-                    <td>Agent 4</td>
-                    <td>agent4@example.com</td>
-                    <td>Approved</td>
-                </tr>  <tr>
-                    <td>Agent 5</td>
-                    <td>agent5@example.com</td>
-                    <td>Approved</td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- Modal for Agent Profile -->
+    <div id="agentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Agent Profile</h2>
+            <div id="agentProfileContent">
+                <!-- Agent details will be populated here -->
+            </div>
+        </div>
     </div>
-
-    <div id="unapproved" class="tabcontent">
-        <!-- Content for Unapproved Agents tab -->
-        <table>
-            <!-- Table for Unapproved Agents -->
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Agent 2</td>
-                    <td>agent2@example.com</td>
-                    <td>Unapproved</td>
-                </tr>
-                  <tr>
-                    <td>Agent 3</td>
-                    <td>agent3@example.com</td>
-                    <td>Unapproved</td>
-                </tr>
-                  <tr>
-                    <td>Agent 6</td>
-                    <td>agent6@example.com</td>
-                    <td>Unapproved</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-</div>
+</body>

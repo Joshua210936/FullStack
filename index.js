@@ -15,6 +15,9 @@ const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const Feedback = require('./models/Feedback');
 const Listed_Properties = require('./models/Listed_Properties');
+const Agent = require('./models/Agent');
+
+
 
 
 //Routers
@@ -27,6 +30,7 @@ const feedbackRoute = require("./routes/feedback.js");
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 const { password } = require('./config/db.js');
+
 
 //routers
 app.use('/', guestRoute);
@@ -113,16 +117,16 @@ app.post('/login', function(req, res) {
             Customer_Email: email
         }
     })
-    .then(user => {
-        if (!user) {
+    .then(customer => {
+        if (!customer) {
             return res.status(404).send({ message: 'User not found' });
         }
 
-        if (user.Customer_Password !== password) {
+        if (customer.Customer_Password !== password) {
             return res.status(401).send({ message: 'Invalid password' });
         }
 
-        res.status(200).send({ message: 'Login successful!', user });
+        res.status(200).send({ message: 'Login successful!', customer });
     })
     .catch(err => {
         res.status(400).send({ message: 'Error logging in', error: err });
@@ -143,6 +147,38 @@ app.get('/agentRegister', (req, res) => { // User Registration page
     res.render('Login/agentReg', {layout:'main'});
 });
 
+app.post('/agentRegister', function(req,res){
+    let{ firstName, lastName, phone, email, agency_license, agency_registration, bio, agentPictures, password, confirmPassword, status} = req.body;
+    
+    Agent.create({
+        agent_firstName: firstName,
+        agent_lastName: lastName,
+        agent_phoneNumber: phone,
+        agent_email: email,
+        agent_licenseNo: agency_license,
+        agent_registrationNo: agency_registration,
+        agent_bio: bio,
+        agent_image: agentPictures,
+        agent_password: password,
+        agent_confirmpassword: confirmPassword,
+        status: status
+        
+    })
+    .then(agent => {
+        res.status(201).send({ message: 'Agent registered successfully!', agent });
+      })
+    .catch(err => {
+    res.status(400).send({ message: 'Error registering agent', error: err });
+    });
+});
+
+
+
+app.get('/agentSetprofile', (req,res) => { // User Login page
+    res.render('Property Agent/agentSetprofile', {layout:'userMain'});
+});
+
+  
 app.get('/userAccount', (req,res) => { // User Login page
     res.render('Profile/userAccountManagement', {layout:'userMain'});
 });
@@ -188,12 +224,38 @@ app.post('/agentListProperty', function(req,res){
     });
 });
 
+
+
+
+
+
+
 app.get('/propertyAgentProfile', function(req, res){
     res.render('Property Agent/propertyAgentProfile', {layout:'userMain'});
 });
 
-app.get('/findAgents', function(req, res){
-    res.render('Property Agent/findAgents', {layout:'main'});
+
+app.get('/findAgents', function (req, res) {
+    // Assuming you have a model named `Agent` for fetching agents
+    Agent.findAll({
+        where: {
+            status: 'approved'
+        }
+    })
+    .then(agents => {
+        // Convert agents to plain objects for rendering
+        res.render('Property Agent/findAgents', {
+            layout: 'main',
+            agents: agents.map(agent => {
+                agent = agent.get({ plain: true });
+                return agent;
+            })
+        });
+    })
+    .catch(err => {
+        console.error('Error fetching agents:', err);
+        res.status(500).send('Internal Server Error');
+    });
 });
 
 app.get('/schedule', function(req, res){
@@ -204,9 +266,86 @@ app.get('/adminDashboard', function(req, res){
     res.render('Dashboard/adminDashboard', {layout:'adminMain'});
 });
 
-app.get('/adminAgentsView', function(req, res){
-    res.render('adminAgentsView', {layout:'adminMain'});
+
+app.get('/adminAgentsView', function (req, res) {
+    Agent.findAll()
+        .then(agents => {
+            res.render('adminAgentsView', {
+                layout: 'adminmain',
+                agents: agents.map(agent => {
+                    agent = agent.get({ plain: true });
+
+                    return agent;
+                })
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching agent:', err);
+            res.status(500).send('Internal Server Error');
+        });
 });
+
+app.get('/agents', async (req, res) => {
+    try {
+        const agents = await Agent.findAll();
+        res.json(agents);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching agents', error });
+    }
+});
+
+// Approve an agent
+app.post('/approveAgent/:id', async (req, res) => {
+    const agentId = req.params.id;
+    try {
+        const agent = await Agent.findByPk(agentId);
+        if (agent) {
+            agent.status = 'approved';
+            await agent.save();
+            res.json({ message: 'Agent approved successfully', agent });
+        } else {
+            res.status(404).json({ message: 'Agent not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error approving agent', error });
+    }
+});
+
+// Unapprove an agent
+app.post('/unapproveAgent/:id', async (req, res) => {
+    const agentId = req.params.id;
+    try {
+        const agent = await Agent.findByPk(agentId);
+        if (agent) {
+            agent.status = 'unapproved';
+            await agent.save();
+            res.json({ message: 'Agent unapproved successfully', agent });
+        } else {
+            res.status(404).json({ message: 'Agent not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error unapproving agent', error });
+    }
+});
+
+// Assuming Express is used
+app.get('/getAgent/:id', async (req, res) => {
+    const agentId = req.params.id;
+    try {
+        const agent = await Agent.findByPk(agentId);
+        if (agent) {
+            res.json(agent);
+        } else {
+            res.status(404).json({ message: 'Agent not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching agent details', error });
+    }
+});
+
+
+
+
 
 app.get('/adminUsersView', function(req, res){
     res.render('adminUsersView', {layout:'adminMain'});
