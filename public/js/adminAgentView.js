@@ -18,53 +18,130 @@ function openTab(evt, tabName) {
     evt.currentTarget.classList.add("active");
 }
 
-   // JavaScript to handle approval action
-   document.addEventListener('DOMContentLoaded', () => {
-    const approveForms = document.querySelectorAll('.approve-form');
-    approveForms.forEach(form => {
-        form.addEventListener('submit', async (event) => {
+document.addEventListener('DOMContentLoaded', () => {
+    const unapprovedAgentsTable = document.getElementById('unapprovedAgentsTable');
+    const approvedAgentsTable = document.getElementById('approvedAgentsTable');
+    const agentProfileContent = document.getElementById('agentProfileContent');
+    const modal = document.getElementById("agentModal");
+    const span = document.getElementsByClassName("close")[0];
+
+    // Fetch agents from the backend and populate the tables
+    async function fetchAgents() {
+        try {
+            const response = await fetch('/agents');
+            const agents = await response.json();
+            agents.forEach(agent => {
+                if (agent.status === 'approved') {
+                    approvedAgentsTable.appendChild(createAgentRow(agent, 'approved'));
+                } else {
+                    unapprovedAgentsTable.appendChild(createAgentRow(agent, 'unapproved'));
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching agents:', error);
+        }
+    }
+
+    function createAgentRow(agent, status) {
+        const tr = document.createElement('tr');
+        tr.id = `${status}AgentRow${agent.agent_id}`;
+        tr.innerHTML = `
+            <td><a href="#" class="agent-name" data-agent-id="${agent.agent_id}">${agent.agent_firstName || 'N/A'} ${agent.agent_lastName || 'N/A'}</a></td>
+            <td>${agent.agent_email || 'N/A'}</td>
+            <td>
+                <form class="${status === 'approved' ? 'unapprove-form' : 'approve-form'}" data-agent-id="${agent.agent_id}">
+                    <button type="submit" class="${status === 'approved' ? 'unapprove-button' : 'approve-button'}">${status === 'approved' ? 'Unapprove' : 'Approve'}</button>
+                </form>
+            </td>
+        `;
+        return tr;
+    }
+
+    // Handle approval action
+    document.addEventListener('submit', async (event) => {
+        if (event.target.classList.contains('approve-form') || event.target.classList.contains('unapprove-form')) {
             event.preventDefault();
             const formElement = event.target;
             const agentId = formElement.dataset.agentId;
+            const isApproving = formElement.classList.contains('approve-form');
 
             try {
-                const response = await fetch(`/approveAgent/${agentId}`, {
+                const response = await fetch(`/${isApproving ? 'approveAgent' : 'unapproveAgent'}/${agentId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
-                    },
+                    }
                 });
                 const data = await response.json();
                 console.log(data); // Log the response for debugging
 
-                // Move the approved agent row to the approved section
-                const agentRow = document.getElementById(`agentRow${agentId}`);
-                const approvedAgentsTable = document.querySelector('#approved table tbody');
-                if (agentRow && approvedAgentsTable) {
-                    agentRow.remove(); // Remove from unapproved section
-                    
-                    // Create a new row for the approved section
-                    const approvedAgentRow = document.createElement('tr');
-                    approvedAgentRow.id = `approvedAgentRow${data.agent.agent_id}`;
-                    approvedAgentRow.innerHTML = `
-                        <td>${data.agent.agent_firstName} ${data.agent.agent_lastName}</td>
-                        <td>${data.agent.agent_email}</td>
-                        <td>
-                            <form class="unapprove-form" action="/unapproveAgent/${data.agent.agent_id}" method="POST" data-agent-id="${data.agent.agent_id}">
-                                <button type="submit" class="unapprove-button">Unapprove</button>
-                            </form>
-                        </td>
-                    `;
-                    approvedAgentsTable.appendChild(approvedAgentRow); // Append to approved section
+                if (response.ok) {
+                    // Move the agent row to the appropriate section
+                    const agentRow = document.getElementById(`${isApproving ? 'agentRow' : 'approvedAgentRow'}${agentId}`);
+                    const targetTable = isApproving ? approvedAgentsTable : unapprovedAgentsTable;
+                    if (agentRow && targetTable) {
+                        agentRow.remove();
+                        agentRow.id = `${isApproving ? 'approvedAgentRow' : 'agentRow'}${agentId}`;
+                        agentRow.querySelector('form').className = isApproving ? 'unapprove-form' : 'approve-form';
+                        agentRow.querySelector('button').className = isApproving ? 'unapprove-button' : 'approve-button';
+                        agentRow.querySelector('button').textContent = isApproving ? 'Unapprove' : 'Approve';
+                        targetTable.appendChild(agentRow);
+                    }
+                } else {
+                    console.error('Failed to update agent status:', data.message);
                 }
-
             } catch (error) {
-                console.error('Error approving agent:', error);
-                // Handle error (e.g., display error message to user)
+                console.error('Error updating agent status:', error);
             }
-        });
+        }
     });
+
+    // Function to fetch and display agent profile in a modal
+    document.addEventListener('click', async (event) => {
+        if (event.target.classList.contains('agent-name')) {
+            event.preventDefault();
+            const agentId = event.target.dataset.agentId;
+
+            try {
+                const response = await fetch(`/getAgent/${agentId}`);
+                const agent = await response.json();
+
+                if (response.ok) {
+                    agentProfileContent.innerHTML = `
+                        <p><strong>Name:</strong> ${agent.agent_firstName || 'N/A'} ${agent.agent_lastName || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${agent.agent_email || 'N/A'}</p>
+                        <p><strong>Phone Number:</strong> ${agent.agent_phoneNumber || 'N/A'}</p>
+                        <p><strong>License No:</strong> ${agent.agent_licenseNo || 'N/A'}</p>
+                        <p><strong>Registration No:</strong> ${agent.agent_registrationNo || 'N/A'}</p>
+                        <p><strong>Bio:</strong> ${agent.agent_bio || 'N/A'}</p>
+                    `;
+                    modal.style.display = "block";
+                } else {
+                    console.error('Failed to fetch agent details:', agent.message);
+                }
+            } catch (error) {
+                console.error('Error fetching agent details:', error);
+            }
+        }
+    });
+
+    // Close the modal when the user clicks on <span> (x)
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Close the modal when the user clicks anywhere outside of the modal
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Fetch and render agents on page load
+    fetchAgents();
 });
+
+
 
 
 

@@ -257,28 +257,64 @@ app.get('/adminAgentsView', function (req, res) {
         });
 });
 
-// POST route to approve an agent
-app.post('/approveAgent/:id', async (req, res) => {
-    const agentId = req.params.id;
-
+app.get('/agents', async (req, res) => {
     try {
-        // Find the agent by ID
-        const agent = await Agent.findByPk(agentId);
-
-        if (!agent) {
-            return res.status(404).json({ error: 'Agent not found' });
-        }
-
-        // Update the agent's status to 'approved'
-        agent.status = 'approved';
-        await agent.save();
-
-        res.status(200).json({ message: 'Agent approved successfully', agent });
+        const agents = await Agent.findAll();
+        res.json(agents);
     } catch (error) {
-        console.error('Error approving agent:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ message: 'Error fetching agents', error });
     }
 });
+
+// Approve an agent
+app.post('/approveAgent/:id', async (req, res) => {
+    const agentId = req.params.id;
+    try {
+        const agent = await Agent.findByPk(agentId);
+        if (agent) {
+            agent.status = 'approved';
+            await agent.save();
+            res.json({ message: 'Agent approved successfully', agent });
+        } else {
+            res.status(404).json({ message: 'Agent not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error approving agent', error });
+    }
+});
+
+// Unapprove an agent
+app.post('/unapproveAgent/:id', async (req, res) => {
+    const agentId = req.params.id;
+    try {
+        const agent = await Agent.findByPk(agentId);
+        if (agent) {
+            agent.status = 'unapproved';
+            await agent.save();
+            res.json({ message: 'Agent unapproved successfully', agent });
+        } else {
+            res.status(404).json({ message: 'Agent not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error unapproving agent', error });
+    }
+});
+
+// Assuming Express is used
+app.get('/getAgent/:id', async (req, res) => {
+    const agentId = req.params.id;
+    try {
+        const agent = await Agent.findByPk(agentId);
+        if (agent) {
+            res.json(agent);
+        } else {
+            res.status(404).json({ message: 'Agent not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching agent details', error });
+    }
+});
+
 
 
 
