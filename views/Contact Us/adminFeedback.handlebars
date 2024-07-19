@@ -1,29 +1,21 @@
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="css/adminFeedback.css">
-    <link rel="javascript" href="adminFeedback.js">
     <link rel="javascript" href="handlebarFunctions.js">
+    <script src="adminFeedback.js"></script>
 </head>
 
-<div class="wrapper">
-    <div class="sidebar">
-        <ul>
-            <li>
-                <a href="#" id="all-link">All Feedback</a>
-            </li>
-            <li>
-                <a href="#" id="issues-link">Issues</a>
-            </li>
-            <li>
-                <a href="#" id="feedbacks-link">Suggestions</a>
-            </li>
-            <li>
-                <a href="#" id="others-link">Others</a>
-            </li>
-        </ul>
-    </div>
-    <div class="displayFeedback">
-        {{#if feedback}}
+<div class="tab">
+  <button class="tablinks" onclick="openFeedback(event, 'allFeedback')">All Feedback</button>
+  <button class="tablinks" onclick="openFeedback(event, 'Issues')">Issues</button>
+  <button class="tablinks" onclick="openFeedback(event, 'Suggestions')">Suggestions</button>
+  <button class="tablinks" onclick="openFeedback(event, 'Other')">Others</button>
+</div>
+
+<div class="allFeedback" id="allFeedback" class="tabcontent">
+    <div class="wrapper">
+        <div class="displayFeedback">
+            {{#if feedback}}
             <h3>Feedback</h3>
             <table class="feedbackTable">
                 <thead>
@@ -38,7 +30,7 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-            {{#each feedback}}
+                {{#each feedback}}
                 <div class="feedback-item">
                     <tr>
                         <td>{{this.feedback_id}}</td>
@@ -51,11 +43,11 @@
                         <td>
                             {{#ifEquals this.feedback_status "Pending"}}
                                 <button type="button" class="btn btn-primary" href="/admin/ViewFeedback">View</button>
-                                <form action="/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post" id="saveFeedback">
+                                <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post" id="saveFeedback">
                                     <input type="hidden" name="_method" value="PUT">
-                                    <button type="submit" class="btn btn-primary">
-                                        Save
-                                    </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            Save
+                                        </button>
                                 </form>
                             {{else}}
                                 <button type="submit" class="btn btn-primary">View</button>
@@ -63,10 +55,14 @@
                         </td>
                     </tr>
                 </div>
-            {{/each}}
+                {{/each}}
             </table>
-        {{else}}
+            {{else}}
             <p>No feedback received</p>
-        {{/if}}
+            {{/if}}
+        </div>
     </div>
+</div>
+<div id="Issues" class="tabcontent">
+    <p> Issues Div</p>
 </div>

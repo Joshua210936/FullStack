@@ -21,6 +21,7 @@ const Listed_Properties = require('./models/Listed_Properties');
 const guestRoute = require("./routes/guest_routes");
 const userRoute = require("./routes/user_routes");
 const adminRoute = require("./routes/admin_routes");
+const feedbackRoute = require("./routes/feedback.js");
 
 
 //Imported helpers
@@ -31,13 +32,13 @@ const { password } = require('./config/db.js');
 app.use('/', guestRoute);
 app.use('/user', userRoute);
 app.use('/admin', adminRoute);
+app.use('/feedback', feedbackRoute);
 
 app.use(bodyParser.urlencoded({extended:true})); 
 app.use(express.static(path.join(__dirname, '/public'))); 
 app.use(flash());
 app.use(methodOverride('_method'));
 
-// Can you guys check if these codes are needed
 const options = {
     host: db.host,
     port: db.port,
@@ -54,8 +55,15 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
-// The codes end here
 
+// Sets our js files to be the correct MIME type. Dont delete or js files wont be linked due to an error
+app.use(express.static('public/js', {
+    setHeaders: (res, path, stat) => {
+      if (path.endsWith('.js')) {
+        res.set('Content-Type', 'application/javascript');
+      }
+    }
+  }));
 
 app.engine('handlebars', exphbs.engine({ //part of handlebars setup
     layoutsDir:__dirname+'/views/layouts',
