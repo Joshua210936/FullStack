@@ -26,4 +26,8 @@ router.get('/test', (req, res)=>{
     res.redirect('/adminDashboard')
 })
 
+router.get('/adminDashboard', (req, res)=> {
+    res.render('Dashboard/adminDashboard', {layout:'adminMain'});
+})
+
 module.exports = router;

@@ -12,6 +12,11 @@ router.use(methodOverride('_method'));
 //Database imports
 const Feedback = require('../models/Feedback');
 
+router.get('/contactUs', function(req, res){
+    console.log('found');
+    res.render('Contact Us/contactUs', {layout:'main'});
+});
+
 router.get('/feedbackForm', function(req, res){
     console.log('found');
     res.render('Contact Us/feedbackForm', {layout:'main'});
@@ -21,7 +26,7 @@ router.post('/feedbackForm', function (req, res) {
     console.log(req.body);
     let { Name, Email, VisitReason, Description, Rating } = req.body;
     let FeedbackDate = moment().format('YYYY/MM/DD');
-    let Status = "Pending";
+    let Status = "Normal";
 
     Feedback.create({ 
         feedback_type: VisitReason, 

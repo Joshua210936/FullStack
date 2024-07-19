@@ -18,13 +18,11 @@ const Listed_Properties = require('./models/Listed_Properties');
 const Agent = require('./models/Agent');
 
 
-
-
 //Routers
 const guestRoute = require("./routes/guest_routes");
 const userRoute = require("./routes/user_routes");
 const adminRoute = require("./routes/admin_routes");
-const feedbackRoute = require("./routes/feedback.js");
+const feedbackRoute = require("./routes/feedback");
 
 
 //Imported helpers
@@ -224,12 +222,6 @@ app.post('/agentListProperty', function(req,res){
     });
 });
 
-
-
-
-
-
-
 app.get('/propertyAgentProfile', function(req, res){
     res.render('Property Agent/propertyAgentProfile', {layout:'userMain'});
 });
@@ -260,10 +252,6 @@ app.get('/findAgents', function (req, res) {
 
 app.get('/schedule', function(req, res){
     res.render('schedule', {layout:'userMain'});
-});
-
-app.get('/adminDashboard', function(req, res){
-    res.render('Dashboard/adminDashboard', {layout:'adminMain'});
 });
 
 
