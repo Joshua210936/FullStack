@@ -16,32 +16,29 @@ const MySQLStore = require('express-mysql-session')(session);
 const Feedback = require('./models/Feedback');
 const Listed_Properties = require('./models/Listed_Properties');
 const Agent = require('./models/Agent');
-
-
-
+const Customer = require('./models/custUser');
 
 //Routers
 const guestRoute = require("./routes/guest_routes");
 const userRoute = require("./routes/user_routes");
 const adminRoute = require("./routes/admin_routes");
-
+const feedbackRoute = require("./routes/feedback.js");
 
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 const { password } = require('./config/db.js');
 
-
 //routers
 app.use('/', guestRoute);
 app.use('/user', userRoute);
 app.use('/admin', adminRoute);
+app.use('/feedback', feedbackRoute);
 
 app.use(bodyParser.urlencoded({extended:true})); 
 app.use(express.static(path.join(__dirname, '/public'))); 
 app.use(flash());
 app.use(methodOverride('_method'));
 
-// Can you guys check if these codes are needed
 const options = {
     host: db.host,
     port: db.port,
@@ -58,8 +55,15 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
-// The codes end here
 
+// Sets our js files to be the correct MIME type. Dont delete or js files wont be linked due to an error
+app.use(express.static('public/js', {
+    setHeaders: (res, path, stat) => {
+      if (path.endsWith('.js')) {
+        res.set('Content-Type', 'application/javascript');
+      }
+    }
+  }));
 
 app.engine('handlebars', exphbs.engine({ //part of handlebars setup
     layoutsDir:__dirname+'/views/layouts',
@@ -101,32 +105,7 @@ app.get('/login', (req,res) => { // User Login page
     res.render('Login/userlogin', {layout:'main'});
 });
 
-app.post('/login', function(req, res) {
-    let { email, password } = req.body;
-
-    Customer.findOne({
-        where: {
-            Customer_Email: email
-        }
-    })
-    .then(customer => {
-        if (!customer) {
-            return res.status(404).send({ message: 'User not found' });
-        }
-
-        if (customer.Customer_Password !== password) {
-            return res.status(401).send({ message: 'Invalid password' });
-        }
-
-        res.status(200).send({ message: 'Login successful!', customer });
-    })
-    .catch(err => {
-        res.status(400).send({ message: 'Error logging in', error: err });
-    });
-});
-
 app.get('/register', (req, res) => { // User Registration page
-    console.log("In register page")
     res.render('Login/userReg', {layout:'main'});
 });
 
@@ -166,7 +145,7 @@ app.post('/agentRegister', function(req,res){
 
 
 
-app.get('/agentSetprofile', (req,res) => { // User Login page
+app.get('/agentSetprofile', (req,res) => { // Agent Set profile page
     res.render('Property Agent/agentSetprofile', {layout:'userMain'});
 });
 
@@ -175,7 +154,7 @@ app.get('/userAccount', (req,res) => { // User Login page
     res.render('Profile/userAccountManagement', {layout:'userMain'});
 });
 
-app.get('/agentAccount', (req, res) => { // User Registration page
+app.get('/agentAccount', (req, res) => { // Agent account management page
     res.render('Profile/agentAccountManagement', {layout:'userMain'});
 });
 
@@ -215,12 +194,6 @@ app.post('/agentListProperty', function(req,res){
     res.status(400).send({ message: 'Error listing property', error: err });
     });
 });
-
-
-
-
-
-
 
 app.get('/propertyAgentProfile', function(req, res){
     res.render('Property Agent/propertyAgentProfile', {layout:'userMain'});
@@ -280,10 +253,6 @@ app.get('/propertyAgentProfile/:id', function (req, res) {
 
 app.get('/schedule', function(req, res){
     res.render('schedule', {layout:'userMain'});
-});
-
-app.get('/adminDashboard', function(req, res){
-    res.render('Dashboard/adminDashboard', {layout:'adminMain'});
 });
 
 

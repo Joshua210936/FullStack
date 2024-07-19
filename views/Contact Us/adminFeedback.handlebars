@@ -1,72 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/adminFeedback.css">
-    <link rel="javascript" href="adminFeedback.js">
-    <link rel="javascript" href="handlebarFunctions.js">
+    <script src="handlebarFunctions.js" defer></script>
+    <script src="adminFeedback.js" defer></script>
+    <title>Feedback Management</title>
 </head>
 
-<div class="wrapper">
-    <div class="sidebar">
-        <ul>
-            <li>
-                <a href="#" id="all-link">All Feedback</a>
+<body>
+    <div class="container mt-4 pt-5">
+        <div class="col text-center">
+            <h2>View Feedback</h2>
+        </div>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <button class="nav-link active" onclick="openFeedback(event, 'allFeedback')">All Feedback</button>
             </li>
-            <li>
-                <a href="#" id="issues-link">Issues</a>
+            <li class="nav-item">
+                <button class="nav-link" onclick="openFeedback(event, 'Issues')">Issues</button>
             </li>
-            <li>
-                <a href="#" id="feedbacks-link">Suggestions</a>
+            <li class="nav-item">
+                <button class="nav-link" onclick="openFeedback(event, 'Suggestions')">Suggestions</button>
             </li>
-            <li>
-                <a href="#" id="others-link">Others</a>
+            <li class="nav-item">
+                <button class="nav-link" onclick="openFeedback(event, 'Other')">Others</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="openFeedback(event, 'Saved Feedback')">Saved Feedback</button>
             </li>
         </ul>
     </div>
-    <div class="displayFeedback">
-        {{#if feedback}}
-            <h3>Feedback</h3>
-            <table class="feedbackTable">
-                <thead>
-                    <tr>
-                        <th>Feedback ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Rating</th>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-            {{#each feedback}}
-                <div class="feedback-item">
-                    <tr>
-                        <td>{{this.feedback_id}}</td>
-                        <td>{{this.feedback_name}}</td>
-                        <td>{{this.feedback_email}}</td>
-                        <td>{{concat this.feedback_rating "/5"}}</td>
-                        <td>{{formatDate feedback_date 'DD MMM YYYY'}}</td>
-                        <td>{{this.feedback_description}}</td>
-                        <td>{{this.feedback_status}}</td>
-                        <td>
-                            {{#ifEquals this.feedback_status "Pending"}}
-                                <button type="button" class="btn btn-primary" href="/admin/ViewFeedback">View</button>
-                                <form action="/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post" id="saveFeedback">
-                                    <input type="hidden" name="_method" value="PUT">
-                                    <button type="submit" class="btn btn-primary">
-                                        Save
-                                    </button>
-                                </form>
-                            {{else}}
-                                <button type="submit" class="btn btn-primary">View</button>
-                            {{/ifEquals}}
-                        </td>
-                    </tr>
-                </div>
-            {{/each}}
-            </table>
-        {{else}}
-            <p>No feedback received</p>
-        {{/if}}
+
+    <div id="allFeedback" class="tabcontent container mt-4">
+        <div class="wrapper">
+            <div class="displayFeedback">
+                {{#if feedback}}
+                <h3>Feedback</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Feedback ID</th>
+                            <th class="text-center">Feedback Type</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Rating</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Description</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each feedback}}
+                        <tr>
+                            <td>{{this.feedback_id}}</td>
+                            <td>{{this.feedback_type}}</td>
+                            <td>{{this.feedback_name}}</td>
+                            <td>{{this.feedback_email}}</td>
+                            <td>{{concat this.feedback_rating "/5"}}</td>
+                            <td>{{formatDate feedback_date 'DD MMM YYYY'}}</td>
+                            <td>{{this.feedback_description}}</td>
+                            <td>{{this.feedback_status}}</td>
+                            <td>
+                                {{#ifEquals this.feedback_status "Normal"}}
+                                <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
+                                    <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                    <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post"
+                                        class="d-inline">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <button type="submit" class="btn btn-success">Save</button>
+                                    </form>
+                                </div>
+                                {{else}}
+                                <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                {{/ifEquals}}
+                            </td>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+                {{else}}
+                <p>No feedback received</p>
+                {{/if}}
+            </div>
+        </div>
     </div>
-</div>
+
+    <div id="Issues" class="tabcontent container mt-4">
+        <div class="wrapper">
+            <div class="displayFeedback" id="displayIssues">
+                {{#if feedback}}
+                <h3>Issues</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Feedback ID</th>
+                            <th class="text-center">Feedback Type</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Rating</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Description</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each feedback}}
+                        {{#ifEquals this.feedback_type "Report an issue"}}
+                        <tr>
+                            <td>{{this.feedback_id}}</td>
+                            <td>{{this.feedback_type}}</td>
+                            <td>{{this.feedback_name}}</td>
+                            <td>{{this.feedback_email}}</td>
+                            <td>{{concat this.feedback_rating "/5"}}</td>
+                            <td>{{formatDate feedback_date 'DD MMM YYYY'}}</td>
+                            <td>{{this.feedback_description}}</td>
+                            <td>{{this.feedback_status}}</td>
+                            <td>
+                                {{#ifEquals this.feedback_status "Normal"}}
+                                <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
+                                    <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                    <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post"
+                                        class="d-inline">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <button type="submit" class="btn btn-success">Save</button>
+                                    </form>
+                                </div>
+                                {{else}}
+                                <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                {{/ifEquals}}
+                            </td>
+                            </td>
+                        </tr>
+                        {{/ifEquals}}
+                        {{/each}}
+                    </tbody>
+                </table>
+                {{else}}
+                <p>No feedback received</p>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+    <div id="Suggestions" class="tabcontent container mt-4">
+        <div class="wrapper">
+            <div class="displayFeedback" id="displayIssues">
+                {{#if feedback}}
+                <h3>Suggestions</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Feedback ID</th>
+                            <th class="text-center">Feedback Type</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Rating</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Description</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each feedback}}
+                        {{#ifEquals this.feedback_type "Send a suggestion"}}
+                        <tr>
+                            <tr>
+                            <td>{{this.feedback_id}}</td>
+                            <td>{{this.feedback_type}}</td>
+                            <td>{{this.feedback_name}}</td>
+                            <td>{{this.feedback_email}}</td>
+                            <td>{{concat this.feedback_rating "/5"}}</td>
+                            <td>{{formatDate feedback_date 'DD MMM YYYY'}}</td>
+                            <td>{{this.feedback_description}}</td>
+                            <td>{{this.feedback_status}}</td>
+                            <td>
+                                {{#ifEquals this.feedback_status "Normal"}}
+                                <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
+                                    <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                    <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post"
+                                        class="d-inline">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <button type="submit" class="btn btn-success">Save</button>
+                                    </form>
+                                </div>
+                                {{else}}
+                                <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                {{/ifEquals}}
+                            </td>
+                            </td>
+                        </tr>
+                        {{/ifEquals}}
+                        {{/each}}
+                    </tbody>
+                </table>
+                {{else}}
+                <p>No feedback received</p>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+    <div id="Other" class="tabcontent container mt-4">
+        <div class="wrapper">
+            <div class="displayFeedback" id="displayIssues">
+                {{#if feedback}}
+                <h3>Suggestions</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Feedback ID</th>
+                            <th class="text-center">Feedback Type</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Rating</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Description</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each feedback}}
+                        {{#ifEquals this.feedback_type "Other"}}
+                        <tr>
+                            <tr>
+                            <td>{{this.feedback_id}}</td>
+                            <td>{{this.feedback_type}}</td>
+                            <td>{{this.feedback_name}}</td>
+                            <td>{{this.feedback_email}}</td>
+                            <td>{{concat this.feedback_rating "/5"}}</td>
+                            <td>{{formatDate feedback_date 'DD MMM YYYY'}}</td>
+                            <td>{{this.feedback_description}}</td>
+                            <td>{{this.feedback_status}}</td>
+                            <td>
+                                {{#ifEquals this.feedback_status "Normal"}}
+                                <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
+                                    <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                    <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post"
+                                        class="d-inline">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <button type="submit" class="btn btn-success">Save</button>
+                                    </form>
+                                </div>
+                                {{else}}
+                                <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                {{/ifEquals}}
+                            </td>
+                            </td>
+                        </tr>
+                        {{/ifEquals}}
+                        {{/each}}
+                    </tbody>
+                </table>
+                {{else}}
+                <p>No feedback received</p>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+    <div id="Saved Feedback" class="tabcontent container mt-4">
+        <div class="wrapper">
+            <div class="displayFeedback" id="displayIssues">
+                {{#if feedback}}
+                <h3>Suggestions</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Feedback ID</th>
+                            <th class="text-center">Feedback Type</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Rating</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Description</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each feedback}}
+                        {{#ifEquals this.feedback_status "Saved"}}
+                        <tr>
+                            <td>{{this.feedback_id}}</td>
+                            <td>{{this.feedback_type}}</td>
+                            <td>{{this.feedback_name}}</td>
+                            <td>{{this.feedback_email}}</td>
+                            <td>{{concat this.feedback_rating "/5"}}</td>
+                            <td>{{formatDate feedback_date 'DD MMM YYYY'}}</td>
+                            <td>{{this.feedback_description}}</td>
+                            <td>{{this.feedback_status}}</td>
+                            <td>
+                                {{#ifEquals this.feedback_status "Normal"}}
+                                <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
+                                    <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                    <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post"
+                                        class="d-inline">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <button type="submit" class="btn btn-success">Save</button>
+                                    </form>
+                                </div>
+                                {{else}}
+                                <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                {{/ifEquals}}
+                            </td>
+                            </td>
+                        </tr>
+                        {{/ifEquals}}
+                        {{/each}}
+                    </tbody>
+                </table>
+                {{else}}
+                <p>No feedback received</p>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

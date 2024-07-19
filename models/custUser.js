@@ -18,7 +18,8 @@ const Customer = db.define('customer', {
         type: sequelize.INTEGER
     },
     Customer_Email: {
-        type: sequelize.STRING
+        type: sequelize.STRING,
+        unique: true
     },
     Customer_Birthday: {
         type: sequelize.DATE
@@ -26,9 +27,6 @@ const Customer = db.define('customer', {
     Customer_Password: {
         type: sequelize.STRING
     },
-    Customer_cPassword: {
-        type: sequelize.STRING
-    }
 });
 
 module.exports = Customer;

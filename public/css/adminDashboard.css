@@ -1,120 +1,351 @@
-.wrapper {
-    display: flex;
-    height: 100vh;
+body {
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  font-size: .875rem;
+  font-family: 'Roboto', sans-serif;
+  background: black;
+  color: #ffffff;
 }
 
-.sidebar {
-    flex: 1;
-    background-color: lightblue;
-    padding-top: 20px;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 500;
+  line-height: 1;
 }
 
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
+p {
+  font-size: .875rem;
+  margin-bottom: .5rem;
+  line-height: 1.3rem;
+}
+
+h1 {
+  font-size: 3.125rem;
+}
+
+h2 {
+  font-size: 2.5rem;
+}
+
+@media(max-width: 767px) {
+  h2 {
+    font-size: 1.9rem;
+  }
+}
+
+h3 {
+  font-size: 1.875rem;
+}
+
+h4 {
+  font-size: 1.45rem;
+}
+
+h5 {
+  font-size: 1rem;
+}
+
+h6 {
+  font-size: .9375rem;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+@media (max-width: 991px) {
+  .card-body {
+    padding: 1.875rem 1.25rem;
+  }
+}
+
+.grid-margin {
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 80%;
+}
+.CodeMirror {
+  font-size: .875rem;
+  height: auto;
+  text-align: left;
+  min-height: auto;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.40em;
+  padding: 10px;
+  font-weight: 100;
+  letter-spacing: .9px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.CodeMirror-scroll {
+  min-height: auto;
+}
+
+.documentation .left-sidebar {
+  width: 260px;
+  padding: 20px 30px;
+  background-color: #000000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+@media (max-width: 991px) {
+  .documentation .left-sidebar {
+    padding: 16px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .documentation .left-sidebar {
+    width: 16.66666667%;
+  }
+}
+
+@media (min-width: 768px) {
+  .documentation .left-sidebar {
+    width: 25%;
+  }
+}
+@media (max-width: 767px) {
+  .documentation .left-sidebar {
+    position: static;
+  }
+}
+.documentation .left-sidebar .logo-wrapper {
+  margin-top: 1rem;
+  margin-bottom: 1.6rem;
+}
+
+.documentation .left-sidebar .logo-wrapper img {
+  height: 24px;
+}
+
+.documentation .left-sidebar .left-menu-title {
+  margin-top: 1rem;
+}
+
+.documentation .left-sidebar .left-menu {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.documentation .left-sidebar .left-menu li {
+  line-height: 2.2;
+  position: relative;
+}
+
+.documentation .left-sidebar .left-menu li a {
+  text-decoration: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding-left: 18px;
+}
+
+.documentation .left-sidebar .left-menu li a::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid #d384f9;
+  position: absolute;
+  left: 0;
+  top: 11px;
+}
+
+.documentation .main-panel {
+  padding: 40px 50px;
+  margin-left: 0;
+}
+
+@media (max-width: 991px) {
+  .documentation .main-panel {
+    padding: 40px 20px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .documentation .main-panel {
+    margin-left: 16.66666667%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .documentation .main-panel {
+    margin-left: 25%;
+  }
+}
+
+.credits .credit-list {
+  list-style-type: none;
+  padding-left: 20px;
+  margin-bottom: 0;
+}
+
+.credits .credit-list li {
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.credits .credit-list li a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.credits .credit-list li p {
+  margin-right: 8px;
+}
+
+.credits .credit-list li p::before {
+  content: '';
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid #d384f9;
+  position: absolute;
+  left: -17px;
+  top: 6px;
+}
+
+.card {
+  background-color: #191c24;
+}
+.table {
+  color: #ffffff;
 }
 
 
+/* Pws-tabs */
 
-.sidebar ul li a {
-    align-content: center;
-    height:60px;
-    color: black;
-    text-decoration: none;
-    display: block;
-    padding-left:50px;
+.pws_tabs_container ul.pws_tabs_controll {
+	border-bottom: 1px solid #b66dff;
 }
 
-.sidebar ul li a:hover {
-    background-color: #87cefa;
-    font-weight:bold;
+.pws_tabs_container ul.pws_tabs_controll li:first-child a {
+	border-radius: 5px 0px 0px 0px;
 }
 
-.main-content {
-    flex: 5;
-    padding: 20px;
+.pws_tabs_container ul.pws_tabs_controll li:last-child a {
+	border-right: 1px solid #b66dff;
+	border-radius: 0px 5px 0px 0px;
 }
 
-.container .row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 10px 0;
+.pws_tabs_container ul.pws_tabs_controll li a {
+	border: 1px solid #b66dff;
+	border-bottom: none;
+	border-right: none;
+	background: #fff;
+	color: #b66dff;
+	padding: 0.6em 1.3em;
+	margin-right: 0;
 }
 
-.container .row2 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    padding: 10px 0;
+.pws_tabs_container ul.pws_tabs_controll li a:hover {
+	background: #fff;
+	color: #b66dff;
 }
 
-.container .row2 img{
-    width:100%;
-    heighT:100%;
+.pws_tabs_container ul.pws_tabs_controll li a.pws_tab_active {
+	background: -webkit-gradient(linear, left top, right top, from(#da8cff), to(#9a55ff));
+	background: linear-gradient(to right, #da8cff, #9a55ff);
+	color: #fff;
 }
 
-.container .row .item {
-    background-color: #f2f2f2;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-align: center;
+.pws_tabs_container .demo-tabs {
+	border: 1px solid #b66dff;
+	border-radius: 0px 5px 5px 5px;
+	overflow: hidden;
+	margin-bottom: 45px;
+	padding-top: 2rem;
 }
 
-.dashboardbox {
-    height:140px;
-    padding:20px;
-    padding-left:2px;
-    padding-right:2px;
-    border-radius:10px;
+.pws_tabs_container .demo-tabs .CodeMirror {
+	margin-bottom: 20px;
 }
 
-.dashboard-bg1 {
-    background-color: rgb(139, 231, 139);
-}
-.dashboard-bg2 {
-    background-color: rgb(41, 205, 247);
-}
-.dashboard-bg3 {
-    background-color: rgb(231, 139, 226);
-}
-.dashboard-bg4 {
-    background-color: rgb(231, 225, 139);
+.pws_tabs_container.pws_tabs_vertical .pws_tabs_controll {
+	border-right: none;
+	border-bottom: none;
 }
 
-.icons {
-    height:50px;
-    width:50px;
-    border-radius:50%;
-    background-color:white;
-
+.pws_tabs_container.pws_tabs_vertical .pws_tabs_controll li:first-child a {
+	border-radius: 5px 0px 0px 0px;
 }
 
-
-img.topagent {
-    display: block;
-    margin: 0 auto;
-    width:75px;
-    height:75px;
+.pws_tabs_container.pws_tabs_vertical .pws_tabs_controll li:last-child a {
+	border-bottom: 1px solid #b66dff;
+	border-radius: 0px 0px 0px 5px;
+	border-right: 0px;
 }
 
-.sub-nav {
-    display: none; /* Hide the sub-navigation by default */
-    list-style-type: none; /* Remove default list styles */
+.pws_tabs_container.pws_tabs_vertical .pws_tabs_controll li a {
+	border-radius: 0px;
+	border: 1px solid #b66dff;
+	border-right: none;
+	border-bottom: none;
+	margin-bottom: 0;
 }
 
-.sidebar ul li:hover .sub-nav {
-    display: block;
+.pws_tabs_container.pws_tabs_horizontal_bottom .pws_tabs_list {
+	margin-bottom: 0;
 }
 
-.sub-nav li {
-    background-color: lightgray; /* Example background color */
-    padding: 5px 10px; /* Example padding */
+.pws_tabs_list {
+  background: #000000;
 }
 
-.sub-nav li:hover {
-    background-color: gray; /* Example background color on hover */
+.pws_tabs_container.pws_tabs_horizontal_bottom .pws_tabs_controll {
+	border-top: 1px solid #b66dff;
+	border-right: none;
+	border-bottom: none;
 }
 
+.pws_tabs_container.pws_tabs_horizontal_bottom .pws_tabs_controll li:first-child a {
+	border-radius: 0px 0px 0px 5px;
+}
 
+.pws_tabs_container.pws_tabs_horizontal_bottom .pws_tabs_controll li:last-child a {
+	border-radius: 0px 0px 5px 0px;
+	border-right: 1px solid #b66dff;
+}
+
+.pws_tabs_container.pws_tabs_horizontal_bottom .pws_tabs_controll li a {
+	border-radius: 0px;
+	border: 1px solid #b66dff;
+	border-top: none;
+	border-right: none;
+	margin-right: 0;
+	margin-bottom: 0;
+}
+
+.pws_tabs_container.pws_tabs_rtl .pws_tabs_controll li:first-child a {
+	border-radius: 0px 5px 0px 0px;
+	border-right: 1px solid #b66dff;
+}
+
+.pws_tabs_container.pws_tabs_rtl .pws_tabs_controll li:last-child a {
+	border-right: none;
+	border-radius: 5px 0px 0px 0px;
+}
+
+.pws_tabs_container.pws_tabs_rtl .pws_tabs_controll li a {
+	border: 1px solid #b66dff;
+	border-bottom: none;
+	border-right: none;
+	margin-right: 0;
+	margin-left: 0;
+}
+
+/* Pws-tabs end */
