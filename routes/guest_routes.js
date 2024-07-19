@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const session = require('express-session');
 const bodyParser = require("body-parser");
 const moment = require("moment");
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -7,11 +8,15 @@ router.use(bodyParser.urlencoded({ extended: true }));
 //Database imports
 const Customer = require('../models/custUser');
 
+router.get('/login', (req, res) => {
+    res.render('login', { user: req.session.user });
+});
+
 router.post('/login', function (req, res) {
     let { email, password } = req.body;
 
     // Find the customer with the given email
-    Customer.findOne({ Customer_Email: email })
+    Customer.findOne({ where: { Customer_Email: email } }) 
         .then(user => {
             if (!user) {
                 return res.status(404).send({ message: 'User not found' });
@@ -23,12 +28,12 @@ router.post('/login', function (req, res) {
             }
 
             // Successful login
-            // res.status(200).send({ message: 'Login successful', user });
-            alert("Login successful");
+            req.session.user = user; // Store user information in session
             res.redirect('/home');
         })
         .catch(err => {
-            res.status(500).send({ message: 'Error occurred', error: err });
+            console.log('Error during login: ', err);
+           return res.status(500).send({ message: 'Error occurred', error: err });
         });
 });
 
@@ -87,6 +92,15 @@ router.post('/register', async function (req, res) {
         .catch(err => {
             res.status(400).send({ message: 'Error registering user', error: err });
         });
+});
+
+router.get('/logout', function (req, res) {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send({ message: 'Error logging out', error: err });
+        }
+        res.redirect('/login');
+    });
 });
 
 module.exports = router;
