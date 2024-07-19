@@ -16,9 +16,7 @@ const MySQLStore = require('express-mysql-session')(session);
 const Feedback = require('./models/Feedback');
 const Listed_Properties = require('./models/Listed_Properties');
 const Agent = require('./models/Agent');
-
-
-
+const Customer = require('./models/custUser');
 
 //Routers
 const guestRoute = require("./routes/guest_routes");
@@ -26,11 +24,9 @@ const userRoute = require("./routes/user_routes");
 const adminRoute = require("./routes/admin_routes");
 const feedbackRoute = require("./routes/feedback.js");
 
-
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 const { password } = require('./config/db.js');
-
 
 //routers
 app.use('/', guestRoute);
@@ -109,32 +105,7 @@ app.get('/login', (req,res) => { // User Login page
     res.render('Login/userlogin', {layout:'main'});
 });
 
-app.post('/login', function(req, res) {
-    let { email, password } = req.body;
-
-    Customer.findOne({
-        where: {
-            Customer_Email: email
-        }
-    })
-    .then(customer => {
-        if (!customer) {
-            return res.status(404).send({ message: 'User not found' });
-        }
-
-        if (customer.Customer_Password !== password) {
-            return res.status(401).send({ message: 'Invalid password' });
-        }
-
-        res.status(200).send({ message: 'Login successful!', customer });
-    })
-    .catch(err => {
-        res.status(400).send({ message: 'Error logging in', error: err });
-    });
-});
-
 app.get('/register', (req, res) => { // User Registration page
-    console.log("In register page")
     res.render('Login/userReg', {layout:'main'});
 });
 
@@ -174,7 +145,7 @@ app.post('/agentRegister', function(req,res){
 
 
 
-app.get('/agentSetprofile', (req,res) => { // User Login page
+app.get('/agentSetprofile', (req,res) => { // Agent Set profile page
     res.render('Property Agent/agentSetprofile', {layout:'userMain'});
 });
 
@@ -183,7 +154,7 @@ app.get('/userAccount', (req,res) => { // User Login page
     res.render('Profile/userAccountManagement', {layout:'userMain'});
 });
 
-app.get('/agentAccount', (req, res) => { // User Registration page
+app.get('/agentAccount', (req, res) => { // Agent account management page
     res.render('Profile/agentAccountManagement', {layout:'userMain'});
 });
 
