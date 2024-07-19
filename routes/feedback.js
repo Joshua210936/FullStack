@@ -24,7 +24,7 @@ router.get('/feedbackForm', function(req, res){
 
 router.post('/feedbackForm', function (req, res) {
     console.log(req.body);
-    let { Name, Email, VisitReason, Description, Rating } = req.body;
+    let { Name, Email, VisitReason, AgentID, Description, Rating } = req.body;
     let FeedbackDate = moment().format('YYYY/MM/DD');
     let Status = "Normal";
 
@@ -35,7 +35,8 @@ router.post('/feedbackForm', function (req, res) {
         feedback_date: FeedbackDate, 
         feedback_rating: Rating, 
         feedback_description: Description, 
-        feedback_status: Status 
+        feedback_status: Status,
+        agent_id: AgentID
     })
     .then(result => {
         console.log('Insert successful:', result);
