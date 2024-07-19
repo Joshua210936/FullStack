@@ -24,26 +24,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const agentProfileContent = document.getElementById('agentProfileContent');
     const modal = document.getElementById("agentModal");
     const span = document.getElementsByClassName("close")[0];
+    const searchInput = document.querySelector('.search-input');
+    let allAgents = [];
 
     // Fetch agents from the backend and populate the tables
     async function fetchAgents() {
         try {
             const response = await fetch('/agents');
             const agents = await response.json();
-            agents.forEach(agent => {
-                if (agent.status === 'approved') {
-                    approvedAgentsTable.appendChild(createAgentRow(agent, 'approved'));
-                } else {
-                    unapprovedAgentsTable.appendChild(createAgentRow(agent, 'unapproved'));
-                }
-            });
+            allAgents = agents;
+            renderAgents(agents);
         } catch (error) {
             console.error('Error fetching agents:', error);
         }
     }
 
+    function renderAgents(agents) {
+        unapprovedAgentsTable.innerHTML = '';
+        approvedAgentsTable.innerHTML = '';
+
+        agents.forEach(agent => {
+            if (agent.status === 'approved') {
+                approvedAgentsTable.appendChild(createAgentRow(agent, 'approved'));
+            } else {
+                unapprovedAgentsTable.appendChild(createAgentRow(agent, 'unapproved'));
+            }
+        });
+    }
+
     function createAgentRow(agent, status) {
         const tr = document.createElement('tr');
+        tr.classList.add('agent-row');
+        tr.dataset.agentName = `${agent.agent_firstName || ''} ${agent.agent_lastName || ''}`.toLowerCase();
         tr.id = `${status}AgentRow${agent.agent_id}`;
         tr.innerHTML = `
             <td><a href="#" class="agent-name" data-agent-id="${agent.agent_id}">${agent.agent_firstName || 'N/A'} ${agent.agent_lastName || 'N/A'}</a></td>
@@ -76,17 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(data); // Log the response for debugging
 
                 if (response.ok) {
-                    // Move the agent row to the appropriate section
-                    const agentRow = document.getElementById(`${isApproving ? 'agentRow' : 'approvedAgentRow'}${agentId}`);
-                    const targetTable = isApproving ? approvedAgentsTable : unapprovedAgentsTable;
-                    if (agentRow && targetTable) {
-                        agentRow.remove();
-                        agentRow.id = `${isApproving ? 'approvedAgentRow' : 'agentRow'}${agentId}`;
-                        agentRow.querySelector('form').className = isApproving ? 'unapprove-form' : 'approve-form';
-                        agentRow.querySelector('button').className = isApproving ? 'unapprove-button' : 'approve-button';
-                        agentRow.querySelector('button').textContent = isApproving ? 'Unapprove' : 'Approve';
-                        targetTable.appendChild(agentRow);
-                    }
+                    // Re-fetch and re-render agents to update the table
+                    await fetchAgents();
                 } else {
                     console.error('Failed to update agent status:', data.message);
                 }
@@ -136,6 +139,19 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.style.display = "none";
         }
     }
+
+    function filterAgents() {
+        const query = searchInput.value.toLowerCase();
+        const filteredAgents = allAgents.filter(agent => 
+            (`${agent.agent_firstName || ''} ${agent.agent_lastName || ''}`.toLowerCase().includes(query))
+        );
+        renderAgents(filteredAgents);
+    }
+
+    // Trigger search on input event
+    searchInput.addEventListener('input', () => {
+        filterAgents();
+    });
 
     // Fetch and render agents on page load
     fetchAgents();
