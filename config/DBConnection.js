@@ -11,7 +11,7 @@ const setUpDB = (drop) => {
             console.log('Fullstack DB database connected');
         })
         .then(() => {
-            /*user.hasMany(video);*/
+            agent.hasMany(feedback);
             mySQLDB.sync({
                 force: drop
             }).then(() => {
