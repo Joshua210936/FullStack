@@ -226,8 +226,28 @@ app.get('/propertyAgentProfile', function(req, res){
     res.render('Property Agent/propertyAgentProfile', {layout:'userMain'});
 });
 
-app.get('/findAgents', function(req, res){
-    res.render('Property Agent/findAgents', {layout:'main'});
+
+app.get('/findAgents', function (req, res) {
+    // Assuming you have a model named `Agent` for fetching agents
+    Agent.findAll({
+        where: {
+            status: 'approved'
+        }
+    })
+    .then(agents => {
+        // Convert agents to plain objects for rendering
+        res.render('Property Agent/findAgents', {
+            layout: 'main',
+            agents: agents.map(agent => {
+                agent = agent.get({ plain: true });
+                return agent;
+            })
+        });
+    })
+    .catch(err => {
+        console.error('Error fetching agents:', err);
+        res.status(500).send('Internal Server Error');
+    });
 });
 
 app.get('/schedule', function(req, res){
