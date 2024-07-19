@@ -250,6 +250,34 @@ app.get('/findAgents', function (req, res) {
     });
 });
 
+app.get('/propertyAgentProfile/:id', function (req, res) {
+    const agentId = req.params.id;
+
+    // Fetch the agent with the given ID from the database
+    Agent.findByPk(agentId)
+        .then(agent => {
+            if (!agent) {
+                return res.status(404).send('Agent not found');
+            }
+
+            // Convert agent to a plain object for rendering
+            agent = agent.get({ plain: true });
+
+            
+
+            // Render the propertyAgentProfile template with the agent's data
+            res.render('Property Agent/propertyAgentProfile', {
+                layout: 'main',
+                agent: agent
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching agent:', err);
+            res.status(500).send('Internal Server Error');
+        });
+});
+
+
 app.get('/schedule', function(req, res){
     res.render('schedule', {layout:'userMain'});
 });

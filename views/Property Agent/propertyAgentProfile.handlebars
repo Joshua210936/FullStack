@@ -9,35 +9,35 @@
             <img src="images/agent1.jpg" height="200" width="200" style="border:1px solid;">
         </div>
         <div class="col">
-            <h3>Marques Brownlee</h3>
-            <div style="margin-bottom:30px;margin-top:30px;">
-                <img src="images/propnex.png" height="50" width="50" style="border:1px solid;"> PropNex Realty PTE LTD
+                <h3>{{agent.agent_firstName}} {{agent.agent_lastName}}</h3>
+                <div style="margin-bottom:30px;margin-top:30px;">
+                    <img src="images/propnex.png" height="50" width="50" style="border:1px solid;"> {{agent.company}}
+                </div>
+                <div>
+                    Agency License No. {{agent.agent_licenseNo}}
+                </div>
+                <div>
+                    CEA Registration No. {{agent.agent_registrationNo}}
+                </div>
             </div>
-            <div>
-                Agency License No. L3002382K
+            <div class="col">
+                <a href="mailto:{{agent.agent_email}}"><button id="cta-button">Contact</button></a>
+                <br>
+                <a href="/agent-reviews/{{agent.id}}"><button id="cta-button">Review</button></a>
             </div>
-            <div>
-                CEA Registration No. R067111C
-            </div>
-        </div>
-        <div class="col">
-            <a href="#"><button id="cta-button">Contact</button></a>
-            <br>
-            <a href="#"><button id="cta-button">Review</button></a>
         </div>
     </div>
-</div>
 
-<div class="container" style="margin-bottom:80px;">
-    <h1>About Me</h1>
-    <div>
-        4 year(s) with Sigma Properties
+    <div class="container" style="margin-bottom:80px;">
+        <h1>About Me</h1>
+        <div>
+            {{agent.experience}} year(s) with {{agent.currentCompany}}
+        </div>
+        <br>
+        <div>
+            {{agent.agent_bio}}
+        </div>
     </div>
-    <br>
-    <div>
-        I bring a unique blend of local market expertise, personalized service, and a passion for helping clients find their dream homes. With over 10 years of experience in the industry, I have built a reputation for integrity, attention to detail, and a deep understanding of the dynamic Singaporean property market. Whether you're looking to buy, sell, or rent, I am committed to guiding you through every step of the process with professionalism and care, ensuring a seamless and successful real estate experience.
-    </div>
-</div>
 
 <div class="container" style="margin-bottom:80px;">
     <h1>Past Transactions:</h1>
