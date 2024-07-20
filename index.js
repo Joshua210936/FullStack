@@ -323,9 +323,7 @@ app.post('/agentListProperty', function(req,res){
     });
 });
 
-app.get('/propertyAgentProfile', function(req, res){
-    res.render('Property Agent/propertyAgentProfile', {layout:'userMain'});
-});
+
 
 
 app.get('/findAgents', function (req, res) {
