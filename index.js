@@ -304,14 +304,22 @@ app.get('/agentListProperty', function(req, res){
 app.post('/agentListProperty', async function(req,res){
     let{
         name, propertyType, address, propertyImage, price, sqft, bedrooms, bathrooms
-        , yearBuilt, floorLevel, topDate, tenure, description, agentID
+        , yearBuilt, floorLevel, topDate, tenure, description, agentID, amenities
     } = req.body;
     
-    if (typeof amenities === 'string') {
-        amenities = JSON.parse(amenities);
+    if (!amenities) {
+        amenities = [];
+    } else if (typeof amenities === 'string') {
+        try {
+            amenities = JSON.parse(amenities);
+        } catch (e) {
+            amenities = [amenities];
+        }
+    } else if (!Array.isArray(amenities)) {
+        amenities = [amenities];
     }
 
-    Listed_Properties.create({
+    const property = await Listed_Properties.create({
         Property_Name: name,
         Property_Type: propertyType,
         Property_Address: address,
@@ -327,12 +335,16 @@ app.post('/agentListProperty', async function(req,res){
         Property_Description: description,
         agent_id: agentID
     })
-    .then(property => {
-        res.redirect('/agentListProperty')
-      })
-    .catch(err => {
-    res.status(400).send({ message: 'Error listing property', error: err });
-    });
+    if (amenities.length > 0) {
+        const amenityPromises = amenities.map(amenity => {
+            return Amenity.create({
+                Amenity: amenity,
+                Property_ID: property.Property_ID
+            });
+        });
+        await Promise.all(amenityPromises);
+    }
+        res.redirect('/agentListProperty');
 });
 
 

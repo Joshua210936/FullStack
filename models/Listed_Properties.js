@@ -2,7 +2,7 @@ const sequelize = require('sequelize');
 
 const db = require('../config/DBConfig');
 const Agent = require('./Agent'); // Import the Agent model
-const Amenity = require('./propertyAmenities'); // Import the Amenity model
+
 const Listed_Properties = db.define('listed_properties', {
     Property_ID:{
         type: sequelize.INTEGER,
