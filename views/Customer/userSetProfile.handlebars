@@ -1,12 +1,12 @@
 <head>
     <link rel="stylesheet" href="/css/agentSetprofile.css">
-    <title>Agent Profile Setup - Sigma Properties</title>
+    <title>User Profile Setup - Sigma Properties</title>
 </head>
 <body>
     <div class="container">
         <aside class="sidebar">
             <div class="profile-section">
-                <h2>{{this.agent_firstName}} {{this.agent_lastName}}</h2>
+                <h2>{{this.Customer_fName}} {{this.Customer_lName}}</h2>
             </div>
             <nav class="sidebar-nav">
                 <ul>
@@ -18,39 +18,27 @@
         </aside>
         <main class="main-content">
             <div class="register-box">
-                <div class="welcome-text">Set Up Your Agent Profile</div>
-                <form action="/agentProfileUpdate" method="post" enctype="multipart/form-data">
+                <div class="welcome-text">Set Up Your User Profile</div>
+                <form action="/userProfileUpdate" method="post" enctype="multipart/form-data">
                     <div class="input-group">
                         <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="{{this.agent_firstName}}">
+                        <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="{{this.Customer_fName}}">
                     </div>
                     <div class="input-group">
                         <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" value="{{this.agent_lastName}}">
+                        <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" value="{{this.Customer_lName}}">
                     </div>
                     <div class="input-group">
                         <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="{{this.agent_phoneNumber}}">
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="{{this.Customer_Phone}}">
+                    </div>
+                    <div class="input-group">
+                        <label for="birthday">Birthday</label>
+                        <input type="date" id="birthday" name="birthday" placeholder="Enter your birthday" value="{{this.Customer_Birthday}}">
                     </div>
                     <div class="input-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Enter your email" value="{{this.agent_email}}">
-                    </div>
-                    <div class="input-group">
-                        <label for="agency_license">Agency License Number</label>
-                        <input type="text" id="agency_license" name="agency_license" placeholder="Enter your agency license number" value="{{this.agent_licenseNo}}">
-                    </div>
-                    <div class="input-group">
-                        <label for="agency_registration">Agency Registration Number</label>
-                        <input type="text" id="agency_registration" name="agency_registration" placeholder="Enter your agency registration number" value="{{this.agent_registrationNo}}">
-                    </div>
-                    <div class="input-group">
-                        <label for="bio">Agent Bio</label>
-                        <textarea id="bio" name="bio" placeholder="Write a short bio about yourself">{{this.agent_bio}}</textarea>
-                    </div>
-                    <div class="input-group">
-                        <label for="agentPictures">Upload Profile Picture</label>
-                        <input type="file" id="agentPictures" name="agentPictures" accept="image/*">
+                        <input type="email" id="email" name="email" placeholder="Enter your email" value="{{this.Customer_Email}}">
                     </div>
                     <button type="submit" class="formbutton">Update Profile</button>
                 </form>
