@@ -6,7 +6,7 @@
     <div class="container">
         <aside class="sidebar">
             <div class="profile-section">
-                <h2>{{this.Customer_fName}} {{this.Customer_lName}}</h2>
+                <h2>{{customer.Customer_fName}} {{customer.Customer_lName}}</h2>
             </div>
             <nav class="sidebar-nav">
                 <ul>
@@ -22,23 +22,23 @@
                 <form action="/userProfileUpdate" method="post" enctype="multipart/form-data">
                     <div class="input-group">
                         <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="{{this.Customer_fName}}">
+                        <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="{{customer.Customer_fName}}">
                     </div>
                     <div class="input-group">
                         <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" value="{{this.Customer_lName}}">
+                        <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" value="{{customer.Customer_lName}}">
                     </div>
                     <div class="input-group">
                         <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="{{this.Customer_Phone}}">
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="{{customer.Customer_Phone}}">
                     </div>
                     <div class="input-group">
                         <label for="birthday">Birthday</label>
-                        <input type="date" id="birthday" name="birthday" placeholder="Enter your birthday" value="{{this.Customer_Birthday}}">
+                        <input type="date" id="birthday" name="birthday" placeholder="Enter your birthday" value="{{customer.Customer_Birthday}}">
                     </div>
                     <div class="input-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Enter your email" value="{{this.Customer_Email}}">
+                        <input type="email" id="email" name="email" placeholder="Enter your email" value="{{customer.Customer_Email}}">
                     </div>
                     <button type="submit" class="formbutton">Update Profile</button>
                 </form>
