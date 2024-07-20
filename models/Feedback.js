@@ -29,9 +29,6 @@ const Feedback = db.define('feedback', {
     feedback_status: {
         type: sequelize.STRING
     },
-    agent_id: {
-        type: sequelize.STRING
-    }
 });
 
 module.exports = Feedback;

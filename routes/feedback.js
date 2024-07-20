@@ -11,6 +11,7 @@ router.use(methodOverride('_method'));
 
 //Database imports
 const Feedback = require('../models/Feedback');
+const Agent = require('../models/Agent');
 
 router.get('/contactUs', function(req, res){
     console.log('found');
@@ -28,23 +29,36 @@ router.post('/feedbackForm', function (req, res) {
     let FeedbackDate = moment().format('YYYY/MM/DD');
     let Status = "Normal";
 
-    Feedback.create({ 
-        feedback_type: VisitReason, 
-        feedback_name: Name, 
-        feedback_email: Email, 
-        feedback_date: FeedbackDate, 
-        feedback_rating: Rating, 
-        feedback_description: Description, 
-        feedback_status: Status,
-        agent_id: AgentID
-    })
-    .then(result => {
-        console.log('Insert successful:', result);
-        res.render('Contact Us/contactUs', { layout: 'main' });
+    Agent.findOne({agent_id: AgentID})
+    .then(agent => {
+        if (!agent) {
+            alert("Agent not found");
+        }
+
+        else{
+            Feedback.create({ 
+                feedback_type: VisitReason, 
+                feedback_name: Name, 
+                feedback_email: Email, 
+                feedback_date: FeedbackDate, 
+                feedback_rating: Rating, 
+                feedback_description: Description, 
+                feedback_status: Status,
+                agentAgentId: AgentID
+            })
+            .then(result => {
+                console.log('Insert successful:', result);
+                res.render('Contact Us/contactUs', { layout: 'main' });
+            })
+            .catch(err => {
+                console.error('Insert failed:', err);
+                res.status(500).send('Error occurred: ' + err.message);
+            });
+        }
+
     })
     .catch(err => {
-        console.error('Insert failed:', err);
-        res.status(500).send('Error occurred: ' + err.message);
+        res.status(500).send({ message: 'Error occurred', error: err });
     });
 });
 
