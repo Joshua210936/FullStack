@@ -31,6 +31,7 @@ const feedbackRoute = require("./routes/feedback.js");
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 const { password } = require('./config/db.js');
+const { error } = require('console');
 
 //JSON for handlebars (idk i need it for my modal)
 Handlebars.registerHelper('json', function (context) {
@@ -135,17 +136,20 @@ app.get('/login', (req,res) => { // User Login page
 });
 
 app.post('/login', function (req, res) {
+    errorList = [];
     let { email, password } = req.body;
 
     // Find the customer with the given email
     Customer.findOne({ where: { Customer_Email: email } }) 
         .then(user => {
             if (!user) {
+                errorList.push({ text: 'User not found' });
                 return res.status(404).send({ message: 'User not found' });
             }
 
             // Check if the password is correct
             if (user.Customer_Password !== password) {
+                errorList.push({ text: 'Incorrect password' });
                 return res.status(401).send({ message: 'Incorrect password' });
             }
 
@@ -233,8 +237,9 @@ app.post('/register', async function (req, res) {
 
 app.get('/userSetProfile/:customer_id', async (req, res) => {
     const customer_id = req.params.customer_id;
+    console.log('Customer ID:', customer_id);
     try {
-        const customer = await Customer.findByPk(customer_id);
+        const customer = await Customer.findByPk(Customer_id);
         if (customer) {
             res.render('Customer/userSetProfile', { 
                 layout: 'userMain', 
