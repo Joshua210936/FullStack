@@ -105,9 +105,137 @@ app.get('/login', (req,res) => { // User Login page
     res.render('Login/userlogin', {layout:'main'});
 });
 
+app.post('/login', function (req, res) {
+    let { email, password } = req.body;
+
+    // Find the customer with the given email
+    Customer.findOne({ where: { Customer_Email: email } }) 
+        .then(user => {
+            if (!user) {
+                return res.status(404).send({ message: 'User not found' });
+            }
+
+            // Check if the password is correct
+            if (user.Customer_Password !== password) {
+                return res.status(401).send({ message: 'Incorrect password' });
+            }
+
+            // Successful login
+            req.session.user = user; // Store user information in session
+            res.redirect('/home');
+        })
+        .catch(err => {
+            console.log('Error during login: ', err);
+           return res.status(500).send({ message: 'Error occurred', error: err });
+        });
+});
+
 app.get('/register', (req, res) => { // User Registration page
     res.render('Login/userReg', {layout:'main'});
 });
+
+app.post('/register', async function (req, res) {
+    let errors = [];
+    let { firstName, lastName, phoneNumber, email, birthday, password, confirmPassword } = req.body;
+    if (!email) {
+        return res.status(400).send("One or more required payloads were not provided.")
+
+    }
+
+    const data = await Customer.findAll({
+        attributes: ["Customer_Email"]
+    });
+    console.log(data);
+    // Check if password and confirmPassword match
+    if (password !== confirmPassword) {
+        errors.push({ text: 'Passwords do not match' });
+        return res.status(400).send({ message: 'Passwords do not match' });
+    }
+
+    // Check if email already exists
+    var exists = false;
+    for (var cust of data) {
+        if (cust.toJSON().Customer_Email == email) {
+            return res.status(400).send("Email already exists.")
+
+        }
+    }
+
+    // Check if phone number is valid
+    const phoneNumberPattern = /^[89]\d{7}$/;
+    if (!phoneNumberPattern.test(phoneNumber)) {
+        return res.status(450).send({ message: 'Phone number must be 8 digits and start with 8 or 9' });
+    }
+
+    // Check if password is valid
+    const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordPattern.test(password)) {
+        return res.status(400).send({ message: 'Password must be at least 8 characters long, include at least one capital letter, and one number' });
+    }
+
+    // Create new customer
+    Customer.create({
+        Customer_fName: firstName,
+        Customer_lName: lastName,
+        Customer_Phone: phoneNumber,
+        Customer_Email: email,
+        Customer_Birthday: birthday,
+        Customer_Password: password,
+    })
+        .then(user => {
+            // Redirect to login page
+            res.redirect('/login');
+        })
+        .catch(err => {
+            res.status(400).send({ message: 'Error registering user', error: err });
+        });
+});
+
+app.get('/userSetProfile/:customer_id', async (req, res) => {
+    const customer_id = req.params.customer_id;
+    try {
+        const customer = await Customer.findByPk(customer_id);
+        if (customer) {
+            res.render('Customer/userSetProfile', { 
+                layout: 'userMain', 
+                customer: customer.get({ plain: true })
+            });
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching customer details', error });
+    }
+});
+
+app.put('/userSetprofile/:customer_id', (req,res) => {
+    let {firstName, lastName, phoneNumber, email, birthday} = req.body;
+    Customer.update({
+        Customer_fName: firstName,
+        Customer_lName: lastName,
+        Customer_Phone: phoneNumber,
+        Customer_Email: email,
+        Customer_Birthday: birthday,
+    },{
+        where:{
+            Customer_Email: email
+        }
+    }).then((Customer)=>{
+        res.redirect("/userSetprofile");
+    }).catch(err=>console.log(err))
+});
+
+app.get('/logout', function (req, res) {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send({ message: 'Error logging out', error: err });
+        }
+        res.redirect('/login');
+    });
+});
+
+
+
 
 // Agent Login and Registration
 app.get('/agentLogin', (req,res) => { // User Login page
@@ -149,14 +277,14 @@ app.get('/agentSetprofile', (req,res) => { // Agent Set profile page
     res.render('Property Agent/agentSetprofile', {layout:'userMain'});
 });
 
-  
-app.get('/userAccount', (req,res) => { // User Login page
-    res.render('Profile/userAccountManagement', {layout:'userMain'});
-});
+// Looks like this is not required
+// app.get('/userAccount', (req,res) => { // User Login page
+//     res.render('Profile/userAccountManagement', {layout:'userMain'});
+// });
 
-app.get('/agentAccount', (req, res) => { // Agent account management page
-    res.render('Profile/agentAccountManagement', {layout:'userMain'});
-});
+// app.get('/agentAccount', (req, res) => { // Agent account management page
+//     res.render('Profile/agentAccountManagement', {layout:'userMain'});
+// });
 
 app.get('/aboutUs', function(req, res){
     res.render('About Us/aboutUs', {layout:'main'});
