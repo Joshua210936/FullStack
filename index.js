@@ -18,6 +18,8 @@ const Listed_Properties = require('./models/Listed_Properties');
 const Agent = require('./models/Agent');
 const Customer = require('./models/custUser');
 const Schedule = require('./models/schedule');
+const Amenity = require('./models/propertyAmenities')
+
 
 //Routers
 const guestRoute = require("./routes/guest_routes");
@@ -300,24 +302,34 @@ app.get('/agentListProperty', function(req, res){
     res.render('Property Agent/agentListProperty', {layout:'userMain'});
 });
 
-app.post('/agentListProperty', function(req,res){
-    let{ propertyType, dateAvailable, bedrooms, bathrooms, squarefootage, yearBuilt, name, description, price, location, propertyPictures} = req.body;
+app.post('/agentListProperty', async function(req,res){
+    let{
+        name, propertyType, address, propertyImage, price, sqft, bedrooms, bathrooms
+        , yearBuilt, floorLevel, topDate, tenure, description, agentID
+    } = req.body;
     
+    if (typeof amenities === 'string') {
+        amenities = JSON.parse(amenities);
+    }
+
     Listed_Properties.create({
+        Property_Name: name,
         Property_Type: propertyType,
-        Date_Available: dateAvailable,
+        Property_Address: address,
+        Property_Image: propertyImage,
+        Property_Price: price,
+        Square_Footage: sqft,
         Property_Bedrooms: bedrooms,
         Property_Bathrooms: bathrooms,
-        Square_Footage: squarefootage,
-        Year_Built: yearBuilt,
-        Property_Name: name,
+        Property_YearBuilt: yearBuilt,
+        Property_Floor: floorLevel,
+        Property_TOP: topDate,
+        Property_Tenure: tenure,
         Property_Description: description,
-        Property_Price: price,
-        Property_Address: location,
-        Property_Image: propertyPictures
+        agent_id: agentID
     })
     .then(property => {
-        res.status(201).send({ message: 'Property listed successfully!', property });
+        res.redirect('/agentListProperty')
       })
     .catch(err => {
     res.status(400).send({ message: 'Error listing property', error: err });

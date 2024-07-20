@@ -13,6 +13,10 @@ body {
     z-index: 10;
 }
 
+.addPropertyForm{
+    width:70%;
+}
+
 .property-listing-page {
     display: flex;
     width: 100%;
@@ -29,7 +33,7 @@ body {
 
 .listing-box {
     width: 100%;
-    max-width: 800px;
+    max-width: 120vh;
     background: white;
     box-shadow: 0px 4px 64px rgba(0, 0, 0, 0.05);
     border-radius: 10px;
@@ -77,8 +81,13 @@ body {
 }
 
 .input-group textarea {
-    height: auto;
+    height: 150px;
     resize: vertical;
+}
+
+.input-group textarea[type="range"] {
+    width: calc(100% - 20px);
+    margin: 0 10px;
 }
 
 .input-group input[type="range"] {
@@ -113,3 +122,38 @@ body {
     margin-top: 5px;
 }
 
+.amenity {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.amenity input[type="text"] {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.add-amenity-btn, .remove-amenity-btn {
+    background: #007bff;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    padding: 10px 15px;
+    font-size: 14px;
+    transition: background 0.3s;
+    margin-top: 10px;
+    
+}
+
+.add-amenity-btn:hover, .remove-amenity-btn:hover {
+    background: #0056b3;
+}
+
+.remove-amenity-btn {
+    background: #dc3545;
+}
+
+.remove-amenity-btn:hover {
+    background: #c82333;
+}
