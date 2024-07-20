@@ -2,77 +2,55 @@
 
 <head>
     <link rel="stylesheet" href="css/adminDashboard.css">
-    <script src="js/adminDashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
 </head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <h2>Ratings Over Time</h2>
+    <canvas id="myChart" width="800" height="600"></canvas>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const dates = JSON.parse('{{{dates}}}');
+            const ratings = JSON.parse('{{{ratings}}}');
 
-<div class="wrapper">
-    <div class="sidebar">
-        <ul>
-            <li>
-                <a href="#" id="properties-link">Properties</a>
-                <ul class="sub-nav">
-                    <li><a href="#">2024</a></li>
-                    <li><a href="#">2023</a></li>
-                    <li><a href="#">2022</a></li>
-                    <li><a href="#">2021</a></li>
-                    <li><a href="#">2020</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" id="agent-link">Agents</a>
-                <ul class="sub-nav">
-                    <li><a href="#">2024</a></li>
-                    <li><a href="#">2023</a></li>
-                    <li><a href="#">2022</a></li>
-                    <li><a href="#">2021</a></li>
-                    <li><a href="#">2020</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <div class="main-content" id="main-content">
-        <div class="container">
-            <h1 class="text-center">Dashboard</h1>
-            <div class="row">
-                <div class="dashboardbox  d-flex  dashboard-bg1">
-                    <div class="align-content-center mr-3 ml-1"><img src="images/propertyicon.png" alt="Property Icon"
-                            class="icons"></div>
-                    <div>
-                        <h4>Total Properties</h3>
-                            <h5>15</h5>
-                    </div>
-                </div>
-                <div class="dashboardbox  d-flex dashboard-bg2">
-                    <div class="align-content-center mr-3 ml-1"><img src="images/new.png" alt="Property Icon"
-                            class="icons"></div>
-                    <div>
-                        <h4>New Properties</h3>
-                            <h5>3</h5>
-                    </div>
-                </div>
-                <div class="dashboardbox  d-flex dashboard-bg3">
-                    <div class="align-content-center mr-3 ml-1"><img src="images/rent.png" alt="Property Icon"
-                            class="icons"></div>
-                    <div>
-                        <h4>Properties Rented</h3>
-                            <h5>3</h5>
-                    </div>
-                </div>
-                <div class="dashboardbox  d-flex dashboard-bg4">
-                    <div class="align-content-center mr-3 ml-1"><img src="images/sold.png" alt="Property Icon"
-                            class="icons"></div>
-                    <div>
-                        <h4>Properties Sold</h3>
-                            <h5>5</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="row2">
-                <div><img src="images/chart.png" alt="chart"></div>
-                <div><img src="images/chart.png" alt="chart"></div>
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Ratings Over Time',
+                        data: ratings,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Rating: ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                tooltipFormat: 'yyyy-MM-dd'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
 
-
-            </div>
-        </div>
-    </div>
-</div>
