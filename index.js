@@ -6,6 +6,7 @@ const flash = require('connect-flash');
 const app = express();
 const path = require('path');
 const methodOverride = require('method-override');
+const Handlebars = require('handlebars');
 
 //Database
 const fullstackDB = require('./config/DBConnection');
@@ -30,9 +31,17 @@ const feedbackRoute = require("./routes/feedback.js");
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 const { password } = require('./config/db.js');
+const { error } = require('console');
+
+//JSON for handlebars (idk i need it for my modal)
+Handlebars.registerHelper('json', function (context) {
+    return JSON.stringify(context);
+});
+Handlebars.registerHelper('parseJson', function (context) {
+    return JSON.parse(context);
+});
 
 //routers
-app.use('/', guestRoute);
 app.use('/user', userRoute);
 app.use('/admin', adminRoute);
 app.use('/feedback', feedbackRoute);
@@ -56,7 +65,8 @@ app.use(session({
     secret: 'session_cookie_secret',
     store: sessionStore,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: { secure: true }
 }));
 
 // Sets our js files to be the correct MIME type. Dont delete or js files wont be linked due to an error
@@ -83,8 +93,25 @@ app.get('/',function(req,res){ //home page
     res.render('home',{layout:'main'})
 });
 
+app.get('/customer' ,function(req,res){ //customer page
+    res.render('customerHome',{layout:'userMain'})
+});
+
 app.get('/buyHouse',function(req,res){ //buyHouse page
-    res.render('buyHouse',{layout:'main'})
+    Listed_Properties.findAll()
+        .then(properties => {
+            res.render('buyHouse', {
+                layout: 'main',
+                properties: properties.map(properties => properties.get({ plain: true })), // Convert to plain objects 
+                json: JSON.stringify // Pass JSON.stringify to the template
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching properties:', err);
+            if (!res.headersSent) {
+                res.status(500).send('Internal Server Error');
+            }
+        });
 });
 
 app.get('/propertyDescription', function(req, res){ //propertyDescription page
@@ -109,23 +136,26 @@ app.get('/login', (req,res) => { // User Login page
 });
 
 app.post('/login', function (req, res) {
+    errorList = [];
     let { email, password } = req.body;
 
     // Find the customer with the given email
     Customer.findOne({ where: { Customer_Email: email } }) 
         .then(user => {
             if (!user) {
+                errorList.push({ text: 'User not found' });
                 return res.status(404).send({ message: 'User not found' });
             }
 
             // Check if the password is correct
             if (user.Customer_Password !== password) {
+                errorList.push({ text: 'Incorrect password' });
                 return res.status(401).send({ message: 'Incorrect password' });
             }
 
             // Successful login
             req.session.user = user; // Store user information in session
-            res.redirect('/home');
+            res.redirect('/customer');
         })
         .catch(err => {
             console.log('Error during login: ', err);
@@ -134,11 +164,11 @@ app.post('/login', function (req, res) {
 });
 
 app.get('/register', (req, res) => { // User Registration page
-    res.render('Login/userReg', {layout:'main'});
+    res.render('Login/userReg',{layout:'main'});
 });
 
 app.post('/register', async function (req, res) {
-    let errors = [];
+    let errorsList = [];
     let { firstName, lastName, phoneNumber, email, birthday, password, confirmPassword } = req.body;
     if (!email) {
         return res.status(400).send("One or more required payloads were not provided.")
@@ -151,7 +181,7 @@ app.post('/register', async function (req, res) {
     console.log(data);
     // Check if password and confirmPassword match
     if (password !== confirmPassword) {
-        errors.push({ text: 'Passwords do not match' });
+        errorsList.push({ text: 'Passwords do not match' });
         return res.status(400).send({ message: 'Passwords do not match' });
     }
 
@@ -159,45 +189,57 @@ app.post('/register', async function (req, res) {
     var exists = false;
     for (var cust of data) {
         if (cust.toJSON().Customer_Email == email) {
-            return res.status(400).send("Email already exists.")
-
+            // return res.status(400).send("Email already exists.")
+            errorsList.push({ text: 'Email already exists' });
+            
         }
     }
 
     // Check if phone number is valid
     const phoneNumberPattern = /^[89]\d{7}$/;
     if (!phoneNumberPattern.test(phoneNumber)) {
-        return res.status(450).send({ message: 'Phone number must be 8 digits and start with 8 or 9' });
+        errorsList.push({ message: 'Phone number must be 8 digits and start with 8 or 9' });
     }
 
     // Check if password is valid
     const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!passwordPattern.test(password)) {
-        return res.status(400).send({ message: 'Password must be at least 8 characters long, include at least one capital letter, and one number' });
+        errorsList.push({ message: 'Password must be at least 8 characters long, include at least one capital letter, and one number' });
     }
 
-    // Create new customer
-    Customer.create({
-        Customer_fName: firstName,
-        Customer_lName: lastName,
-        Customer_Phone: phoneNumber,
-        Customer_Email: email,
-        Customer_Birthday: birthday,
-        Customer_Password: password,
-    })
-        .then(user => {
-            // Redirect to login page
-            res.redirect('/login');
+    if (errorsList.length > 0) {
+        let msg_success = "Success message using success_msg!";
+        let msg_error = "";
+        for (let i = 0; i < errorsList.length; i++) {
+            msg_error += errorsList[i].text + "\n";
+        }
+
+        res.render('Login/userReg',{layout:'main', success_msg:msg_success, error_msg:msg_error});
+    } else {
+        // Create new customer
+        Customer.create({
+            Customer_fName: firstName,
+            Customer_lName: lastName,
+            Customer_Phone: phoneNumber,
+            Customer_Email: email,
+            Customer_Birthday: birthday,
+            Customer_Password: password,
         })
-        .catch(err => {
-            res.status(400).send({ message: 'Error registering user', error: err });
-        });
+            .then(user => {
+                // Redirect to login page
+                res.redirect('/login');
+            })
+            .catch(err => {
+                res.status(400).send({ message: 'Error registering user', error: err });
+            });
+    }
 });
 
 app.get('/userSetProfile/:customer_id', async (req, res) => {
     const customer_id = req.params.customer_id;
+    console.log('Customer ID:', customer_id);
     try {
-        const customer = await Customer.findByPk(customer_id);
+        const customer = await Customer.findByPk(Customer_id);
         if (customer) {
             res.render('Customer/userSetProfile', { 
                 layout: 'userMain', 
@@ -212,12 +254,11 @@ app.get('/userSetProfile/:customer_id', async (req, res) => {
 });
 
 app.put('/userSetprofile/:customer_id', (req,res) => {
-    let {firstName, lastName, phoneNumber, email, birthday} = req.body;
+    let {firstName, lastName, phoneNumber, birthday} = req.body;
     Customer.update({
         Customer_fName: firstName,
         Customer_lName: lastName,
         Customer_Phone: phoneNumber,
-        Customer_Email: email,
         Customer_Birthday: birthday,
     },{
         where:{
@@ -237,7 +278,22 @@ app.get('/logout', function (req, res) {
     });
 });
 
-
+app.get('/adminUsersView', function(req, res){
+    Customer.findAll()
+    .then((customers)=>{
+        res.render('adminUsersView', {
+            layout:'adminMain', 
+            customers:customers.map(customer=>{
+                customer = customer.get({plain:true});
+                return customer;    
+            })
+        });
+    })
+    .catch(err => {
+        console.error('Error fetching customers:', err);
+        res.status(500).send('Internal Server Error');
+    });
+});
 
 
 // Agent Login and Registration
@@ -286,15 +342,6 @@ app.get('/agentSchedule', (req,res) => { // Agent Set profile page
 
 
 
-// Looks like this is not required
-// app.get('/userAccount', (req,res) => { // User Login page
-//     res.render('Profile/userAccountManagement', {layout:'userMain'});
-// });
-
-// app.get('/agentAccount', (req, res) => { // Agent account management page
-//     res.render('Profile/agentAccountManagement', {layout:'userMain'});
-// });
-
 app.get('/aboutUs', function(req, res){
     res.render('About Us/aboutUs', {layout:'main'});
 });
@@ -311,14 +358,22 @@ app.get('/agentListProperty', function(req, res){
 app.post('/agentListProperty', async function(req,res){
     let{
         name, propertyType, address, propertyImage, price, sqft, bedrooms, bathrooms
-        , yearBuilt, floorLevel, topDate, tenure, description, agentID
+        , yearBuilt, floorLevel, topDate, tenure, description, agentID, amenities
     } = req.body;
     
-    if (typeof amenities === 'string') {
-        amenities = JSON.parse(amenities);
+    if (!amenities) {
+        amenities = [];
+    } else if (typeof amenities === 'string') {
+        try {
+            amenities = JSON.parse(amenities);
+        } catch (e) {
+            amenities = [amenities];
+        }
+    } else if (!Array.isArray(amenities)) {
+        amenities = [amenities];
     }
 
-    Listed_Properties.create({
+    const property = await Listed_Properties.create({
         Property_Name: name,
         Property_Type: propertyType,
         Property_Address: address,
@@ -334,12 +389,16 @@ app.post('/agentListProperty', async function(req,res){
         Property_Description: description,
         agent_id: agentID
     })
-    .then(property => {
-        res.redirect('/agentListProperty')
-      })
-    .catch(err => {
-    res.status(400).send({ message: 'Error listing property', error: err });
-    });
+    if (amenities.length > 0) {
+        const amenityPromises = amenities.map(amenity => {
+            return Amenity.create({
+                Amenity: amenity,
+                Property_ID: property.Property_ID
+            });
+        });
+        await Promise.all(amenityPromises);
+    }
+        res.redirect('/agentListProperty');
 });
 
 
@@ -578,9 +637,7 @@ app.delete('/deleteAgent/:id', async (req, res) => {
 });
 
 
-app.get('/adminUsersView', function(req, res){
-    res.render('adminUsersView', {layout:'adminMain'});
-});
+
 
 app.get('/advertisement', function(req, res){
     res.render('Advertisements/advertisement', {layout:'adminMain'});
