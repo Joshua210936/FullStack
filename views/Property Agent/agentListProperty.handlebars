@@ -1,14 +1,23 @@
 <head>
-<link rel="stylesheet" href="css/AgentListProperty.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/AgentListProperty.css">
+    <title>Property Listing Form</title>
 </head>
-
- <div class="property-listing-page">
+    <div class="property-listing-page">
         <div class="listing-box">
             <div class="form-header">
                 <h1>Property Listing Form</h1>
             </div>
-            <form action="/agentListProperty" method="post">
-                <!-- First Section -->
+            <form action="/agentListProperty" method="post" class="addPropertyForm">
+                <!-- Property Details Section -->
+                <div class="form-header">
+                    <h2>Property Details</h2>
+                </div>
+                <div class="input-group">
+                    <label for="name">Property Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter property name">
+                </div>
                 <div class="input-group">
                     <label for="propertytype">Property Type</label>
                     <select id="propertyType" name="propertyType">
@@ -19,13 +28,25 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <label for="dateAvailable">Date Available</label>
-                    <input type="date" id="dateAvailable" name="dateAvailable">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" placeholder="Enter address">
+                </div>
+                <div class="input-group">
+                    <label for="propertyImage">Property Thumbnail</label>
+                    <input type="file" id="propertyImage" name="propertyImage" accept="image/*" required>
+                </div>
+                <div class="input-group">
+                    <label for="price">Price</label>
+                    <input type="number" id="price" name="price" placeholder="Enter price">
+                </div>
+                <div class="input-group">
+                    <label for="sqft">SQFT</label>
+                    <input type="number" id="sqft" name="sqft" placeholder="Enter square footage">
                 </div>
                 <div class="input-group">
                     <label for="bedrooms">Bedrooms</label>
                     <input type="range" id="bedrooms" name="bedrooms" min="1" max="10" oninput="updateCounter('bedrooms', this.value)">
-                    <div class="range-counter" id="bedroomsCounter" name="bedrooms-counter">5</div>
+                    <div class="range-counter" id="bedrooms-counter" name="bedrooms-counter">5</div>
                 </div>
                 <div class="input-group">
                     <label for="bathrooms">Bathrooms</label>
@@ -33,81 +54,76 @@
                     <div class="range-counter" id="bathrooms-counter" name="bathrooms-counter">5</div>
                 </div>
                 <div class="input-group">
-                    <label for="squarefootage">Square Footage</label>
-                    <input type="number" id="squarefootage" name="squarefootage" placeholder="Enter square footage" >
-                </div>
-                <div class="input-group">
-                    <label for="yearBuilt">Year Built</label>
+                    <label for="yearBuilt">Build Year</label>
                     <input type="number" id="yearBuilt" name="yearBuilt" placeholder="Enter year built">
                 </div>
                 <div class="input-group">
-                    <label for="name">Property Name</label>
-                    <input type="text" id="name" name="name" placeholder="Enter property name">
+                    <label for="floorLevel">Floor Level</label>
+                    <input type="number" id="floorLevel" name="floorLevel" placeholder="Enter floor level">
+                </div>
+                <div class="input-group">
+                    <label for="topDate">TOP</label>
+                    <input type="number" id="topDate" name="topDate" placeholder="Enter TOP year">
+                </div>
+                <div class="input-group">
+                    <label for="tenure">Tenure</label>
+                    <select id="tenure" name="tenure">
+                        <option value="" disabled selected>Select tenure</option>
+                        <option value="Freehold">Freehold</option>
+                        <option value="99-year Leasehold">99-year Leasehold</option>
+                        <option value="103-year Leasehold">103-year Leasehold</option>
+                        <option value="110-year Leasehold">110-year Leasehold</option>
+                        <option value="999-year Leasehold">999-year Leasehold</option>
+                        <option value="Unknown Tenure">Unknown Tenure</option>
+                    </select>
                 </div>
                 <div class="input-group">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" placeholder="Enter property description"></textarea>
+                    <textarea id="description" name="description" placeholder="Enter Property Description"></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="agentID">TEMPORARY(Agent ID)</label>
+                    <textarea id="agentID" name="agentID" placeholder="Enter Agent ID"></textarea>
                 </div>
 
-                <!-- Second Section -->
-                <div class="form-header">
-                    <h2>More Details</h2>
+                <!-- Amenities Section -->
+               {{!-- <div class="form-header">
+                    <h2>Amenities</h2>
                 </div>
-                <div class="input-group">
-                    <label for="price">Price</label>
-                    <input type="number" id="price" name="price" placeholder="Enter price" >
+                <div class="input-group" id="amenities-container">
+                    <div class="amenity" id="amenity-1">
+                        <input type="text" name="amenities[]" placeholder="Enter amenity">
+                        <button type="button" class="remove-amenity-btn" onclick="removeAmenity('amenity-1')">Remove</button>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="location">Location</label>
-                    <input type="text" id="location" name="location" placeholder="Enter location">
-                </div>
-                <div class="input-group">
-                    <label for="zip-code">Zip Code</label>
-                    <input type="text" id="zip-code" name="zip-code" placeholder="Enter zip code">
-                </div>
-                <div class="input-group">
-                    <label for="propertyPictures">Upload pictures of property</label>
-                    <input type="file" id="propertyPictures" name="propertyPictures" multiple accept="image/*" onchange="previewImages()" required>
-                </div>
-                <div id="image-preview"></div>
+                <button type="button" class="add-amenity-btn" onclick="addAmenity()">Add Amenity</button> --}}
+
                 <button class="formbutton" type="submit">Submit</button>
             </form>
         </div>
     </div>
 
- <script>
-    function updateCounter(id, value) {
-        document.getElementById(id + '-counter').textContent = value;
-    }
-
-    function previewImages() {
-        const preview = document.getElementById('image-preview');
-        preview.innerHTML = '';
-        const files = document.getElementById('property-pictures').files;
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const imgContainer = document.createElement('div');
-                imgContainer.className = 'image-container';
-
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.style.maxWidth = '150px';
-                img.style.margin = '10px';
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'Remove';
-                deleteBtn.className = 'delete-btn';
-                deleteBtn.addEventListener('click', function() {
-                    imgContainer.remove(); // Remove the image container
-                });
-
-                imgContainer.appendChild(img);
-                imgContainer.appendChild(deleteBtn);
-                preview.appendChild(imgContainer);
-            };
-            reader.readAsDataURL(file);
+     <script>
+        function updateCounter(id, value) {
+            document.getElementById(id + '-counter').textContent = value;
         }
-    }
-</script>
+
+        function addAmenity() {
+            const container = document.getElementById('amenities-container');
+            const amenityCount = container.getElementsByClassName('amenity').length;
+            const newAmenityId = `amenity-${amenityCount + 1}`;
+            const newAmenity = document.createElement('div');
+            newAmenity.className = 'amenity';
+            newAmenity.id = newAmenityId;
+            newAmenity.innerHTML = `
+                <input type="text" name="amenities[]" placeholder="Enter amenity">
+                <button type="button" class="remove-amenity-btn" onclick="removeAmenity('${newAmenityId}')">Remove</button>
+            `;
+            container.appendChild(newAmenity);
+        }
+
+        function removeAmenity(id) {
+            const amenity = document.getElementById(id);
+            amenity.remove();
+        }
+    </script>
