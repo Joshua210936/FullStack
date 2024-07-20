@@ -3,6 +3,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="/css/buyhouse.css">
     <script src="js/buyHouse.js" defer></script>
+    <script>
+        // Embed workshops data into a JavaScript variable
+        const properties = {{{json properties}}};
+    </script>
 </head> 
  
  
@@ -20,24 +24,30 @@
                             <button class="filter-icon" ><span class="material-symbols-outlined">tune</span>  </button>
                         </div> 
                     </form>
-                    <div class="buyitem">
-                        <a href="/propertyDescription">
-                            <div class="houseimg">
-                                <img src="images/hdb1.jpg" class="buyitemimage">
+                    {{#if properties.length}}
+                    <div class="properties-container">
+                        {{#each properties}}
+                            <div class="buyitem">
+                                <a href="/propertyDescription">
+                                    <div class="houseimg">
+                                        <img src="images/{{this.Property_Image}}" alt="images/{{this.Property_Image}}" class="buyitemimage">
+                                    </div>
+                                    <div class="housedesc">
+                                        <h2 class="desctext">{{this.Property_Name}}</h2>
+                                        <p class="desctext">{{this.Property_Address}}</p>
+                                        <p class="desctext">S$ {{this.Property_Price}}</p>
+                                        <div>
+                                            {{this.Property_Bedrooms}} Bedroom - {{this.Property_Bathrooms}} Bathroom - {{this.Square_Footage}} sqft - S$650 psf
+                                        </div>
+                                        <div>
+                                            {{this.Property_Type}} - Built: {{this.Property_YearBuilt}}
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
-                            <div class="housedesc">
-                                <h2 class="desctext">212B Punggol Walk</h2>
-                                <p class="desctext">212B Punggol Walk -  822212, Hougang / Punggol</p>
-                                <p class="desctext">S$ 650,000</p>
-                                <div>
-                                    3 Bedroom - 2 Bathroom - 1000 sqft - S$650 psf
-                                </div>
-                                <div>
-                                    HDB - Built: 2014 - Resale
-                                </div>
-                            </div>
-                        </a>
+                        {{/each}}
                     </div>
+                    {{/if}}
                 </div>
                 <div class="col-sm">
                 </div>

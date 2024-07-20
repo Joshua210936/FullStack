@@ -6,6 +6,7 @@ const flash = require('connect-flash');
 const app = express();
 const path = require('path');
 const methodOverride = require('method-override');
+const Handlebars = require('handlebars');
 
 //Database
 const fullstackDB = require('./config/DBConnection');
@@ -30,6 +31,14 @@ const feedbackRoute = require("./routes/feedback.js");
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 const { password } = require('./config/db.js');
+
+//JSON for handlebars (idk i need it for my modal)
+Handlebars.registerHelper('json', function (context) {
+    return JSON.stringify(context);
+});
+Handlebars.registerHelper('parseJson', function (context) {
+    return JSON.parse(context);
+});
 
 //routers
 app.use('/', guestRoute);
@@ -84,7 +93,20 @@ app.get('/',function(req,res){ //home page
 });
 
 app.get('/buyHouse',function(req,res){ //buyHouse page
-    res.render('buyHouse',{layout:'main'})
+    Listed_Properties.findAll()
+        .then(properties => {
+            res.render('buyHouse', {
+                layout: 'main',
+                properties: properties.map(properties => properties.get({ plain: true })), // Convert to plain objects 
+                json: JSON.stringify // Pass JSON.stringify to the template
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching properties:', err);
+            if (!res.headersSent) {
+                res.status(500).send('Internal Server Error');
+            }
+        });
 });
 
 app.get('/propertyDescription', function(req, res){ //propertyDescription page
