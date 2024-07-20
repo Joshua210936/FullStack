@@ -1,78 +1,83 @@
 <!-- CSS !-->
 
 <head>
-    <link rel="stylesheet" href="css/adminDashboard.css">
-    <script src="js/adminDashboard.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
 </head>
-
-<div class="wrapper">
-    <div class="sidebar">
-        <ul>
-            <li>
-                <a href="#" id="properties-link">Properties</a>
-                <ul class="sub-nav">
-                    <li><a href="#">2024</a></li>
-                    <li><a href="#">2023</a></li>
-                    <li><a href="#">2022</a></li>
-                    <li><a href="#">2021</a></li>
-                    <li><a href="#">2020</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" id="agent-link">Agents</a>
-                <ul class="sub-nav">
-                    <li><a href="#">2024</a></li>
-                    <li><a href="#">2023</a></li>
-                    <li><a href="#">2022</a></li>
-                    <li><a href="#">2021</a></li>
-                    <li><a href="#">2020</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <div class="main-content" id="main-content">
-        <div class="container">
-            <h1 class="text-center">Dashboard</h1>
-            <div class="row">
-                <div class="dashboardbox  d-flex  dashboard-bg1">
-                    <div class="align-content-center mr-3 ml-1"><img src="images/propertyicon.png" alt="Property Icon"
-                            class="icons"></div>
-                    <div>
-                        <h4>Total Properties</h3>
-                            <h5>15</h5>
-                    </div>
-                </div>
-                <div class="dashboardbox  d-flex dashboard-bg2">
-                    <div class="align-content-center mr-3 ml-1"><img src="images/new.png" alt="Property Icon"
-                            class="icons"></div>
-                    <div>
-                        <h4>New Properties</h3>
-                            <h5>3</h5>
-                    </div>
-                </div>
-                <div class="dashboardbox  d-flex dashboard-bg3">
-                    <div class="align-content-center mr-3 ml-1"><img src="images/rent.png" alt="Property Icon"
-                            class="icons"></div>
-                    <div>
-                        <h4>Properties Rented</h3>
-                            <h5>3</h5>
-                    </div>
-                </div>
-                <div class="dashboardbox  d-flex dashboard-bg4">
-                    <div class="align-content-center mr-3 ml-1"><img src="images/sold.png" alt="Property Icon"
-                            class="icons"></div>
-                    <div>
-                        <h4>Properties Sold</h3>
-                            <h5>5</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="row2">
-                <div><img src="images/chart.png" alt="chart"></div>
-                <div><img src="images/chart.png" alt="chart"></div>
-
-
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+    </nav>
+    <div class="container mt-4">
+        <h1 class="text-center">Admin Dashboard</h1>
+        <h2 class="text-center">Ratings Over Time</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <canvas id="myChart" width="800" height="600"></canvas>
             </div>
         </div>
     </div>
-</div>
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const dates = JSON.parse('{{{dates}}}');
+            const ratings = JSON.parse('{{{ratings}}}');
+
+            // Calculate the overall average rating
+            const totalSum = ratings.reduce((acc, rating) => acc + rating, 0);
+            const overallAverage = totalSum / ratings.length;
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Average Rating',
+                        data: new Array(dates.length).fill(overallAverage), // Fill all bars with the same average value
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1 // Adjust bar thickness
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                // Show the same tooltip value for all bars
+                                title: function() {
+                                    return 'Average Rating: ' + overallAverage.toFixed(2);
+                                },
+                                label: function() {
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                tooltipFormat: 'yyyy-MM-dd'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+

@@ -412,6 +412,7 @@ app.get('/adminAgentsView', function (req, res) {
         });
 });
 
+
 app.get('/agents', async (req, res) => {
     try {
         const agents = await Agent.findAll();
@@ -420,6 +421,8 @@ app.get('/agents', async (req, res) => {
         res.status(500).json({ message: 'Error fetching agents', error });
     }
 });
+
+
 
 // Approve an agent
 app.post('/approveAgent/:id', async (req, res) => {
@@ -472,6 +475,21 @@ app.get('/getAgent/:id', async (req, res) => {
 
 
 
+// Delete an agent
+app.delete('/deleteAgent/:id', async (req, res) => {
+    const agentId = req.params.id;
+    try {
+        const agent = await Agent.findByPk(agentId);
+        if (agent) {
+            await agent.destroy();
+            res.json({ message: 'Agent deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Agent not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting agent', error });
+    }
+});
 
 
 app.get('/adminUsersView', function(req, res){

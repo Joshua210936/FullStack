@@ -6,10 +6,12 @@
 </head>
 <br>
 <div class="feedbackForm">
+    {{> _errors}}
     <form action="/feedback/feedbackForm" method="post">
         <div class="center-rating">
             <div class="rating-box">
-                <header>How was your experience?</header>
+                <header>FeedbackForm</header>
+                <P>How was your experience?</P>
                 <div class="stars">
                     <i class="fa-solid fa-star"></i>
                     <i class="fa-solid fa-star"></i>
@@ -18,7 +20,7 @@
                     <i class="fa-solid fa-star"></i>
                 </div>
                 <br>
-                <input type="hidden" name="Rating" id="current-rating" value=""/>
+                <input type="hidden" name="Rating" id="current-rating" value="0"/>
             </div>
         </div>
         <div class="container">
@@ -33,7 +35,7 @@
                     <label for="visitReason">What prompted you to visit our feedback form today?</label>
                     <div class="input-group mb-3">
                         <select class="custom-select" id="visitReason" name="VisitReason" required>
-                            <option selected>Choose...</option>
+                            <option selected value="Choose">Choose...</option>
                             <option value="Report an issue">Report an issue</option>
                             <option value="Provide feedback">Provide feedback</option>
                             <option value="Send a suggestion">Send a suggestion</option>
@@ -41,7 +43,7 @@
                         </select>
                     </div>
                     <label for="AgentID">Agent ID (Optional)</label>
-                    <input type="text" name="AgentID" class="form-control" required>
+                    <input type="text" name="AgentID" class="form-control">
                     <label for="Description">Description</label>
                     <input type="text" name="Description" class="form-control" required>
                     <br>
