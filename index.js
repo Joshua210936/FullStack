@@ -280,6 +280,12 @@ app.get('/agentSetprofile', (req,res) => { // Agent Set profile page
     res.render('Property Agent/agentSetprofile', {layout:'userMain'});
 });
 
+app.get('/agentSchedule', (req,res) => { // Agent Set profile page
+    res.render('Property Agent/agentSchedule', {layout:'userMain'});
+});
+
+
+
 // Looks like this is not required
 // app.get('/userAccount', (req,res) => { // User Login page
 //     res.render('Profile/userAccountManagement', {layout:'userMain'});
@@ -395,24 +401,83 @@ app.get('/schedule', function(req, res){
 });
 
 app.post('/schedule', function(req,res){
-    let{ propertyType, dateAvailable, bedrooms, bathrooms, squarefootage, yearBuilt, name, description, price, location, propertyPictures} = req.body;
+    let{ customerId, agentId, propertyId, appointmentDate, appointmentTime} = req.body;
     
     Schedule.create({
-        customer_id: propertyType,
-        agent_id: dateAvailable,
-        property_id: bedrooms,
-        date_selected: bathrooms,
-        Square_Footage: squarefootage,
-        time_selected: yearBuilt,
+        customer_id: customerId,
+        agent_id: agentId,
+        property_id: propertyId,
+        date_selected: appointmentDate,
+        time_selected: appointmentTime,
+        
        
     })
     .then(property => {
-        res.status(201).send({ message: 'Property listed successfully!', property });
+        res.status(201).send({ message: 'Schedule insert successful!', property });
       })
     .catch(err => {
-    res.status(400).send({ message: 'Error listing property', error: err });
+    res.status(400).send({ message: 'Error inserting schedule', error: err });
     });
 });
+
+app.get('/agent/4/appointments', async (req, res) => {
+    const agentId = 4;
+
+    try {
+        const appointments = await Schedule.findAll({
+            where: { agent_id: agentId },
+            include: [
+                { model: Customer, attributes: ['Customer_fName', 'Customer_Email'] },
+                { model: Listed_Properties, attributes: ['Property_Description', 'Property_Price', 'Property_Address'] }
+            ]
+        });
+
+        // Log the fetched data to verify its structure
+        console.log('Appointments:', JSON.stringify(appointments, null, 2));
+
+        // Pass data to Handlebars view
+        res.render('Property Agent/agentSchedule', { 
+            agentId, 
+            appointments: appointments.map(appointment => appointment.get({ plain: true })) 
+        });
+    } catch (err) {
+        console.error('Error retrieving appointments:', err);
+        res.status(500).send({ message: 'Error retrieving appointments', error: err });
+    }
+});
+
+app.get('/customer/:id/appointments', async (req, res) => {
+    try {
+        const customerId = 2; // Hardcoded customer ID
+
+        // Fetch schedules for the customer
+        const schedules = await Schedule.findAll({
+            where: { customer_id: customerId },
+            include: [
+                { model: Agent, attributes: ['agent_firstName', 'agent_lastName', 'agent_email'] },
+                { model: Listed_Properties, attributes: ['Property_Description', 'Property_Price', 'Property_Address'] }
+            ]
+        });
+
+        // Log fetched data to ensure structure is correct
+        console.log('Fetched Schedules:', JSON.stringify(schedules, null, 2));
+
+        // Render the appointments view with Handlebars
+        res.render('Customer/customerSchedule', {
+            customerId: customerId,
+            schedules: schedules.map(schedule => schedule.get({ plain: true }))
+        });
+    } catch (error) {
+        console.error('Error fetching schedules:', error);
+        res.status(500).send('Server Error');
+    }
+});
+
+  
+
+
+
+
 
 
 app.get('/adminAgentsView', function (req, res) {

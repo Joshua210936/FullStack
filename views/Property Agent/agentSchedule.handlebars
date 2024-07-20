@@ -1,0 +1,34 @@
+<head>
+    <link rel="stylesheet" href="/css/agentSchedule.css">
+    <title>Agent Appointments</title>
+</head>
+
+<h1>Appointments for Agent ID: {{agentId}}</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Customer Email</th>
+            <th>Property Description</th>
+            <th>Property Price</th>
+            <th>Property Address</th>
+            <th>Date Selected</th>
+            <th>Time Selected</th>
+        </tr>
+    </thead>
+    <tbody>
+       {{#each appointments}}
+<tr>
+    <td>{{customer.Customer_fName}}</td>
+    <td>{{customer.Customer_Email}}</td>
+    <td>{{listed_property.Property_Description}}</td>
+    <td>{{listed_property.Property_Price}}</td>
+    <td>{{listed_property.Property_Address}}</td>
+    <td>{{date_selected}}</td>
+    <td>{{time_selected}}</td>
+</tr>
+{{/each}}
+
+    </tbody>
+</table>

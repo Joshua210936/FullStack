@@ -13,7 +13,12 @@
       </div>
     </div>
     <div class="calendar-section">
-      <form action="/schedule/confirm" method="POST" class="schedule-form">
+      <form action="/schedule" method="POST" class="schedule-form">
+        <!-- Hidden fields for agent_id and property_id -->
+        <input type="hidden" id="agentId" name="agentId" value="4"> <!-- Replace with actual agent_id -->
+        <input type="hidden" id="propertyId" name="propertyId" value="2"> 
+        <input type="hidden" id="customerId" name="customerId" value="2">
+
         <div class="form-group">
           <label for="appointmentDate">Select Date:</label>
           <input type="date" id="appointmentDate" name="appointmentDate" required>
@@ -21,10 +26,10 @@
         <div class="form-group">
           <label for="appointmentTime">Select Time:</label>
           <select id="appointmentTime" name="appointmentTime" required>
-            <option value="09:00 AM">09:00 AM</option>
-            <option value="10:00 AM">10:00 AM</option>
-            <option value="11:00 AM">11:00 AM</option>
-            <option value="12:00 PM">12:00 PM</option>
+            <option value="09:00">09:00 AM</option>
+            <option value="10:00">10:00 AM</option>
+            <option value="11:00">11:00 AM</option>
+            <option value="12:00">12:00 PM</option>
           </select>
         </div>
         <button type="submit" class="confirm-button">Confirm Appointment</button>
