@@ -235,11 +235,11 @@ app.post('/register', async function (req, res) {
     }
 });
 
-app.get('/userSetProfile/:customer_id', async (req, res) => {
+app.get('/userSetProfile/:id', async (req, res) => {
     const customer_id = req.params.customer_id;
     console.log('Customer ID:', customer_id);
     try {
-        const customer = await Customer.findByPk(Customer_id);
+        const customer = await Customer.findByPk(customer_id);
         if (customer) {
             res.render('Customer/userSetProfile', { 
                 layout: 'userMain', 
@@ -255,6 +255,7 @@ app.get('/userSetProfile/:customer_id', async (req, res) => {
 
 app.put('/userSetprofile/:customer_id', (req,res) => {
     let {firstName, lastName, phoneNumber, birthday} = req.body;
+    let customer_id = req.params.customer_id;
     Customer.update({
         Customer_fName: firstName,
         Customer_lName: lastName,
@@ -262,7 +263,7 @@ app.put('/userSetprofile/:customer_id', (req,res) => {
         Customer_Birthday: birthday,
     },{
         where:{
-            Customer_Email: email
+            Customer_id:customer_id
         }
     }).then((Customer)=>{
         res.redirect("/userSetprofile");
