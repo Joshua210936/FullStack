@@ -17,6 +17,7 @@ const Feedback = require('./models/Feedback');
 const Listed_Properties = require('./models/Listed_Properties');
 const Agent = require('./models/Agent');
 const Customer = require('./models/custUser');
+const Schedule = require('./models/schedule');
 const Amenity = require('./models/propertyAmenities')
 
 
@@ -403,6 +404,26 @@ app.get('/propertyAgentProfile/:id', function (req, res) {
 
 app.get('/schedule', function(req, res){
     res.render('schedule', {layout:'userMain'});
+});
+
+app.post('/schedule', function(req,res){
+    let{ propertyType, dateAvailable, bedrooms, bathrooms, squarefootage, yearBuilt, name, description, price, location, propertyPictures} = req.body;
+    
+    Schedule.create({
+        customer_id: propertyType,
+        agent_id: dateAvailable,
+        property_id: bedrooms,
+        date_selected: bathrooms,
+        Square_Footage: squarefootage,
+        time_selected: yearBuilt,
+       
+    })
+    .then(property => {
+        res.status(201).send({ message: 'Property listed successfully!', property });
+      })
+    .catch(err => {
+    res.status(400).send({ message: 'Error listing property', error: err });
+    });
 });
 
 

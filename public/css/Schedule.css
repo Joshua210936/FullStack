@@ -1,145 +1,96 @@
 body {
-    font-family: 'Poppins', sans-serif;
-    background: #f8f9fa;
-    margin: 0;
-    padding: 20px; /* Added padding for overall layout */
-  }
-  
-  /* Agent and Calendar Container */
-  .agent-and-calendar-container {
-    display: flex;
-    flex-wrap: wrap; /* Allow elements to wrap if needed */
-    gap: 20px; /* Added gap for spacing between sections */
-  }
-  
-  /* Agent Info */
-  .agent-info {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 30%; /* Set width for agent info section */
-    display: flex;
-    align-items: center;
-  }
-  
-  .agent-image {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    margin-right: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .agent-details {
-    flex: 1; /* Allow details to fill remaining space */
-  }
-  
-  .agent-details h3 {
-    font-size: 20px;
-    font-weight: 500;
-    margin: 10px 0;
-  }
-  
-  .agent-details p {
-    font-size: 14px;
-    color: #666;
-    margin: 5px 0 0;
-  }
-  
-  /* Calendar Section */
-  .calendar-section {
-    width: 70%; /* Set width for calendar section */
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-  }
-  
-  .calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 10px; /* Adjusted padding for better spacing */
-    border-bottom: 1px solid #ddd;
-  }
-  
-  /* Navigation buttons */
-  .nav-button {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #007bff;
-  }
-  
-  .month-display {
-    font-size: 20px;
-    font-weight: 500;
-  }
-  
-  /* Calendar UI */
-  .calendar-ui {
-    border-radius: 0 0 10px 10px;
-    overflow: hidden;
-  }
-  
-  .calendar-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .calendar-table th, .calendar-table td {
-    border: 1px solid #ddd;
-    width: 14.28%;
-    height: 80px;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 14px;
-  }
-  
-  .calendar-table th {
-    background-color: #007bff;
-    color: #fff;
-  }
-  
-  /* Time slots */
-  .time-slots {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 20px;
-  }
-  
-  .time-slot, .confirm-button {
-    padding: 12px 40px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s, color 0.3s;
-  }
-  
-  .time-slot {
-    background-color: #007bff;
-    color: #fff;
-  }
-  
-  .time-slot:hover {
-    background-color: #0056b3;
-  }
-  
-  .confirm-button {
-    background-color: #28a745;
-    color: #fff;
-  }
-/* Calendar cell */
-.calendar-cell {
-    cursor: pointer;
-    padding: 5px;
+  font-family: 'Poppins', sans-serif;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 20px; /* Added padding for overall layout */
 }
 
-.calendar-cell.selected {
-    background-color: rgba(0, 123, 255, 0.3); /* Transparent blue */
-    color: #007bff; /* Text color */
+/* Agent and Calendar Container */
+.agent-and-calendar-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow elements to wrap if needed */
+  gap: 20px; /* Added gap for spacing between sections */
+}
+
+/* Agent Info */
+.agent-info {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 30%; /* Set width for agent info section */
+  display: flex;
+  align-items: center;
+}
+
+.agent-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-right: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.agent-details {
+  flex: 1; /* Allow details to fill remaining space */
+}
+
+.agent-details h3 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 10px 0;
+}
+
+.agent-details p {
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0 0;
+}
+
+/* Calendar Section */
+.calendar-section {
+  width: 70%; /* Set width for calendar section */
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Form */
+.schedule-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 500;
+}
+
+input[type="date"],
+select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.confirm-button {
+  padding: 12px 40px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #28a745;
+  color: #fff;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.confirm-button:hover {
+  background-color: #218838;
 }
