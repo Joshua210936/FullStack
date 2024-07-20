@@ -3,7 +3,6 @@
     <script src="js/schedulepage.js" defer></script>
 </head>
 
-
 <div class="schedule-open-house-page">
   <div class="agent-and-calendar-container">
     <div class="agent-info">
@@ -14,24 +13,22 @@
       </div>
     </div>
     <div class="calendar-section">
-      <div class="calendar-header">
-        <button class="nav-button" id="prevMonth">&#8592;</button>
-        <div class="month-display" id="monthDisplay">May 2024</div>
-        <button class="nav-button" id="nextMonth">&#8594;</button>
-      </div>
-      <div class="calendar-ui" id="calendar">
+      <form action="/schedule/confirm" method="POST" class="schedule-form">
+        <div class="form-group">
+          <label for="appointmentDate">Select Date:</label>
+          <input type="date" id="appointmentDate" name="appointmentDate" required>
         </div>
-      <div class="time-slots">
-        <button class="time-slot">09:00 AM</button>
-        <button class="time-slot">10:00 AM</button>
-        <button class="time-slot">11:00 AM</button>
-        <button class="time-slot">12:00 PM</button>
-        <button class="confirm-button">Confirm Appointment</button>
-      </div>
+        <div class="form-group">
+          <label for="appointmentTime">Select Time:</label>
+          <select id="appointmentTime" name="appointmentTime" required>
+            <option value="09:00 AM">09:00 AM</option>
+            <option value="10:00 AM">10:00 AM</option>
+            <option value="11:00 AM">11:00 AM</option>
+            <option value="12:00 PM">12:00 PM</option>
+          </select>
+        </div>
+        <button type="submit" class="confirm-button">Confirm Appointment</button>
+      </form>
     </div>
   </div>
 </div>
-
-
-  
-
