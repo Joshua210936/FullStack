@@ -31,7 +31,7 @@ const feedbackRoute = require("./routes/feedback.js");
 //Imported helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 const { password } = require('./config/db.js');
-const { error } = require('console');
+const { error, clear } = require('console');
 const { layouts } = require('chart.js');
 
 //JSON for handlebars (idk i need it for my modal)
@@ -57,7 +57,10 @@ const options = {
     port: db.port,
     user: db.username,
     password: db.password,
-    database: db.database
+    database: db.database,
+    clearExpired: true,
+    checkExpirationInterval: 900000,
+    expiration: 86400000
 }
 const sessionStore = new MySQLStore(options);
 
@@ -210,6 +213,8 @@ app.post('/login', function (req, res) {
 
             // Successful login
             req.session.user = user; // Store user information in session
+            const user_id = user.Customer_id;
+            console.log(user_id) 
             res.redirect('/customerHome');
         })
         .catch(err => {
@@ -225,70 +230,140 @@ app.get('/register', (req, res) => { // User Registration page
 app.post('/register', async function (req, res) {
     let errorsList = [];
     let { firstName, lastName, phoneNumber, email, birthday, password, confirmPassword } = req.body;
+    
+    // Check for missing email
     if (!email) {
-        return res.status(400).send("One or more required payloads were not provided.")
-
+        return res.status(400).send("One or more required payloads were not provided.");
     }
 
-    const data = await Customer.findAll({
-        attributes: ["Customer_Email"]
-    });
-    console.log(data);
-    // Check if password and confirmPassword match
-    if (password !== confirmPassword) {
-        errorsList.push({ text: 'Passwords do not match' });
-        return res.status(400).send({ message: 'Passwords do not match' });
-    }
+    try {
+        const data = await Customer.findAll({
+            attributes: ["Customer_Email"]
+        });
 
-    // Check if email already exists
-    var exists = false;
-    for (var cust of data) {
-        if (cust.toJSON().Customer_Email == email) {
-            // return res.status(400).send("Email already exists.")
-            errorsList.push({ text: 'Email already exists' });
-            
-        }
-    }
+        console.log('Retrieved customer emails:', data);
 
-    // Check if phone number is valid
-    const phoneNumberPattern = /^[89]\d{7}$/;
-    if (!phoneNumberPattern.test(phoneNumber)) {
-        errorsList.push({ message: 'Phone number must be 8 digits and start with 8 or 9' });
-    }
-
-    // Check if password is valid
-    const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!passwordPattern.test(password)) {
-        errorsList.push({ message: 'Password must be at least 8 characters long, include at least one capital letter, and one number' });
-    }
-
-    if (errorsList.length > 0) {
-        let msg_success = "Success message using success_msg!";
-        let msg_error = "";
-        for (let i = 0; i < errorsList.length; i++) {
-            msg_error += errorsList[i].text + "\n";
+        // Check if password and confirmPassword match
+        if (password !== confirmPassword) {
+            errorsList.push({ text: 'Passwords do not match' });
         }
 
-        res.render('Login/userReg',{layout:'main', success_msg:msg_success, error_msg:msg_error});
-    } else {
+        // Check if email already exists
+        for (var cust of data) {
+            if (cust.toJSON().Customer_Email === email) {
+                errorsList.push({ text: 'Email already exists' });
+                break;
+            }
+        }
+
+        // Check if phone number is valid
+        const phoneNumberPattern = /^[89]\d{7}$/;
+        if (!phoneNumberPattern.test(phoneNumber)) {
+            errorsList.push({ text: 'Phone number must be 8 digits and start with 8 or 9' });
+        }
+
+        // Check if password is valid
+        const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        if (!passwordPattern.test(password)) {
+            errorsList.push({ text: 'Password must be at least 8 characters long, include at least one capital letter, and one number' });
+        }
+
+        // If there are errors, render the registration page with error messages
+        if (errorsList.length > 0) {
+            let msg_error = "";
+            for (let i = 0; i < errorsList.length; i++) {
+                console.log('Error:', errorsList[i]);
+                msg_error += errorsList[i].text + "\n";
+            }
+            return res.render('Login/userReg', { layout: 'main', error_msg: msg_error });
+        }
+
         // Create new customer
-        Customer.create({
+        const newCustomer = await Customer.create({
             Customer_fName: firstName,
             Customer_lName: lastName,
             Customer_Phone: phoneNumber,
             Customer_Email: email,
             Customer_Birthday: birthday,
             Customer_Password: password,
-        })
-            .then(user => {
-                // Redirect to login page
-                res.redirect('/login');
-            })
-            .catch(err => {
-                res.status(400).send({ message: 'Error registering user', error: err });
-            });
+        });
+
+        // Redirect to login page upon successful registration
+        res.redirect('/login');
+    } catch (err) {
+        console.error('Error registering user:', err);
+        res.status(500).send({ message: 'Error registering user', error: err });
     }
 });
+
+
+// app.post('/register', async function (req, res) {
+//     let errorsList = [];
+//     let { firstName, lastName, phoneNumber, email, birthday, password, confirmPassword } = req.body;
+//     if (!email) {
+//         return res.status(400).send("One or more required payloads were not provided.")
+
+//     }
+
+//     const data = await Customer.findAll({
+//         attributes: ["Customer_Email"]
+//     });
+//     console.log(data);
+//     // Check if password and confirmPassword match
+//     if (password !== confirmPassword) {
+//         errorsList.push({ text: 'Passwords do not match' });
+//         return res.status(400).send({ message: 'Passwords do not match' });
+//     }
+
+//     // Check if email already exists
+//     var exists = false;
+//     for (var cust of data) {
+//         if (cust.toJSON().Customer_Email == email) {
+//             // return res.status(400).send("Email already exists.")
+//             errorsList.push({ text: 'Email already exists' });
+            
+//         }
+//     }
+
+//     // Check if phone number is valid
+//     const phoneNumberPattern = /^[89]\d{7}$/;
+//     if (!phoneNumberPattern.test(phoneNumber)) {
+//         errorsList.push({ message: 'Phone number must be 8 digits and start with 8 or 9' });
+//     }
+
+//     // Check if password is valid
+//     const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+//     if (!passwordPattern.test(password)) {
+//         errorsList.push({ message: 'Password must be at least 8 characters long, include at least one capital letter, and one number' });
+//     }
+
+//     if (errorsList.length > 0) {
+//         let msg_error = "";
+//         for (let i = 0; i < errorsList.length; i++) {
+//             console.log(errorsList[i]);
+//             msg_error += errorsList[i].text + "\n";
+//         }
+
+//         res.render('Login/userReg',{layout:'main', error_msg:msg_error});
+//     } else {
+//         // Create new customer
+//         Customer.create({
+//             Customer_fName: firstName,
+//             Customer_lName: lastName,
+//             Customer_Phone: phoneNumber,
+//             Customer_Email: email,
+//             Customer_Birthday: birthday,
+//             Customer_Password: password,
+//         })
+//             .then(user => {
+//                 // Redirect to login page
+//                 res.redirect('/login');
+//             })
+//             .catch(err => {
+//                 res.status(400).send({ message: 'Error registering user', error: err });
+//             });
+//     }
+// });
 
 app.get('/userSetProfile/:customer_id', async (req, res) => {
     const customer_id = req.params.customer_id;
@@ -310,29 +385,55 @@ app.get('/userSetProfile/:customer_id', async (req, res) => {
 });
 
 
-app.post('/userSetprofile/:customer_id', (req,res) => {
-    let {firstName, lastName, phoneNumber, birthday} = req.body;
-    let customer_id = req.params.customer_id;
-    console.log(`Updating customer ${customer_id} with:`, {firstName, lastName, phoneNumber, birthday});
-    Customer.update({
-        Customer_fName: firstName,
-        Customer_lName: lastName,
-        Customer_Phone: phoneNumber,
-        Customer_Birthday: birthday,
-    },{
-        where:{
-            Customer_id: customer_id
-        }
-    }).then((result) => {
-        if (result[0] > 0) { // Assuming update returns an array where the first element is the number of rows updated
-            res.redirect(`/userSetprofile/${customer_id}`);
+app.post('/userSetProfile/:customer_id', async (req, res) => {
+    const { firstName, lastName, phoneNumber, birthday } = req.body;
+    const customer_id = req.params.customer_id;
+    
+    console.log('Received customer ID:', customer_id); // Log customer ID
+    console.log('Received update data:', { firstName, lastName, phoneNumber, birthday }); // Log update data
+    
+    try {
+        const customer = await Customer.findByPk(customer_id);
+        if (customer) {
+            await Customer.update(
+                {
+                    Customer_fName: firstName,
+                    Customer_lName: lastName,
+                    Customer_Phone: phoneNumber,
+                    Customer_Birthday: birthday,
+                },
+                {
+                    where: {
+                        Customer_id: customer_id
+                    }
+                }
+            );
+            res.redirect(`/userSetProfile/${customer_id}`);
         } else {
             res.status(404).send("Customer not found");
         }
-    }).catch(err => {
+    } catch (err) {
         console.error(err);
         res.status(500).send("Error updating customer profile");
-    });
+    }
+});
+
+// User Delete Route
+app.post('/deleteUser/:customer_id', async (req, res) => {
+    const customer_id = req.params.customer_id;
+    console.log('Received customer ID:', customer_id);
+    try {
+        const customer = await Customer.findByPk(customer_id);
+        if (customer) {
+            await customer.destroy();
+            res.redirect('/customerHome'); // Redirect to an appropriate page after deletion
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting customer:', error);
+        res.status(500).json({ message: 'Error deleting customer', error });
+    }
 });
 
 app.get('/logout', function (req, res) {
@@ -343,40 +444,6 @@ app.get('/logout', function (req, res) {
         res.redirect('/login');
     });
 });
-
-app.get('/adminUsersView', function(req, res){
-    Customer.findAll()
-    .then((customers)=>{
-        res.render('adminUsersView', {
-            layout:'adminMain', 
-            customers:customers.map(customer=>{
-                customer = customer.get({plain:true});
-                return customer;    
-            })
-        });
-    })
-    .catch(err => {
-        console.error('Error fetching customers:', err);
-        res.status(500).send('Internal Server Error');
-    });
-});
-
-// Delete an agent
-app.delete('/deleteAgent/:id', async (req, res) => {
-    const agentId = req.params.id;
-    try {
-        const agent = await Agent.findByPk(agentId);
-        if (agent) {
-            await agent.destroy();
-            res.json({ message: 'Agent deleted successfully' });
-        } else {
-            res.status(404).json({ message: 'Agent not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: 'Error deleting agent', error });
-    }
-});
-
 
 // Agent Login and Registration
 app.get('/agentLogin', (req,res) => { // User Login page
@@ -854,9 +921,64 @@ app.delete('/schedule/:id', async (req, res) => {
     }
 });
 
+// Admin User Management
+app.get('/adminUsersView', function(req, res){
+    Customer.findAll()
+    .then((customers)=>{
+        res.render('adminUsersView', {
+            layout:'adminMain', 
+            customers:customers.map(customer=>{
+                customer = customer.get({plain:true});
+                return customer;    
+            })
+        });
+    })
+    .catch(err => {
+        console.error('Error fetching customers:', err);
+        res.status(500).send('Internal Server Error');
+    });
+});
 
+app.get('/customers', async (req, res) => {
+    try {
+        const customers = await Customer.findAll();
+        res.json(customers);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching customers', error });
+    }
+});
 
+app.get('/getCustomer/:id', async (req, res) => {
+    const customerId = req.params.id;
+    try {
+        const customer = await Customer.findByPk(customerId);
+        if (customer) {
+            res.json(customer);
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching Customer details', error });
+    }
+});
 
+// Admin delete customer
+app.delete('/adminDeleteCustomer/:id', async (req, res) => {
+    const customerId = req.params.id;
+    try {
+        const customer = await Customer.findByPk(customerId);
+        if (customer) {
+            await customer.destroy();
+            res.json({ message: 'customer deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting Customer', error });
+    }
+});
+
+// Admin Agent Management
 app.get('/adminAgentsView', function (req, res) {
     Agent.findAll()
         .then(agents => {
@@ -884,8 +1006,6 @@ app.get('/agents', async (req, res) => {
         res.status(500).json({ message: 'Error fetching agents', error });
     }
 });
-
-
 
 // Approve an agent
 app.post('/approveAgent/:id', async (req, res) => {

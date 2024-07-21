@@ -130,3 +130,20 @@ body {
 .formbutton:hover {
     background: #0056b3;
 }
+
+.registerbutton {
+    width: 100%;
+    height: 45px;
+    background: #007bff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.registerbutton:hover {
+    background: #0056b3;
+}
