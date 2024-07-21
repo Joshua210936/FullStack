@@ -70,7 +70,7 @@
                             <td>
                                 {{#ifEquals this.feedback_status "Normal"}}
                                 <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
-                                    <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
                                     <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post"
                                         class="d-inline">
                                         <input type="hidden" name="_method" value="PUT">
@@ -78,7 +78,7 @@
                                     </form>
                                 </div>
                                 {{else}}
-                                <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
                                 {{/ifEquals}}
                             </td>
                             </td>
@@ -127,7 +127,7 @@
                             <td>
                                 {{#ifEquals this.feedback_status "Normal"}}
                                 <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
-                                    <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
                                     <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post"
                                         class="d-inline">
                                         <input type="hidden" name="_method" value="PUT">
@@ -135,7 +135,7 @@
                                     </form>
                                 </div>
                                 {{else}}
-                                <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
                                 {{/ifEquals}}
                             </td>
                             </td>
@@ -186,7 +186,7 @@
                             <td>
                                 {{#ifEquals this.feedback_status "Normal"}}
                                 <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
-                                    <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
                                     <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post"
                                         class="d-inline">
                                         <input type="hidden" name="_method" value="PUT">
@@ -194,7 +194,7 @@
                                     </form>
                                 </div>
                                 {{else}}
-                                <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
                                 {{/ifEquals}}
                             </td>
                             </td>
@@ -245,7 +245,7 @@
                             <td>
                                 {{#ifEquals this.feedback_status "Normal"}}
                                 <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
-                                    <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
                                     <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post"
                                         class="d-inline">
                                         <input type="hidden" name="_method" value="PUT">
@@ -253,7 +253,7 @@
                                     </form>
                                 </div>
                                 {{else}}
-                                <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
                                 {{/ifEquals}}
                             </td>
                             </td>
@@ -303,7 +303,7 @@
                             <td>
                                 {{#ifEquals this.feedback_status "Normal"}}
                                 <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
-                                    <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
                                     <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post"
                                         class="d-inline">
                                         <input type="hidden" name="_method" value="PUT">
@@ -311,7 +311,7 @@
                                     </form>
                                 </div>
                                 {{else}}
-                                <a href="/admin/ViewFeedback" class="btn btn-primary">View</a>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
                                 {{/ifEquals}}
                             </td>
                             </td>
@@ -326,6 +326,52 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feedbackModalLabel">Feedback Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="modalFeedbackType"></h4>
+                    <p><strong>Name:</strong> <span id="modalFeedbackName"></span></p>
+                    <p><strong>Email:</strong> <span id="modalFeedbackEmail"></span></p>
+                    <p><strong>Rating:</strong> <span id="modalFeedbackRating"></span></p>
+                    <p><strong>Date:</strong> <span id="modalFeedbackDate"></span></p>
+                    <p><strong>Description:</strong> <span id="modalFeedbackDescription"></span></p>
+                    <p><strong>Status:</strong> <span id="modalFeedbackStatus"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        $('#feedbackModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var feedback = button.data('feedback') // Extract info from data-* attributes
+            var modal = $(this)
+
+            modal.find('.modal-title').text('Feedback Details')
+            modal.find('#modalFeedbackType').text(feedback.feedback_type)
+            modal.find('#modalFeedbackName').text(feedback.feedback_name)
+            modal.find('#modalFeedbackEmail').text(feedback.feedback_email)
+            modal.find('#modalFeedbackRating').text(feedback.feedback_rating + "/5")
+            modal.find('#modalFeedbackDate').text(feedback.feedback_date)
+            modal.find('#modalFeedbackDescription').text(feedback.feedback_description)
+            modal.find('#modalFeedbackStatus').text(feedback.feedback_status)
+        })
+    </script>
 </body>
 
 </html>

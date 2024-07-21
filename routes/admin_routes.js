@@ -14,19 +14,6 @@ const Customer = require('../models/custUser');
 const Schedule = require('../models/schedule');
 const Amenity = require('../models/propertyAmenities')
 
-router.put('/saveFeedback/:id', (req, res) => {
-    let feedback_status = 'saved';
-    Feedback.update({
-        feedback_status
-    }, {
-        where: {
-            feedback_id: req.params.id
-        }
-    }).then((video) => {
-        res.redirect("/adminFeedback");
-    }).catch(err => console.log(err))
-});
-
 router.get('/test', (req, res) => {
     console.log('router connected successfully')
     res.redirect('/adminDashboard')
