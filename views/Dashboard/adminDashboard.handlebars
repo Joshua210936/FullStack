@@ -1,5 +1,3 @@
-<!-- CSS !-->
-
 <head>
     <link rel="stylesheet" href="/css/adminDashboard.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -13,25 +11,32 @@
         <h1 class="text-center">Admin Dashboard</h1>
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="custom-div">
                         <p>Average Feedback Rating this week</p>
                         <br>
                         <h3>{{{averageRatingToday}}}</h3>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="custom-div">
-                        <p>Number of customer accounts</p>
-                        <br>
-                        <h3>{{{custCount}}}</h3>
-                    </div>
-                </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="custom-div">
                         <p>Number of property agents</p>
                         <br>
                         <h3>{{{agentCount}}}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="custom-div">
+                        <p>Number of properties sold this month</p>
+                        <br>
+                        <h3>{{{soldPropertyCount}}}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="custom-div">
+                        <p>Revenue earned:</p>
+                        <br>
+                        <h3>${{{soldPropertyRevenue}}}</h3>
                     </div>
                 </div>
             </div>
@@ -39,7 +44,7 @@
         <h2 class="text-center">Average Ratings Over Time</h2>
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <canvas id="myChart" width="400" height="400"></canvas>
+                <canvas id="revenueChart" width="400" height="400"></canvas>
             </div>
         </div>
     </div>
@@ -49,51 +54,35 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const ctx = document.getElementById('myChart').getContext('2d');
-            const dates = JSON.parse('{{{dates}}}');
-            const ratings = JSON.parse('{{{ratings}}}');
-
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            const revenueData = JSON.parse('{{{revenueData}}}');
+            
             new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
-                    labels: dates,
+                    labels: revenueData.map(entry => entry.month),
                     datasets: [{
-                        label: 'Average Rating',
-                        data: ratings,
+                        label: 'Monthly Revenue',
+                        data: revenueData.map(entry => entry.revenue),
                         borderColor: 'rgba(75, 192, 192, 1)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderWidth: 1 // Adjust bar thickness
+                        borderWidth: 2
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                // Show the average rating for the hovered bar
-                                title: function (tooltipItems) {
-                                    const index = tooltipItems[0].dataIndex;
-                                    return `Date: ${dates[index]}`;
-                                },
-                                label: function (tooltipItem) {
-                                    return `Average Rating: ${tooltipItem.raw.toFixed(2)}`;
-                                }
-                            }
-                        }
-                    },
                     scales: {
                         x: {
-                            type: 'time',
-                            time: {
-                                unit: 'day',
-                                tooltipFormat: 'yyyy-MM-dd'
+                            title: {
+                                display: true,
+                                text: 'Month'
                             }
                         },
                         y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
+                            title: {
+                                display: true,
+                                text: 'Revenue'
                             }
                         }
                     }

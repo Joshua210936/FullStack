@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const moment = require("moment");
 router.use(bodyParser.urlencoded({ extended: true }));
 const methodOverride = require('method-override');
-const { Op, fn, col } = require('sequelize');
+const { Op, fn, col, literal } = require('sequelize');
 
 //Database imports
 const Feedback = require('../models/Feedback');
@@ -14,20 +14,20 @@ const Customer = require('../models/custUser');
 const Schedule = require('../models/schedule');
 const Amenity = require('../models/propertyAmenities')
 
-router.put('/saveFeedback/:id', (req, res) => { 
+router.put('/saveFeedback/:id', (req, res) => {
     let feedback_status = 'saved';
     Feedback.update({
         feedback_status
-    },{
-        where:{
-            feedback_id:req.params.id
+    }, {
+        where: {
+            feedback_id: req.params.id
         }
-    }).then((video)=>{
+    }).then((video) => {
         res.redirect("/adminFeedback");
-    }).catch(err=>console.log(err))
+    }).catch(err => console.log(err))
 });
 
-router.get('/test', (req, res)=>{
+router.get('/test', (req, res) => {
     console.log('router connected successfully')
     res.redirect('/adminDashboard')
 });
@@ -36,15 +36,8 @@ router.get('/adminDashboard', async (req, res) => {
     try {
         const startOfDay = moment().startOf('day').toDate();
         const endOfDay = moment().endOf('day').toDate();
-
-        const feedbacks = await Feedback.findAll({
-            attributes: [
-                [fn('DATE', col('feedback_date')), 'date'],
-                [fn('AVG', col('feedback_rating')), 'averageRating']
-            ],
-            group: [fn('DATE', col('feedback_date'))],
-            raw: true
-        });
+        const startOfMonth = moment().startOf('month').toDate();
+        const endOfMonth = moment().endOf('month').toDate();
 
         const todayFeedback = await Feedback.findOne({
             attributes: [[fn('AVG', col('feedback_rating')), 'averageRating']],
@@ -56,22 +49,81 @@ router.get('/adminDashboard', async (req, res) => {
             raw: true
         });
 
+        const propertySold = await Listed_Properties.findAll({
+            attributes: [
+                [fn('COUNT', col('Property_ID')), 'soldPropertyCount'],
+                [fn('SUM', col('Property_Price')), 'soldPropertyRevenue']
+            ],
+            where: {
+                Property_Status: true,
+                Property_ListedDate: {
+                    [Op.between]: [startOfMonth, endOfMonth]
+                }
+            },
+            raw: true
+        });
+
+        const soldPropertyCount = propertySold.map(fb => fb.soldPropertyCount);
+        let soldPropertyRevenue = propertySold.map(fb => parseFloat(fb.soldPropertyRevenue));
+
+        if (isNaN(soldPropertyRevenue)) {
+            console.log("No properties sold");
+            soldPropertyRevenue = "No properties sold";
+        };
+
+        console.log("soldPropertyCount " + soldPropertyCount);
+        console.log("soldPropertyRevenue " + soldPropertyRevenue);
+
+        const propertySoldByMonth = await Listed_Properties.findAll({
+            attributes: [
+                [fn('DATE_FORMAT', col('Property_ListedDate'), '%Y-%m'), 'month'],
+                [fn('SUM', col('Property_Price')), 'monthlyRevenue']
+            ],
+            where: {
+                Property_Status: true,
+                Property_ListedDate: {
+                    [Op.between]: [startOfMonth, endOfMonth]
+                }
+            },
+            group: [literal('DATE_FORMAT(Property_ListedDate, "%Y-%m")')],
+            order: [[literal('DATE_FORMAT(Property_ListedDate, "%Y-%m")'), 'ASC']],
+            raw: true
+        });
+
+        const monthlyRevenue = propertySoldByMonth.map(ps => ({
+            month: ps.month,
+            revenue: parseFloat(ps.monthlyRevenue) || 0
+        }));
+
+        // Process revenue data for the past 6 months
+        const revenueData = [];
+        for (let i = 5; i >= 0; i--) {
+            const month = moment().subtract(i, 'months').format('YYYY-MM');
+            const revenueEntry = monthlyRevenue.find(entry => entry.month === month);
+            revenueData.push({
+                month: month,
+                revenue: revenueEntry ? revenueEntry.revenue : 0
+            });
+        }
+
         const averageRatingToday = todayFeedback ? parseFloat(todayFeedback.averageRating).toFixed(2) : "No feedback today";
         console.log('Average Rating for today:', averageRatingToday);
 
-        const dates = feedbacks.map(fb => fb.date);
-        const ratings = feedbacks.map(fb => parseFloat(fb.averageRating));
+        const dates = propertySoldByMonth.map(fb => fb.date);
 
         const custUser = await Customer.findOne({
             attributes: [[fn('COUNT', col('Customer_id')), 'custCount']],
             raw: true
         });
-        
+
         const custCount = parseInt(custUser.custCount);
         console.log("custCount " + custCount);
 
         const agent = await Agent.findOne({
             attributes: [[fn('COUNT', col('agent_id')), 'agentCount']],
+            where: {
+                status: true
+            },
             raw: true
         });
 
@@ -79,12 +131,15 @@ router.get('/adminDashboard', async (req, res) => {
         console.log("agentCount " + agentCount);
 
         // Render the adminDashboard with the data
-        res.render('Dashboard/adminDashboard', { 
-            dates: JSON.stringify(dates), 
-            ratings: JSON.stringify(ratings),
+        res.render('Dashboard/adminDashboard', {
+            layout: "adminMain",
+            dates: JSON.stringify(dates),
             averageRatingToday: averageRatingToday,
             custCount: custCount,
-            agentCount: agentCount
+            agentCount: agentCount,
+            soldPropertyCount: soldPropertyCount,
+            soldPropertyRevenue: soldPropertyRevenue,
+            revenueData: JSON.stringify(revenueData)
         });
     } catch (err) {
         console.error('Error fetching data:', err);

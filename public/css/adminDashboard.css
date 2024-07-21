@@ -1,5 +1,5 @@
 .custom-div {
-  background-color: #D3D3D3;
+  background-color: #d3e3fd;
   height: 150px; /* Adjust height as needed */
   border-radius: 10px; /* Adjust border radius as needed */
   display: flex;
@@ -26,6 +26,7 @@ body {
 
 .container {
   padding: 20px; /* Add padding from the each side */
+  background-color: white;
 }
 
 h1, h2 {

@@ -48,9 +48,6 @@ const Listed_Properties = db.define('listed_properties', {
     Property_Description:{
         type: sequelize.STRING
     },
-    Property_Status:{
-        type: sequelize.STRING
-    },
     agent_id: {
         type: sequelize.INTEGER,
         references: {

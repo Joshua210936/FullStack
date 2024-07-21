@@ -12,6 +12,8 @@ const setUpDB = (drop) => {
         })
         .then(() => {
             agent.hasMany(feedback);
+            agent.hasMany(listed_properties);
+
             mySQLDB.sync({
                 force: drop
             }).then(() => {
