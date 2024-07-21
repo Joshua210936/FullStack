@@ -114,8 +114,37 @@ app.get('/buyHouse',function(req,res){ //buyHouse page
         });
 });
 
-app.get('/propertyDescription', function(req, res){ //propertyDescription page
-    res.render('propertyDescription', {layout:'main'})
+app.get('/propertyDescription/:id', async function(req, res){ 
+    try {
+        const propertyID = req.params.id;
+        
+        // Fetch property details by ID
+        const property = await Listed_Properties.findByPk(propertyID);
+        if (!property) {
+            return res.status(404).send('Property not found');
+        }
+
+         // Calculate price per square foot
+        const pricePerSquareFoot = (property.Property_Price / property.Square_Footage).toFixed(2);
+         
+        // Fetch property amenities by property ID
+        const amenities = await Amenity.findAll({
+            where: { Property_ID: propertyID }
+        });
+
+        // Render the property description page
+        res.render('propertyDescription', {
+            layout: 'main',
+            json: JSON.stringify,
+            propertyDetail: property.dataValues, // Pass the property object
+            amenities: amenities.map(a => a.dataValues), // Pass amenities array
+            pricePerSquareFoot: pricePerSquareFoot
+            
+        });
+    } catch (error) {
+        console.error('Error fetching property details:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 app.get('/sellHouse',function(req,res){ //buyHouse page

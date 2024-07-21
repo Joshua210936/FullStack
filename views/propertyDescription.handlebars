@@ -1,18 +1,23 @@
 <head>
-    <link rel="stylesheet" href="css/propertyDescription.css">
+    <link rel="stylesheet" href="../css/propertyDescription.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="../js/propertyDescription"></script>
+    <script>
+        // Embed workshops data into a JavaScript variable
+        const properties = {{{json properties}}};
+    </script>
 </head>
     <div class="title">
-        <h1>212B Punggol Walk -  822212, Hougang / Punggol</h1>
+        <h1>{{propertyDetail.Property_Name}} - {{propertyDetail.Property_Address}}</h1>
     </div>
 <section class="container">
     <div class="slider-wrapper">
         <div class="slider">
-            <img src="images/hdb1.jpg" id="slide-1">
-            <img src="images/hdbinterior1.jpg" id="slide-2">
-            <img src="images/hdbinterior_bedroom.png" id="slide-3">
+            <img src="../images/hdb1.jpg" id="slide-1">
+            <img src="../images/hdbinterior1.jpg" id="slide-2">
+            <img src="../images/hdbinterior_bedroom.png" id="slide-3">
         </div>
         <div class="slider-nav">
             <a href="#slide-1"></a>
@@ -25,23 +30,23 @@
   <div class="row">
     <div class="col-sm text text-right">
       <h3>PRICE</h3>
-      <div>S$ 1,240,000</div>
+      <div>S$ {{propertyDetail.Property_Price}}</div>
     </div>
     <div class="col-sm text text-right">
       <h3>SQFT</h3>
-      <div>2160 sqft</div>
+      <div>{{propertyDetail.Square_Footage}} sqft</div>
     </div>
     <div class="col-sm text text-right">
       <h3>PSF</h3>
-      <div>$S 574</div>
+      <div>$S {{pricePerSquareFoot}}</div>
     </div>
     <div class="col-sm text text-right">
       <h3>BED</h3>
-      <div>5 Bedroom</div>
+      <div>{{propertyDetail.Property_Bedrooms}} Bedrooms</div>
     </div>
     <div class="col-sm text text-right">
       <h3>BATH</h3>
-      <div>3 Bathroom</div>
+      <div>{{propertyDetail.Property_Bathrooms}} Bathroom</div>
     </div>
   </div>
 </div>
@@ -77,10 +82,10 @@ This landed property in Yio Chu Kang is a rare gem that combines luxurious livin
     <div class="col col-lg-2">
       <table class="agentbox">
         <tr>
-            <td colspan="4" class="propagentlogo"><img src="images/propnex.png" width="50" height="50"> PropNex Realty PTE. LTD.</td><td></td><td></td><td></td>
+            <td colspan="4" class="propagentlogo"><img src="../images/propnex.png" width="50" height="50"> PropNex Realty PTE. LTD.</td><td></td><td></td><td></td>
         </tr>
         <tr>
-            <td colspan="2"><img class="profilepicture" src="images/agent1.jpg"></td>
+            <td colspan="2"><img class="profilepicture" src="../images/agent1.jpg"></td>
             <td colspan="2"><h3 class="text">Marques Brownlee <a class="hover_settings" href="/propertyAgentProfile"><div class="aboutme_button">About Me</div></a></h3></td>
             <td></td>
             <td></td>
@@ -106,7 +111,7 @@ This landed property in Yio Chu Kang is a rare gem that combines luxurious livin
             <td colspan="4">
                 <div class="contactbuttons">
                     <a href="#" class="contactbuttonclick"><div>
-                        <h3>Whatsapp Web <img src="images/whatsapp.png" height="40" width="40"></h3>
+                        <h3>Whatsapp Web <img src="../images/whatsapp.png" height="40" width="40"></h3>
                     </div></a>
                 </div>
             </td>
@@ -115,13 +120,13 @@ This landed property in Yio Chu Kang is a rare gem that combines luxurious livin
             <td></td>
         </tr>
         <tr class="contactrow">
-            <td colspan="4"><div class="contactbuttons"><a href="#" class="contactbuttonclick"><h3>Email <img src="images/email_logo.png" height="30" width="50"></h3></a></div></td>
+            <td colspan="4"><div class="contactbuttons"><a href="#" class="contactbuttonclick"><h3>Email <img src="../images/email_logo.png" height="30" width="50"></h3></a></div></td>
             <td></td>
             <td></td>
             <td></td>
         </tr>
         <tr class="contactrow">
-            <td colspan="4"><div class="contactbuttons"><a href="#" class="contactbuttonclick"><h3>Phone Number <img src="images/phone_logo.png" height="40" width="40"></h3></a></div></td>
+            <td colspan="4"><div class="contactbuttons"><a href="#" class="contactbuttonclick"><h3>Phone Number <img src="../images/phone_logo.png" height="40" width="40"></h3></a></div></td>
             <td></td>
             <td></td>
             <td></td>
