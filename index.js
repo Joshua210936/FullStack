@@ -114,7 +114,7 @@ app.get('/buyHouse',function(req,res){ //buyHouse page
         });
 });
 
-app.get('/propertyDescription/:id', async function(req, res){ 
+app.get('/propertyDescription/:id', async function(req, res) { 
     try {
         const propertyID = req.params.id;
         
@@ -124,13 +124,19 @@ app.get('/propertyDescription/:id', async function(req, res){
             return res.status(404).send('Property not found');
         }
 
-         // Calculate price per square foot
+        // Calculate price per square foot
         const pricePerSquareFoot = (property.Property_Price / property.Square_Footage).toFixed(2);
-         
+
         // Fetch property amenities by property ID
         const amenities = await Amenity.findAll({
             where: { Property_ID: propertyID }
         });
+
+        // Fetch agent details by agent ID (foreign key)
+        const agent = await Agent.findByPk(property.agent_id);
+        if (!agent) {
+            return res.status(404).send('Agent not found');
+        }
 
         // Render the property description page
         res.render('propertyDescription', {
@@ -138,8 +144,8 @@ app.get('/propertyDescription/:id', async function(req, res){
             json: JSON.stringify,
             propertyDetail: property.dataValues, // Pass the property object
             amenities: amenities.map(a => a.dataValues), // Pass amenities array
-            pricePerSquareFoot: pricePerSquareFoot
-            
+            pricePerSquareFoot: pricePerSquareFoot,
+            agentDetail: agent.dataValues // Pass the agent object
         });
     } catch (error) {
         console.error('Error fetching property details:', error);
@@ -418,7 +424,7 @@ app.post('/agentListProperty', async function(req,res){
         Property_TOP: topDate,
         Property_Tenure: tenure,
         Property_Description: description,
-        agent_id: agentID
+        agent_id: agentID,
     })
     if (amenities.length > 0) {
         const amenityPromises = amenities.map(amenity => {

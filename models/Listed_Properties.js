@@ -40,7 +40,7 @@ const Listed_Properties = db.define('listed_properties', {
         type: sequelize.INTEGER
     },
     Property_TOP:{
-        type: sequelize.INTEGER
+        type: sequelize.STRING
     },
     Property_Tenure:{
         type: sequelize.STRING
@@ -54,6 +54,10 @@ const Listed_Properties = db.define('listed_properties', {
             model: Agent,
             key: 'agent_id'
         }
+    },
+    Property_Status: {
+        type: sequelize.BOOLEAN,
+        defaultValue: false  // Assuming the default status is 'not sold'
     }
 });
 
