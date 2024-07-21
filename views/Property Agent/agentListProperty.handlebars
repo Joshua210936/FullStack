@@ -98,6 +98,7 @@
                 </div>
                 <button type="button" class="add-amenity-btn" onclick="addAmenity()">Add Amenity</button>
 
+                <input type="hidden" id="listedDate" name="listedDate"> 
                 <button class="formbutton" type="submit">Submit</button>
             </form>
         </div>
@@ -126,4 +127,17 @@
             const amenity = document.getElementById(id);
             amenity.remove();
         }
+
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${year}-${month}-${day}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const listedDateInput = document.getElementById('listedDate');
+            const currentDate = new Date();
+            listedDateInput.value = formatDate(currentDate);
+        });
     </script>
