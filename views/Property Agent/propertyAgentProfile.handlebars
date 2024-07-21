@@ -90,23 +90,28 @@
         </div>
     </div>
 
-    
     <div class="container" style="margin-bottom:80px;">
         <h1>Active Listings:</h1>
-        <div class="buyitem">
-            <a href="/propertyDescription">
-                <div class="houseimg">
-                    <img src="/images/hdb1.jpg" class="buyitemimage">
-                </div>
-                <div class="housedesc">
-                    <h2 class="desctext">212B Punggol Walk</h2>
-                    <p class="desctext">212B Punggol Walk -  822212, Hougang / Punggol</p>
-                    <p class="desctext">S$ 650,000</p>
-                    <div>3 Bedroom - 2 Bathroom - 1000 sqft - S$650 psf</div>
-                    <div>HDB - Built: 2014 - Resale</div>
-                </div>
-            </a>
-        </div>
+        {{#if agent.listed_properties.length}}
+            {{#each agent.listed_properties}}
+            <div class="buyitem">
+                <a href="/propertyDescription/{{this.Property_ID}}">
+                    <div class="houseimg">
+                        <img src="/images/{{this.Property_Image}}" class="buyitemimage" alt="{{this.Property_Name}}">
+                    </div>
+                    <div class="housedesc">
+                        <h2 class="desctext">{{this.Property_Name}}</h2>
+                        <p class="desctext">{{this.Property_Address}}</p>
+                        <p class="desctext">S$ {{this.Property_Price}}</p>
+                        <div>{{this.Property_Bedrooms}} Bedroom - {{this.Property_Bathrooms}} Bathroom - {{this.Square_Footage}} sqft - S$ {{this.Property_Price}} psf</div>
+                        <div>{{this.Property_Type}} - Built: {{this.Property_YearBuilt}} - {{this.Property_Tenure}}</div>
+                    </div>
+                </a>
+            </div>
+            {{/each}}
+        {{else}}
+            <p>No properties listed by this agent.</p>
+        {{/if}}
     </div>
 
     <div class="container">
