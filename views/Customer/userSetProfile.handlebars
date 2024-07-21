@@ -19,7 +19,7 @@
         <main class="main-content">
             <div class="register-box">
                 <div class="welcome-text">Set Up Your User Profile</div>
-                <form action="/userSetProfile/{{customer_id}}" method="post" enctype="multipart/form-data">
+                <form action="/userSetProfile/{{customer.Customer_id}}" method="post" enctype="multipart/form-data">
                     <div class="input-group">
                         <label for="firstName">First Name</label>
                         <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="{{customer.Customer_fName}}">
@@ -41,6 +41,9 @@
                         <input type="email" id="email" name="email" placeholder="Enter your email" value="{{customer.Customer_Email}}">
                     </div>
                     <button type="submit" class="formbutton">Update Profile</button>
+                </form> <br>
+                <form action="/deleteUser/{{customer_id}}" method="post" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                    <button type="submit" class="formbuttondelete">Delete Profile</button>
                 </form>
             </div>
         </main>

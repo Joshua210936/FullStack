@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tr.id = `customerRow${customer.Customer_id}`;
         tr.innerHTML = `
             <td><a href="#" class="customer-name" data-customer-id="${customer.Customer_id}">${customer.Customer_fName || 'N/A'} ${customer.Customer_lName || 'N/A'}</a></td>
-            <td>${customer.customer_email || 'N/A'}</td>
+            <td>${customer.Customer_Email || 'N/A'}</td>
             <td>
                 <button class="delete-button" data-customer-id="${customer.Customer_id}">Delete</button>
             </td>
@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const customer = await response.json();
                     customerProfileContent.innerHTML = `
                         <p><strong>Name:</strong> ${customer.Customer_fName || 'N/A'} ${customer.Customer_lName || 'N/A'}</p>
-                        <p><strong>Email:</strong> ${customer.customer_email || 'N/A'}</p>
-                        <p><strong>Phone Number:</strong> ${customer.customer_phoneNumber || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${customer.Customer_Email || 'N/A'}</p>
+                        <p><strong>Phone Number:</strong> ${customer.Customer_Phone || 'N/A'}</p>
                     `;
                     customerModal.style.display = "block";
                 } else {
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const customerId = event.target.dataset.customerId;
             if (confirm('Are you sure you want to delete this customer?')) {
                 try {
-                    const response = await fetch(`/deleteCustomer/${customerId}`, {
+                    const response = await fetch(`/adminDeleteCustomer/${customerId}`, {
                         method: 'DELETE'
                     });
                     const result = await response.json();
