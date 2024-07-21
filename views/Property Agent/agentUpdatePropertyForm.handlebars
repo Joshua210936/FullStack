@@ -1,0 +1,136 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/AgentListProperty.css">
+    <title>Property Update Form</title>
+</head>
+    <div class="property-listing-page">
+        <div class="listing-box">
+            <div class="form-header">
+                <h1>Update {{propertyDetail.Property_Name}} (Property ID: {{propertyDetail.Property_ID}})</h1>
+            </div>
+            <form action="/agentUpdatePropertyForm/{{propertyDetail.Property_ID}}" method="post" class="addPropertyForm">
+                <!-- Property Details Section -->
+                <div class="form-header">
+                    <h2>Property Details</h2>
+                </div>
+                <div class="input-group">
+                    <label for="name">Change Property Name</label>
+                    <input type="text" id="name" name="name" value="{{propertyDetail.Property_Name}}">
+                </div>
+                <div class="input-group">
+                    <label for="propertytype">Change Property Type</label>
+                    <select id="propertyType" name="propertyType">
+                        <option value="{{propertyDetail.Property_Type}}" selected>Current Type: {{propertyDetail.Property_Type}}</option>
+                        <option value="HDB">HDB</option>
+                        <option value="Condominium">Condominium</option>
+                        <option value="Landed">Landed</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="address">Change Property Address</label>
+                    <input type="text" id="address" name="address" value="{{propertyDetail.Property_Address}}">
+                </div>
+                <div>
+                        Current Thumbnail:
+                        {{propertyDetail.Property_Image}}
+                        <img src="../images/{{propertyDetail.Property_Image}}" width="50" height="50">
+                </div>
+                <div class="input-group">
+                    <label for="propertyImage">Change Property Thumbnail</label>
+                    <input type="file" id="propertyImage" name="propertyImage" accept="image/*" required>
+                </div>
+                <div class="input-group">
+                    <label for="price">Price</label>
+                    <input type="number" id="price" name="price" value="{{propertyDetail.Property_Price}}">
+                </div>
+                <div class="input-group">
+                    <label for="sqft">SQFT</label>
+                    <input type="number" id="sqft" name="sqft" value="{{propertyDetail.Square_Footage}}">
+                </div>
+                <div class="input-group">
+                    <label for="bedrooms">Bedrooms (Current Value: {{propertyDetail.Property_Bedrooms}})</label>
+                    <input type="range" id="bedrooms" name="bedrooms" min="1" max="10" oninput="updateCounter('bedrooms', this.value)" value="{{propertyDetail.Property_Bedrooms}}">
+                    <div class="range-counter" id="bedrooms-counter" name="bedrooms-counter">{{propertyDetail.Property_Bedrooms}}</div>
+                </div>
+                <div class="input-group">
+                    <label for="bathrooms">Bathrooms (Current Value: {{propertyDetail.Property_Bathrooms}})</label>
+                    <input type="range" id="bathrooms" name="bathrooms" min="1" max="10" oninput="updateCounter('bathrooms', this.value)" value="{{propertyDetail.Property_Bathrooms}}">
+                    <div class="range-counter" id="bathrooms-counter" name="bathrooms-counter">{{propertyDetail.Property_Bathrooms}}</div>
+                </div>
+                <div class="input-group">
+                    <label for="yearBuilt">Build Year</label>
+                    <input type="number" id="yearBuilt" name="yearBuilt" value="{{propertyDetail.Property_YearBuilt}}">
+                </div>
+                <div class="input-group">
+                    <label for="floorLevel">Floor Level</label>
+                    <input type="number" id="floorLevel" name="floorLevel" value="{{propertyDetail.Property_Floor}}">
+                </div>
+                <div class="input-group">
+                    <label for="topDate">TOP</label>
+                    <input type="number" id="topDate" name="topDate" value="{{propertyDetail.Property_TOP}}">
+                </div>
+                <div class="input-group">
+                    <label for="tenure">Tenure</label>
+                    <select id="tenure" name="tenure">
+                        <option value="{{propertyDetail.Property_Tenure}}" selected>Current Tenure: {{propertyDetail.Property_Tenure}}</option>
+                        <option value="Freehold">Freehold</option>
+                        <option value="99-year Leasehold">99-year Leasehold</option>
+                        <option value="103-year Leasehold">103-year Leasehold</option>
+                        <option value="110-year Leasehold">110-year Leasehold</option>
+                        <option value="999-year Leasehold">999-year Leasehold</option>
+                        <option value="Unknown Tenure">Unknown Tenure</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description">{{propertyDetail.Property_Description}}</textarea>
+                </div>
+                <div class="input-group">
+                    <label for="agentID">TEMPORARY(Agent ID)</label>
+                    <textarea id="agentID" name="agentID">{{propertyDetail.agent_id}}</textarea>
+                </div>
+
+                <!-- Amenities Section -->
+               <div class="form-header">
+                    <h2>Amenities</h2>
+                </div>
+                <div class="input-group" id="amenities-container">
+                    {{#each amenities}}
+                        <div class="amenity" id="amenity-{{@index}}">
+                            <input type="text" name="amenities[]" value="{{this.Amenity}}">
+                            <button type="button" class="remove-amenity-btn" onclick="removeAmenity('amenity-{{@index}}')">Remove</button>
+                        </div>
+                    {{/each}}
+                </div>
+                <button type="button" class="add-amenity-btn" onclick="addAmenity()">Add Amenity</button>
+
+                <button class="formbutton" type="submit">Update</button>
+            </form>
+        </div>
+    </div>
+
+     <script>
+    function updateCounter(id, value) {
+        document.getElementById(id + '-counter').textContent = value;
+    }
+
+    function addAmenity() {
+        const container = document.getElementById('amenities-container');
+        const amenityCount = container.getElementsByClassName('amenity').length;
+        const newAmenityId = `amenity-${amenityCount + 1}`;
+        const newAmenity = document.createElement('div');
+        newAmenity.className = 'amenity';
+        newAmenity.id = newAmenityId;
+        newAmenity.innerHTML = `
+            <input type="text" name="amenities[]" placeholder="Enter amenity">
+            <button type="button" class="remove-amenity-btn" onclick="removeAmenity('${newAmenityId}')">Remove</button>
+        `;
+        container.appendChild(newAmenity);
+    }
+
+    function removeAmenity(id) {
+        const amenity = document.getElementById(id);
+        amenity.remove();
+    }
+    </script>

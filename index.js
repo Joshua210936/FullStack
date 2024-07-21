@@ -171,7 +171,7 @@ app.get('/propertyDescription/:id', async function(req, res) {
     }
 });
 
-app.get('/sellHouse',function(req,res){ //buyHouse page
+app.get('/sellHouse',function(req,res){
     res.render('sellHouse',{layout:'main'})
 });
 
@@ -440,9 +440,47 @@ app.post('/agentRegister', function(req,res){
 
 
 
-app.get('/agentSetprofile', (req,res) => { // Agent Set profile page
-    res.render('Property Agent/agentSetprofile', {layout:'userMain'});
+app.get('/agentSetprofile', (req, res) => {
+    // Assuming you have the agent's ID stored in the session
+    const agentId = req.session.agentId; // or however you track the logged-in agent
+    
+    Agent.findByPk(agentId)
+        .then(agent => {
+            res.render('Property Agent/agentSetprofile', { 
+                layout: 'userMain', 
+                agent // Pass the agent data to the template
+            });
+        })
+        .catch(err => {
+            res.status(500).send({ message: 'Error fetching agent data', error: err });
+        });
 });
+
+app.post('/agentProfileUpdate', (req, res) => {
+    const agentId = req.session.agentId; // or however you track the logged-in agent
+    const { firstName, lastName, phone, email, agency_license, agency_registration, bio } = req.body;
+    const agentPictures = req.file ? req.file.filename : req.body.existingPicture; // Handle file upload
+
+    Agent.update({
+        agent_firstName: firstName,
+        agent_lastName: lastName,
+        agent_phoneNumber: phone,
+        agent_email: email,
+        agent_licenseNo: agency_license,
+        agent_registrationNo: agency_registration,
+        agent_bio: bio,
+        agent_image: agentPictures
+    }, {
+        where: { agent_id: agentId }
+    })
+    .then(() => {
+        res.status(200).send({ message: 'Profile updated successfully!' });
+    })
+    .catch(err => {
+        res.status(400).send({ message: 'Error updating profile', error: err });
+    });
+});
+
 
 app.get('/agentSchedule', (req,res) => { // Agent Set profile page
     res.render('Property Agent/agentSchedule', {layout:'userMain'});
@@ -458,9 +496,12 @@ app.get('/contactUs', function(req, res){
     res.render('Contact Us/contactUs', {layout:'main'});
 });
 
+app.get('/agentPropertyOptions', function(req, res){
+    res.render('Property Agent/agentPropertyOptions', {layout:'main'});
+});
 
 app.get('/agentListProperty', function(req, res){
-    res.render('Property Agent/agentListProperty', {layout:'userMain'});
+    res.render('Property Agent/agentListProperty', {layout:'main'});
 });
 
 app.post('/agentListProperty', async function(req,res){
@@ -510,7 +551,107 @@ app.post('/agentListProperty', async function(req,res){
         res.redirect('/agentListProperty');
 });
 
+app.get('/agentUpdateProperty', async (req, res) => {
+    try {
+        // Replace `agentid` with agentid when session is done
+        const agentId = 1
 
+        if (!agentId) {
+            return res.status(400).send('Agent ID is required');
+        }
+
+        // Fetch properties associated with the given agent_id
+        const properties = await Listed_Properties.findAll({
+            where: { agent_id: agentId }
+        });
+
+        // Render the view with the properties data
+        res.render('Property Agent/agentUpdateProperty', {
+            layout: 'main',
+            properties: properties.map(properties => properties.get({ plain: true })),
+            json: JSON.stringify,
+        });
+    } catch (error) {
+        console.error('Error fetching properties:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/agentUpdatePropertyForm/:id', async (req, res) => {
+    try {
+        const propertyID = req.params.id;
+        const property = await Listed_Properties.findByPk(propertyID);
+        const amenities = await Amenity.findAll({ where: { Property_ID: propertyID } });
+
+        if (!property) {
+            return res.status(404).send('Property not found');
+        }
+
+        res.render('Property Agent/agentUpdatePropertyForm', {
+            layout: 'main',
+            propertyDetail: property.get({ plain: true }),
+            amenities: amenities.map(amenity => amenity.get({ plain: true })),
+            json: JSON.stringify
+        });
+    } catch (error) {
+        res.status(500).send('Error retrieving property details');
+    }
+});
+
+app.post('/agentUpdatePropertyForm/:id', async (req, res) => {
+    try {
+        const propertyID = req.params.id;
+        const {
+            name,
+            propertyType,
+            address,
+            propertyImage,
+            price,
+            sqft,
+            bedrooms,
+            bathrooms,
+            yearBuilt,
+            floorLevel,
+            topDate,
+            tenure,
+            description,
+            agentID,
+            amenities
+        } = req.body;
+
+        // Update the property details
+        await Listed_Properties.update({
+            Property_Name: name,
+            Property_Type: propertyType,
+            Property_Address: address,
+            Property_Image: propertyImage,
+            Property_Price: price,
+            Square_Footage: sqft,
+            Property_Bedrooms: bedrooms,
+            Property_Bathrooms: bathrooms,
+            Property_YearBuilt: yearBuilt,
+            Property_Floor: floorLevel,
+            Property_TOP: topDate,
+            Property_Tenure: tenure,
+            Property_Description: description,
+            agent_id: agentID,
+        }, {
+            where: { Property_ID: propertyID }
+        });
+
+        // Update amenities
+        await Amenity.destroy({ where: { Property_ID: propertyID } });
+        if (Array.isArray(amenities)) {
+            for (const amenity of amenities) {
+                await Amenity.create({ Property_ID: propertyID, Amenity: amenity });
+            }
+        }
+
+        res.redirect(`/agentUpdatePropertyForm/${propertyID}`);
+    } catch (error) {
+        res.status(500).send('Error updating property details');
+    }
+});
 
 
 app.get('/findAgents', function (req, res) {
