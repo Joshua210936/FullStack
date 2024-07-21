@@ -28,7 +28,7 @@
                     <div class="properties-container">
                         {{#each properties}}
                             <div class="buyitem">
-                                <a href="/propertyDescription">
+                                <a href="/propertyDescription/{{this.Property_ID}}">
                                     <div class="houseimg">
                                         <img src="images/{{this.Property_Image}}" alt="images/{{this.Property_Image}}" class="buyitemimage">
                                     </div>
@@ -47,7 +47,13 @@
                             </div>
                         {{/each}}
                     </div>
+                    {{else}}
+                    <div>
+                        Currently No Available Properties
+                    </div>
                     {{/if}}
+                    
+                    
                 </div>
                 <div class="col-sm">
                 </div>
