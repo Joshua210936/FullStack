@@ -440,9 +440,47 @@ app.post('/agentRegister', function(req,res){
 
 
 
-app.get('/agentSetprofile', (req,res) => { // Agent Set profile page
-    res.render('Property Agent/agentSetprofile', {layout:'userMain'});
+app.get('/agentSetprofile', (req, res) => {
+    // Assuming you have the agent's ID stored in the session
+    const agentId = req.session.agentId; // or however you track the logged-in agent
+    
+    Agent.findByPk(agentId)
+        .then(agent => {
+            res.render('Property Agent/agentSetprofile', { 
+                layout: 'userMain', 
+                agent // Pass the agent data to the template
+            });
+        })
+        .catch(err => {
+            res.status(500).send({ message: 'Error fetching agent data', error: err });
+        });
 });
+
+app.post('/agentProfileUpdate', (req, res) => {
+    const agentId = req.session.agentId; // or however you track the logged-in agent
+    const { firstName, lastName, phone, email, agency_license, agency_registration, bio } = req.body;
+    const agentPictures = req.file ? req.file.filename : req.body.existingPicture; // Handle file upload
+
+    Agent.update({
+        agent_firstName: firstName,
+        agent_lastName: lastName,
+        agent_phoneNumber: phone,
+        agent_email: email,
+        agent_licenseNo: agency_license,
+        agent_registrationNo: agency_registration,
+        agent_bio: bio,
+        agent_image: agentPictures
+    }, {
+        where: { agent_id: agentId }
+    })
+    .then(() => {
+        res.status(200).send({ message: 'Profile updated successfully!' });
+    })
+    .catch(err => {
+        res.status(400).send({ message: 'Error updating profile', error: err });
+    });
+});
+
 
 app.get('/agentSchedule', (req,res) => { // Agent Set profile page
     res.render('Property Agent/agentSchedule', {layout:'userMain'});

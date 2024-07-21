@@ -1,69 +1,43 @@
 <head>
     <link rel="stylesheet" href="css/FindAgent.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
+<body>
 <div class="agents-listing-page">
     <div class="form-header">
         <h1>Find Property Agents</h1>
-    </div>
-
-    <!-- Browse By Region Section -->
-    <section class="browse-by-region">
-        <h2>Browse By Region</h2>
-        <div class="regions">
-            <div class="region">
-                <img src="images/city.jpg" alt="City & South West">
-                <p>City and South West</p>
-            </div>
-            <div class="region">
-                <img src="images/orchard.jpg" alt="Orchard / Holland">
-                <p>Orchard / Holland</p>
-            </div>
-            <div class="region">
-                <img src="images/changi.jpg" alt="Changi / Pasir Ris">
-                <p>Changi / Pasir Ris</p>
-            </div>
-            <div class="region">
-                <img src="images/serangoon.jpg" alt="Serangoon / Thomson">
-                <p>Serangoon / Thomson</p>
-            </div>
-            <div class="region">
-                <img src="images/west.jpg" alt="West">
-                <p>West</p>
-            </div>
-            <div class="region">
-                <img src="images/north.jpg" alt="North">
-                <p>North</p>
-            </div>
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Search by name..." oninput="searchAgents()">
         </div>
-    </section>
-    
-    <div class="filters">
-        <form id="filter-form">
-            <div class="filter-group">
-                <label for="sort">Sort By:</label>
-                <select id="sort" name="sort">
-                    <option value="recommended">Recommended</option>
-                    <option value="buyingHighToLow">Active Listings for Buying (High to Low)</option>
-                    <option value="sellingHighToLow">Active Listings for Selling (High to Low)</option>
-                    <option value="ratings">Ratings</option>
-                </select>
-            </div>
-            <button type="button" onclick="sortAgents()" class="agentform-buttonsubmit">Sort</button>
-        </form>
     </div>
-      <section class="agents-list" id="agents-list">
+    
+    <section class="agents-list" id="agents-list">
         {{#each agents}}
-        <div class="agent">
+        <div class="agent" data-agent-name="{{this.agent_firstName}} {{this.agent_lastName}}">
             <div class="agent-info">
                 <h3>{{this.agent_firstName}} {{this.agent_lastName}}</h3>
                 <p>Agent License Number: {{this.agent_licenseNo}}</p>
                 <a href="/propertyAgentProfile/{{this.agent_id}}"><button class="agentform-buttonsubmit">View Profile</button></a>
-            
             </div>
         </div>
         {{/each}}
     </section>
-</body>
-
-    </section>
 </div>
+
+<script>
+    function searchAgents() {
+        const searchInput = document.getElementById('search').value.toLowerCase();
+        const agents = document.querySelectorAll('.agent');
+
+        agents.forEach(agent => {
+            const name = agent.getAttribute('data-agent-name').toLowerCase();
+            if (name.includes(searchInput)) {
+                agent.style.display = 'block';
+            } else {
+                agent.style.display = 'none';
+            }
+        });
+    }
+</script>
+</body>
