@@ -32,6 +32,7 @@ const feedbackRoute = require("./routes/feedback.js");
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 const { password } = require('./config/db.js');
 const { error } = require('console');
+const { layouts } = require('chart.js');
 
 //JSON for handlebars (idk i need it for my modal)
 Handlebars.registerHelper('json', function (context) {
@@ -93,8 +94,25 @@ app.get('/',function(req,res){ //home page
     res.render('home',{layout:'main'})
 });
 
-app.get('/customer' ,function(req,res){ //customer page
+// app.get('/customer', function (req, res) {
+//     // if (!req.session.user) {
+//     //     console.log('User not logged in');
+//     //     return res.redirect('/login');
+//     // }
+
+//     res.render('customerHome', { user: req.session.user, layout: 'userMain' });
+// });
+
+app.get('/adminHome', function(req, res){
+    res.render('adminHome', {layout:'adminMain'});
+});
+
+app.get('/customerHome' ,function(req,res){ //customer page
     res.render('customerHome',{layout:'userMain'})
+});
+
+app.get('/agentHome', function(req, res){
+    res.render('agentHome', {layout:'agentMain'});
 });
 
 app.get('/buyHouse',function(req,res){ //buyHouse page
@@ -190,7 +208,7 @@ app.post('/login', function (req, res) {
 
             // Successful login
             req.session.user = user; // Store user information in session
-            res.redirect('/customer');
+            res.redirect('/customerHome');
         })
         .catch(err => {
             console.log('Error during login: ', err);
@@ -270,7 +288,7 @@ app.post('/register', async function (req, res) {
     }
 });
 
-app.get('/userSetProfile/:id', async (req, res) => {
+app.get('/userSetProfile/:customer_id', async (req, res) => {
     const customer_id = req.params.customer_id;
     console.log('Customer ID:', customer_id);
     try {
@@ -278,6 +296,7 @@ app.get('/userSetProfile/:id', async (req, res) => {
         if (customer) {
             res.render('Customer/userSetProfile', { 
                 layout: 'userMain', 
+                customer_id: customer_id,
                 customer: customer.get({ plain: true })
             });
         } else {
@@ -289,9 +308,10 @@ app.get('/userSetProfile/:id', async (req, res) => {
 });
 
 
-app.put('/userSetprofile/:customer_id', (req,res) => {
+app.post('/userSetprofile/:customer_id', (req,res) => {
     let {firstName, lastName, phoneNumber, birthday} = req.body;
     let customer_id = req.params.customer_id;
+    console.log(`Updating customer ${customer_id} with:`, {firstName, lastName, phoneNumber, birthday});
     Customer.update({
         Customer_fName: firstName,
         Customer_lName: lastName,
@@ -299,11 +319,18 @@ app.put('/userSetprofile/:customer_id', (req,res) => {
         Customer_Birthday: birthday,
     },{
         where:{
-            Customer_id:customer_id
+            Customer_id: customer_id
         }
-    }).then((Customer)=>{
-        res.redirect("/userSetprofile");
-    }).catch(err=>console.log(err))
+    }).then((result) => {
+        if (result[0] > 0) { // Assuming update returns an array where the first element is the number of rows updated
+            res.redirect(`/userSetprofile/${customer_id}`);
+        } else {
+            res.status(404).send("Customer not found");
+        }
+    }).catch(err => {
+        console.error(err);
+        res.status(500).send("Error updating customer profile");
+    });
 });
 
 app.get('/logout', function (req, res) {
@@ -332,10 +359,54 @@ app.get('/adminUsersView', function(req, res){
     });
 });
 
+// Delete an agent
+app.delete('/deleteAgent/:id', async (req, res) => {
+    const agentId = req.params.id;
+    try {
+        const agent = await Agent.findByPk(agentId);
+        if (agent) {
+            await agent.destroy();
+            res.json({ message: 'Agent deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Agent not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting agent', error });
+    }
+});
+
 
 // Agent Login and Registration
 app.get('/agentLogin', (req,res) => { // User Login page
     res.render('Login/agentLogin', {layout:'main'});
+});
+
+app.post('/agentLogin', function (req, res) {
+    errorList = [];
+    let { email, password } = req.body;
+
+    // Find the customer with the given email
+    Agent.findOne({ where: { agent_email: email } }) 
+        .then(agent => {
+            if (!agent) {
+                errorList.push({ text: 'agent not found' });
+                return res.status(404).send({ message: 'agent not found' });
+            }
+
+            // Check if the password is correct
+            if (agent.agent_password !== password) {
+                errorList.push({ text: 'Incorrect password' });
+                return res.status(401).send({ message: 'Incorrect password' });
+            }
+
+            // Successful login
+            req.session.agent = agent; // Store agent information in session
+            res.redirect('/agentHome');
+        })
+        .catch(err => {
+            console.log('Error during login: ', err);
+           return res.status(500).send({ message: 'Error occurred', error: err });
+        });
 });
 
 app.get('/agentRegister', (req, res) => { // User Registration page
