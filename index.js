@@ -282,6 +282,7 @@ app.get('/userSetProfile/:id', async (req, res) => {
     }
 });
 
+
 app.put('/userSetprofile/:customer_id', (req,res) => {
     let {firstName, lastName, phoneNumber, birthday} = req.body;
     let customer_id = req.params.customer_id;
@@ -562,9 +563,57 @@ app.get('/customer/:id/appointments', async (req, res) => {
     }
 });
 
-  
+app.get('/schedule/:id', async (req, res) => {
+    try {
+        const schedule = await Schedule.findByPk(req.params.id);
+        if (schedule) {
+            res.json(schedule);
+        } else {
+            res.status(404).json({ message: 'Schedule not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching schedule', error });
+    }
+});
 
+// Update schedule
+app.put('/schedule/:id', async (req, res) => {
+    try {
+        const { date_selected, time_selected } = req.body;
+        const schedule = await Schedule.findByPk(req.params.id);
+        if (schedule) {
+            schedule.date_selected = date_selected;
+            schedule.time_selected = time_selected;
+            await schedule.save();
+            res.status(200).json(schedule);
+        } else {
+            res.status(404).json({ message: 'Schedule not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating schedule', error });
+    }
+});
 
+// Route to handle the deletion of a schedule
+app.delete('/schedule/:id', async (req, res) => {
+    const scheduleId = req.params.id;
+
+    try {
+        // Find and delete the schedule by ID
+        const result = await Schedule.destroy({
+            where: { schedule_id: scheduleId }
+        });
+
+        if (result) {
+            res.status(200).send({ message: 'Schedule deleted successfully!' });
+        } else {
+            res.status(404).send({ message: 'Schedule not found.' });
+        }
+    } catch (err) {
+        console.error('Error deleting schedule:', err);
+        res.status(500).send({ message: 'Error deleting schedule.', error: err });
+    }
+});
 
 
 
