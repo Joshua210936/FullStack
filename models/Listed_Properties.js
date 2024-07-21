@@ -18,7 +18,13 @@ const Listed_Properties = db.define('listed_properties', {
     Property_Address:{
         type: sequelize.STRING
     },
+    Property_PostalCode:{
+        type: sequelize.STRING
+    },
     Property_Image:{
+        type: sequelize.STRING
+    },
+    Property_AdditionalImages:{
         type: sequelize.STRING
     },
     Property_Price: {

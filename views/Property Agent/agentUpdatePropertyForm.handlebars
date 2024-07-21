@@ -31,6 +31,10 @@
                     <label for="address">Change Property Address</label>
                     <input type="text" id="address" name="address" value="{{propertyDetail.Property_Address}}">
                 </div>
+                <div class="input-group">
+                    <label for="postalCode">Change Property Postal Code</label>
+                    <input type="text" id="postalCode" name="postalCode" value="{{propertyDetail.Property_PostalCode}}">
+                </div>
                 <div>
                         Current Thumbnail:
                         {{propertyDetail.Property_Image}}
@@ -38,7 +42,11 @@
                 </div>
                 <div class="input-group">
                     <label for="propertyImage">Change Property Thumbnail</label>
-                    <input type="file" id="propertyImage" name="propertyImage" accept="image/*" required>
+                    <input type="file" id="propertyImage" name="propertyImage" accept="image/*">
+                </div>
+                <div class="input-group">
+                    <label for="propertyAdditionalImages">Change Property Additional Images</label>
+                    <input type="file" id="propertyAdditionalImages" name="propertyAdditionalImages" accept="image/*">
                 </div>
                 <div class="input-group">
                     <label for="price">Price</label>

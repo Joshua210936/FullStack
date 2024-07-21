@@ -3,7 +3,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="../js/propertyDescription"></script>
+    <script src="../js/propertyDescription.js"></script>
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY0zEGiZRJ6kmm79kgqTkxuGnkXgJ0zhg&loading=async&callback=initMap">
+    </script>
     <script>
         // Embed workshops data into a JavaScript variable
         const properties = {{{json properties}}};
@@ -15,9 +18,9 @@
 <section class="container">
     <div class="slider-wrapper">
         <div class="slider">
-            <img src="../images/hdb1.jpg" id="slide-1">
-            <img src="../images/hdbinterior1.jpg" id="slide-2">
-            <img src="../images/hdbinterior_bedroom.png" id="slide-3">
+            <img src="../images/{{propertyDetail.Property_Image}}" id="slide-1">
+            <img src="../images/{{propertyDetail.Property_AdditionalImages}}" id="slide-2">
+            <img src="../images/{{propertyDetail.Property_AdditionalImages}}" id="slide-3">
         </div>
         <div class="slider-nav">
             <a href="#slide-1"></a>
@@ -204,7 +207,11 @@
                         </ul>
                     </div>
         </div>
-        <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31909.289506841924!2d103.83483370259457!3d1.3799489382254528!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da16eb64b0249d%3A0xe5f10ff680eed942!2sNanyang%20Polytechnic!5e0!3m2!1sen!2ssg!4v1716742877016!5m2!1sen!2ssg" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="container">
+                <div class="flex-container">
+                    <div id="map"></div>
+                </div>
+            </div>
         </div>
 </div>
 </div>

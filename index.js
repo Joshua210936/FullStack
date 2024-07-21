@@ -508,7 +508,7 @@ app.get('/agentListProperty', function(req, res){
 
 app.post('/agentListProperty', async function(req,res){
     let{
-        name, propertyType, address, propertyImage, price, sqft, bedrooms, bathrooms
+        name, propertyType, address, postalCode, propertyImage, propertyAdditionalImages, price, sqft, bedrooms, bathrooms
         , yearBuilt, floorLevel, topDate, tenure, description, agentID, amenities, listedDate
     } = req.body;
     
@@ -528,7 +528,9 @@ app.post('/agentListProperty', async function(req,res){
         Property_Name: name,
         Property_Type: propertyType,
         Property_Address: address,
+        Property_PostalCode: postalCode,
         Property_Image: propertyImage,
+        Property_AdditionalImages: propertyAdditionalImages,
         Property_Price: price,
         Square_Footage: sqft,
         Property_Bedrooms: bedrooms,
