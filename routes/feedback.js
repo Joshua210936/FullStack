@@ -25,54 +25,59 @@ router.get('/feedbackForm', function (req, res) {
 });
 
 router.post('/feedbackForm', async function (req, res) {
-    let errorList = []
+    let errorList = [];
     console.log(req.body);
     let { Name, Email, VisitReason, AgentID, Description, Rating } = req.body;
     let FeedbackDate = moment().format('YYYY/MM/DD');
     let Status = "Normal";
 
     if (Rating == 0) {
-        errorList.push("Please choose a star rating")
+        errorList.push("Please choose a star rating");
     }
 
     if (VisitReason == "Choose") {
-        errorList.push("Please choose a visit reason")  // Fixed the error message
+        errorList.push("Please choose a visit reason");
     }
 
-    if (Description.trim == ''){
-        errorList.push("Enter feedback description")
+    if (Description.trim() === '') {
+        errorList.push("Enter feedback description");
     }
 
     if (AgentID && AgentID.trim() !== '') {
         try {
-            const agent = await Agent.findOne({ agent_id: AgentID });
+            const agent = await Agent.findOne({ where: { agent_id: AgentID } });
             if (!agent) {
-                errorList.push("Agent not found")
+                errorList.push("Agent not found");
             }
         } catch (err) {
             console.error("Error checking agent:", err);
-            errorList.push("Error occurred while checking agent")
+            errorList.push("Error occurred while checking agent");
         }
     }
 
     console.log("errorList " + errorList.length);
-    if (errorList.length == 0) {
+    if (errorList.length === 0) {
+        const feedbackData = {
+            feedback_type: VisitReason,
+            feedback_name: Name,
+            feedback_email: Email,
+            feedback_date: FeedbackDate,
+            feedback_rating: Rating,
+            feedback_description: Description,
+            feedback_status: Status
+        };
+
+        if (AgentID && AgentID.trim() !== '') {
+            feedbackData.agentAgentId = AgentID;
+        }
+
         try {
-            const result = await Feedback.create({
-                feedback_type: VisitReason,
-                feedback_name: Name,
-                feedback_email: Email,
-                feedback_date: FeedbackDate,
-                feedback_rating: Rating,
-                feedback_description: Description,
-                feedback_status: Status,
-                agentAgentId: AgentID
-            });
+            const result = await Feedback.create(feedbackData);
             console.log('Insert successful:', result);
             res.render('Contact Us/contactUs', { layout: 'main' });
         } catch (err) {
             console.error("Error creating feedback:", err);
-            errorList.push("Agent not found");
+            errorList.push("Error occurred while creating feedback");
             renderFormWithErrors(res, errorList, req.body);
         }
     } else {
@@ -80,14 +85,11 @@ router.post('/feedbackForm', async function (req, res) {
     }
 });
 
-function renderFormWithErrors(res, errorList, formData) {
-    console.log("Has error");
-    let msg_error = errorList.join("\n");
-    console.log(msg_error);
-    res.render("Contact Us/feedbackForm", {
-        layout: "main", 
-        error_msg: msg_error,
-        formData: formData  // Pass form data back to pre-fill the form
+function renderFormWithErrors(res, errors, formData) {
+    res.render('Contact Us/feedbackForm', { 
+        layout: 'main', 
+        error_msg: errors.join('\n'), 
+        formData: formData 
     });
 }
 
