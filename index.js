@@ -466,7 +466,7 @@ app.get('/agentListProperty', function(req, res){
 app.post('/agentListProperty', async function(req,res){
     let{
         name, propertyType, address, propertyImage, price, sqft, bedrooms, bathrooms
-        , yearBuilt, floorLevel, topDate, tenure, description, agentID, amenities
+        , yearBuilt, floorLevel, topDate, tenure, description, agentID, amenities, listedDate
     } = req.body;
     
     if (!amenities) {
@@ -496,6 +496,7 @@ app.post('/agentListProperty', async function(req,res){
         Property_Tenure: tenure,
         Property_Description: description,
         agent_id: agentID,
+        Property_ListedDate: listedDate
     })
     if (amenities.length > 0) {
         const amenityPromises = amenities.map(amenity => {
