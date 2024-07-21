@@ -156,6 +156,32 @@
 <div class="col col-lg-2"></div>
 
 <div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Amenities</h1>
+            {{#if amenities.length}}
+            <table class="details_table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Amenities</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each amenities}}
+                    <tr>
+                        <td>{{this.Amenity}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{else}}
+            <p>No amenities listed for this property.</p>
+            {{/if}}
+        </div>
+    </div>
+</div>
+
+<div class="container">
   <div class="row">
     <div class="col">
         <h1>Location</h1>
