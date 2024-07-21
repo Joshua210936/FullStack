@@ -57,7 +57,7 @@ const Listed_Properties = db.define('listed_properties', {
     },
     Property_Status: {
         type: sequelize.BOOLEAN,
-        defaultValue: false  // Assuming the default status is 'not sold'
+        defaultValue: true  // Assuming the default status is 'not sold'
     },
     Property_ListedDate:{
         type:sequelize.DATE

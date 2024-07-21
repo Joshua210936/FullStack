@@ -115,21 +115,23 @@ app.get('/agentHome', function(req, res){
     res.render('agentHome', {layout:'agentMain'});
 });
 
-app.get('/buyHouse',function(req,res){ //buyHouse page
-    Listed_Properties.findAll()
-        .then(properties => {
-            res.render('buyHouse', {
-                layout: 'main',
-                properties: properties.map(properties => properties.get({ plain: true })), // Convert to plain objects 
-                json: JSON.stringify // Pass JSON.stringify to the template
-            });
-        })
-        .catch(err => {
-            console.error('Error fetching properties:', err);
-            if (!res.headersSent) {
-                res.status(500).send('Internal Server Error');
-            }
+app.get('/buyHouse', async (req, res) => {
+    try {
+        const properties = await Listed_Properties.findAll({
+            where: { Property_Status: true }
         });
+
+        res.render('buyHouse', {
+            layout: 'main',
+            properties: properties.map(property => property.get({ plain: true })), // Convert to plain objects 
+            json: JSON.stringify // Pass JSON.stringify to the template
+        });
+    } catch (error) {
+        console.error('Error fetching properties:', error);
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error');
+        }
+    }
 });
 
 app.get('/propertyDescription/:id', async function(req, res) { 
@@ -553,27 +555,42 @@ app.post('/agentListProperty', async function(req,res){
 
 app.get('/agentUpdateProperty', async (req, res) => {
     try {
-        // Replace `agentid` with agentid when session is done
-        const agentId = 1
+        const agentId = 1; // Replace with actual agent ID from session
 
         if (!agentId) {
             return res.status(400).send('Agent ID is required');
         }
 
-        // Fetch properties associated with the given agent_id
         const properties = await Listed_Properties.findAll({
             where: { agent_id: agentId }
         });
 
-        // Render the view with the properties data
         res.render('Property Agent/agentUpdateProperty', {
             layout: 'main',
-            properties: properties.map(properties => properties.get({ plain: true })),
+            properties: properties.map(property => property.get({ plain: true })),
             json: JSON.stringify,
         });
     } catch (error) {
         console.error('Error fetching properties:', error);
         res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/togglePropertyStatus/:propertyId', async (req, res) => { //code for delist
+    const { propertyId } = req.params;
+    try {
+        const property = await Listed_Properties.findByPk(propertyId);
+        if (!property) {
+            return res.status(404).json({ success: false, message: 'Property not found' });
+        }
+
+        property.Property_Status = !property.Property_Status; // Toggle the status
+        await property.save();
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error toggling property status:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 });
 

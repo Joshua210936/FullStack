@@ -4,43 +4,69 @@
     <link rel="stylesheet" href="../css/AgentUpdateProperty.css">
     <script src="js/buyHouse.js" defer></script>
     <script>
-        // Embed workshops data into a JavaScript variable
+        // Embed properties data into a JavaScript variable
         const properties = {{{json properties}}};
     </script>
 </head>
 
-
 <div class="container">
-            <div class="row">
-                <div class="col-sm">
-                    {{#if properties.length}}
-                    <div class="properties-container">
-                        {{#each properties}}
-                            <div class="buyitem">
-                                <a href="/agentUpdatePropertyForm/{{this.Property_ID}}">
-                                    <div class="houseimg">
-                                        <img src="images/{{this.Property_Image}}" alt="images/{{this.Property_Image}}" class="buyitemimage">
-                                    </div>
-                                    <div class="housedesc">
-                                        <h2 class="desctext">{{this.Property_Name}} ({{this.Property_ID}})</h2>
-                                        <p class="desctext">{{this.Property_Address}}</p>
-                                        <p class="desctext">S$ {{this.Property_Price}}</p>
-                                        <div>
-                                            
-                                        </div>
-                                        <div>
-                                            
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        {{/each}}
+    <div class="row">
+        <div class="col-sm">
+            {{#if properties.length}}
+            <div class="properties-container">
+                {{#each properties}}
+                <div class="buyitem">
+                    <div class="houseimg">
+                        <img src="images/{{this.Property_Image}}" alt="images/{{this.Property_Image}}" class="buyitemimage">
                     </div>
-                    {{else}}
-                    <div>
-                        Currently No Available Properties
+                    <div class="housedesc">
+                        <h2 class="desctext">{{this.Property_Name}} ({{this.Property_ID}})</h2>
+                        <p class="desctext">{{this.Property_Address}}</p>
+                        <p class="desctext">S$ {{this.Property_Price}}</p>
+                        <div></div>
+                        <div>
+                            <button type="button" class="btn btn-danger toggle-status" data-id="{{this.Property_ID}}" style="padding:10px;float:left;margin-left:10px;">
+                                {{#if this.Property_Status}}De-List{{else}}Re-List{{/if}}
+                            </button>
+                            <span style="padding:10px;">Status: {{#if this.Property_Status}}Listed{{else}}De-Listed{{/if}}</span>
+                            <a href="/agentUpdatePropertyForm/{{this.Property_ID}}">
+                                <button type="button" class="btn btn-primary" style="padding:10px;float:right;margin-right:10px;">Update</button>
+                            </a>
+                        </div>
                     </div>
-                    {{/if}}   
                 </div>
-              </div>
+                {{/each}}
+            </div>
+            {{else}}
+            <div>Currently No Available Properties</div>
+            {{/if}}
         </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.toggle-status');
+        buttons.forEach(button => {
+            button.addEventListener('click', async (event) => {
+                const propertyId = event.target.dataset.id;
+                try {
+                    const response = await fetch(`/togglePropertyStatus/${propertyId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        window.location.reload();
+                    } else {
+                        console.error('Failed to toggle property status:', result.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+</script>

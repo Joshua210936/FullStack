@@ -234,3 +234,11 @@
 .schedule_button:hover{
     background-color:#f6f6f6;
 }
+
+.agenttext{
+    background-color:white;
+    height: 550px;
+    border-radius:10px;
+    padding: 10px;
+    overflow-y:scroll;
+}
