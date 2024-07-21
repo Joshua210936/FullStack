@@ -1,33 +1,56 @@
-function initMap(){
-    map = new google.maps.Map(document.getElementById('map'),{
-        center: {lat: 1.3801001587360433, lng: 103.84918473018321},
-        zoom: 12,
-        mapId: '7eb9cb155077df0'
-    });
+const API_KEY = 'AIzaSyDY0zEGiZRJ6kmm79kgqTkxuGnkXgJ0zhg';
+        const address = 'Nanyang Polytechnic';
 
-    //1.3365408985337843, 103.96105621086166
-    //Name
-    //Lat, Long,
-    //Img URL
-    //scaledSize width, height
-    workshops.forEach(workshops => {
-        const marker = new google.maps.Marker({
-            position: {lat: parseFloat(workshops.Workshop_Latitude), lng: parseFloat(workshops.Workshop_Longitude)},
+        const encodedAddress = encodeURIComponent(address);
+
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${API_KEY}`;
+
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'OK') {
+              // Extract latitude and longitude from the response
+              const location = data.results[0].geometry.location;
+              const latitude = location.lat;
+              const longitude = location.lng;
+
+              // Log the latitude and longitude
+              console.log('Latitude:', latitude);
+              console.log('Longitude:', longitude);
+
+              // Initialize the map and add the marker
+              initMap(latitude, longitude);
+            } else {
+              console.error('Geocoding error:', data.status);
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
+
+        function initMap(latitude, longitude) {
+          const map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: latitude, lng: longitude },
+            zoom: 12,
+            mapId: '7eb9cb155077df0'
+          });
+
+          const marker = new google.maps.Marker({
+            position: { lat: latitude, lng: longitude },
             map,
-            title: workshops.Workshop_Name,
+            title: 'Nanyang Polytechnic',
             icon: {
-                url: "images/map-marker.png",
-                scaledSize: new google.maps.Size(38, 38)
+              url: "../images/map-marker.png",
+              scaledSize: new google.maps.Size(38, 38)
             },
             animation: google.maps.Animation.DROP
-        });
-        
-        const infowindow = new google.maps.InfoWindow({
-            content: workshops.Workshop_Name,
-        }); //adds content to infowindow
-    
-        marker.addListener("click", ()=>{
-            infowindow.open(map,marker);
-        }); //opens infowindow on click
-    })
-};
+          });
+
+          const infowindow = new google.maps.InfoWindow({
+            content: 'Nanyang Polytechnic'
+          });
+
+          marker.addListener("click", () => {
+            infowindow.open(map, marker);
+          });
+        }

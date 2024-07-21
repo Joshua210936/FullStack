@@ -164,11 +164,11 @@ app.get('/propertyDescription/:id', async function(req, res) {
         // Render the property description page
         res.render('propertyDescription', {
             layout: 'main',
-            json: JSON.stringify,
             propertyDetail: property.dataValues, // Pass the property object
             amenities: amenities.map(a => a.dataValues), // Pass amenities array
             pricePerSquareFoot: pricePerSquareFoot,
-            agentDetail: agent.dataValues // Pass the agent object
+            agentDetail: agent.dataValues, // Pass the agent object
+            json: JSON.stringify,
         });
     } catch (error) {
         console.error('Error fetching property details:', error);
