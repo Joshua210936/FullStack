@@ -2,6 +2,7 @@ const sequelize = require('sequelize');
 
 const db = require('../config/DBConfig');
 
+
 const Agent = db.define('agent', {
     agent_id: {
         type: sequelize.INTEGER,
@@ -42,6 +43,5 @@ const Agent = db.define('agent', {
         type: sequelize.STRING
     } 
 });
-
 
 module.exports = Agent;

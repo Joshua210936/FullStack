@@ -8,6 +8,7 @@ const path = require('path');
 const methodOverride = require('method-override');
 const Handlebars = require('handlebars');
 const multer = require('multer');
+const fs = require('fs');
 
 //Database
 const fullstackDB = require('./config/DBConnection');
@@ -21,6 +22,7 @@ const Agent = require('./models/Agent');
 const Customer = require('./models/custUser');
 const Schedule = require('./models/schedule');
 const Amenity = require('./models/propertyAmenities');
+const Advertisement = require('./models/advertisement');
 
 
 //Routers
@@ -42,12 +44,14 @@ Handlebars.registerHelper('json', function (context) {
 Handlebars.registerHelper('parseJson', function (context) {
     return JSON.parse(context);
 });
+Handlebars.registerHelper('eq', function(a, b) {
+    return a === b;
+});
 
 //routers
 app.use('/user', userRoute);
 app.use('/admin', adminRoute);
 app.use('/feedback', feedbackRoute);
-
 app.use(bodyParser.urlencoded({extended:true})); 
 app.use(express.static(path.join(__dirname, '/public'))); 
 app.use(flash());
@@ -94,9 +98,64 @@ app.set('view engine','handlebars');
 
 app.set('views', path.join(__dirname, 'views'));
 
-app.get('/',function(req,res){ //home page
-    res.render('home',{layout:'main'})
+app.get('/', async (req, res) => {
+    try {
+
+        const advertisements = await Advertisement.findAll({
+            include: [{
+                model: Agent,
+                as: 'agent'
+            }]
+        });
+
+        const formatDate = (date) => {
+            if (!date) return '';
+            const d = new Date(date);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const year = d.getFullYear();
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        };
+
+        const advertisementsWithParsedDescription = advertisements.map(ad => {
+            try {
+                const adData = ad.toJSON();
+                const description = JSON.stringify(adData.description).replace(/'/g, '"') || '[]';
+                const parsedDescription = JSON.parse(description);
+
+                
+                return {
+                    ...adData,
+                    description: parsedDescription,
+                    date_started: formatDate(adData.date_started),
+                    date_end: formatDate(adData.date_end),
+                    
+                    
+                };
+            } catch (error) {
+                console.error('Error parsing description JSON:', error);
+                return {
+                    ...ad.toJSON(),
+                    description: [],
+                    date_started: '',
+                    date_end: ''
+                };
+            }
+        });
+
+        res.render('home', {
+            layout: 'main',
+            advertisements: advertisementsWithParsedDescription
+        });
+    } catch (error) {
+        console.error('Error retrieving advertisement:', error);
+        res.status(500).send('Server error');
+    }
 });
+
+
 
 // app.get('/customer', function (req, res) {
 //     // if (!req.session.user) {
@@ -106,13 +165,25 @@ app.get('/',function(req,res){ //home page
 
 //     res.render('customerHome', { user: req.session.user, layout: 'userMain' });
 // });
+
 // for image
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'public/images/'); // Save files to public/images
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Rename the file to avoid conflicts
+        const filePath = path.join('public/images/', file.originalname);
+
+        // Check if file exists
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+                // File does not exist, proceed with the upload
+                cb(null, file.originalname);
+            } else {
+                // File exists, use the existing file name
+                cb(null, file.originalname);
+            }
+        });
     },
     fileFilter: (req, file, cb) => {
         const allowedTypes = /jpeg|jpg|png/;
@@ -128,13 +199,12 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
 //
 app.get('/adminHome', function(req, res){
     res.render('adminHome', {layout:'adminMain'});
 });
 
-app.get('/customerHome' ,function(req,res){ //customer page
+app.get('/customerHome' ,function(req,res){ 
     res.render('customerHome',{layout:'userMain'})
 });
 
@@ -216,30 +286,43 @@ app.post('/login', function (req, res) {
     errorList = [];
     let { email, password } = req.body;
 
-    // Find the customer with the given email
-    Customer.findOne({ where: { Customer_Email: email } }) 
-        .then(user => {
-            if (!user) {
-                errorList.push({ text: 'User not found' });
-                return res.status(404).send({ message: 'User not found' });
-            }
+    // Admin credentials
+    const adminEmail = 'admin@gmail.com';
+    const adminPassword = 'Admin12345';
 
-            // Check if the password is correct
-            if (user.Customer_Password !== password) {
-                errorList.push({ text: 'Incorrect password' });
-                return res.status(401).send({ message: 'Incorrect password' });
-            }
+    if (email === adminEmail && password === adminPassword) {
+        // Admin login
+        req.session.isAdmin = true;
+        req.session.userID = 'admin'; // You can store any identifier for the admin user
+        console.log('Admin logged in');
+        return res.redirect('/adminHome'); // Redirect to the admin home page
+    } else {
+        // Find the customer with the given email
+        Customer.findOne({ where: { Customer_Email: email } })
+            .then(user => {
+                if (!user) {
+                    errorList.push({ text: 'User not found' });
+                    return res.status(404).send({ message: 'User not found' });
+                }
 
-            // Successful login
-            req.session.user = user; // Store user information in session
-            const user_id = user.Customer_id;
-            console.log(user_id) 
-            res.redirect('/customerHome');
-        })
-        .catch(err => {
-            console.log('Error during login: ', err);
-           return res.status(500).send({ message: 'Error occurred', error: err });
-        });
+                // Check if the password is correct
+                if (user.Customer_Password !== password) {
+                    errorList.push({ text: 'Incorrect password' });
+                    return res.status(401).send({ message: 'Incorrect password' });
+                }
+
+                // Successful customer login
+                req.session.isAdmin = false;
+                req.session.userID = user.Customer_id; // Store user information in session
+                const user_id = user.Customer_id;
+                console.log(user_id);
+                res.redirect('/customerHome');
+            })
+            .catch(err => {
+                console.log('Error during login: ', err);
+                return res.status(500).send({ message: 'Error occurred', error: err });
+            });
+    }
 });
 
 app.get('/register', (req, res) => { // User    tration page
@@ -404,6 +487,7 @@ app.get('/userSetProfile/:customer_id', async (req, res) => {
 });
 
 
+
 app.post('/userSetProfile/:customer_id', async (req, res) => {
     const { firstName, lastName, phoneNumber, birthday } = req.body;
     const customer_id = req.params.customer_id;
@@ -519,6 +603,7 @@ app.post('/agentRegister', function(req,res){
         
     })
     .then(agent => {
+        res.redirect('/agentLogin');
         res.status(201).send({ message: 'Agent registered successfully!', agent });
       })
     .catch(err => {
@@ -528,21 +613,41 @@ app.post('/agentRegister', function(req,res){
 
 
 
-app.get('/agentSetprofile', (req, res) => {
-    // Assuming you have the agent's ID stored in the session
-    const agentId = req.session.agentId; // or however you track the logged-in agent
+// app.get('/agentSetprofile', (req, res) => {
+//     // Assuming you have the agent's ID stored in the session
+//     const agentId = req.session.agentId; // or however you track the logged-in agent
     
-    Agent.findByPk(agentId)
-        .then(agent => {
-            res.render('Property Agent/agentSetprofile', { 
-                layout: 'userMain', 
-                agent // Pass the agent data to the template
+//     Agent.findByPk(agentId)
+//         .then(agent => {
+//             res.render('Property Agent/agentSetprofile', { 
+//                 layout: 'userMain', 
+//                 agent // Pass the agent data to the template
+//             });
+//         })
+//         .catch(err => {
+//             res.status(500).send({ message: 'Error fetching agent data', error: err });
+//         });
+// });
+
+app.get('/agentSetProfile/:agent_id', async (req, res) => { // Agent Set profile page
+    const agent_id = req.params.agent_id;
+    console.log('Agent ID:', agent_id);
+    try {
+        const agent = await Agent.findByPk(agent_id);
+        if (agent) {
+            res.render('Property Agent/agentSetProfile', { 
+                layout: 'main', 
+                agent_id: agent_id,
+                agent: agent.get({ plain: true })
             });
-        })
-        .catch(err => {
-            res.status(500).send({ message: 'Error fetching agent data', error: err });
-        });
+        } else {
+            res.status(404).json({ message: 'Agent not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching agent details', error });
+    }
 });
+    
 
 app.post('/agentProfileUpdate', (req, res) => {
     const agentId = req.session.agentId; // or however you track the logged-in agent
@@ -1101,25 +1206,55 @@ app.delete('/deleteAgent/:id', async (req, res) => {
 app.get('/adminadvertisement', async (req, res) => {
     try {
         const advertisements = await Advertisement.findAll({
-            include: [Agent] 
+            include: [{
+                model: Agent,
+                as: 'agent'
+            }]
         });
-        
-        const agents = await Agent.findAll();
+
+        const formatDate = (date) => {
+            if (!date) return '';
+            const d = new Date(date);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const year = d.getFullYear();
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        };
+
+        const advertisementsWithParsedDescription = advertisements.map(ad => {
+            try {
+                const adData = ad.toJSON();
+                const description = JSON.stringify(adData.description).replace(/'/g, '"') || '[]';
+                const parsedDescription = JSON.parse(description);
+
+                return {
+                    ...adData,
+                    description: parsedDescription,
+                    date_started: formatDate(adData.date_started),
+                    date_end: formatDate(adData.date_end)
+                };
+            } catch (error) {
+                console.error('Error parsing description JSON:', error);
+                return {
+                    ...ad.toJSON(),
+                    description: [],
+                    date_started: '',
+                    date_end: ''
+                };
+            }
+        });
 
         res.render('Advertisements/adminadvertisement', {
             layout: 'adminMain',
-            advertisements, 
-            agents
+            advertisements: advertisementsWithParsedDescription
         });
     } catch (error) {
         console.error('Error retrieving advertisements:', error);
         res.status(500).send('Server error');
     }
 });
-app.get('/advertisement', function(req, res){
-    res.render('Advertisements/advertisement', {layout:'adminMain'});
-});
-
 app.get('/adminPropertiesView', function(req, res){
     res.render('adminPropertiesView', {layout:'adminMain'});
 });
@@ -1164,12 +1299,116 @@ app.post('/addAdvertisement', upload.single('advertisementImage'), async (req, r
         });
 
         // Redirect to the admin advertisements page
-        res.redirect('/adminAdvertisements');
+        res.redirect('/adminadvertisement');
     } catch (error) {
         console.error('Error adding advertisement:', error);
         res.status(500).send('Server error');
     }
 });
+
+app.get('/editAdvertisement/:ad_id', async (req, res) => {
+    try {
+        const ad_id = req.params.ad_id;
+        const advertisement = await Advertisement.findOne({
+            where: { ad_id },
+            include: [{
+                model: Agent,
+                as: 'agent'
+            }]
+        });
+
+        if (!advertisement) {
+            return res.status(404).send('Advertisement not found');
+        }
+        const agents = await Agent.findAll();
+        const adData = advertisement.toJSON();
+        const description = JSON.stringify(adData.description).replace(/'/g, '"') || '[]';
+        const parsedDescription = JSON.parse(description);
+
+        res.render('editAdvertisement', {
+            layout: 'main',
+            advertisement: {
+                ...adData,
+                description: parsedDescription
+            },
+            agents: agents.map(agent => agent.toJSON())
+        });
+    } catch (error) {
+        console.error('Error retrieving advertisement:', error);
+        res.status(500).send('Server error');
+    }
+});
+
+app.post('/editAdvertisement/:ad_id', upload.single('ad_image'), async (req, res) => {
+    try {
+        const ad_id = req.params.ad_id;
+        const { ad_title, ad_content, agent_id, ad_description = '', date_started, date_end } = req.body;
+
+        // Determine the image path to use
+        const ad_image = req.file ? req.file.filename : req.body.existing_image;
+
+        // Check if ad_image is defined before normalizing the path
+        const normalizedAdImage = ad_image && ad_image.startsWith('../') ? ad_image.replace(/^\.\.\//, '') : ad_image;
+
+        const descriptionJson = ad_description
+            .split(',')
+            .map(item => item.trim());
+    
+        // Find the advertisement by its ID
+        const advertisement = await Advertisement.findByPk(ad_id);
+    
+        if (!advertisement) {
+            return res.status(404).send('Advertisement not found');
+        }
+    
+        // Update the advertisement record
+        const updated = await advertisement.update({
+            ad_title,
+            ad_content,
+            ad_image: normalizedAdImage, // Use the normalized path
+            agent_id,
+            description: descriptionJson,
+            date_started,
+            date_end
+        });
+    
+        if (updated) {
+            res.redirect('/adminadvertisement');
+        } else {
+            res.status(400).send('Failed to update advertisement');
+        }
+    } catch (error) {
+        console.error('Error updating advertisement:', error);
+        res.status(500).send('Server error');
+    }
+});
+
+
+
+app.post('/deleteAdvertisement/:id', async (req, res) => {
+    try {
+        // Find the advertisement by primary key (ID)
+        const advertisement = await Advertisement.findByPk(req.params.id);
+
+        // Check if the advertisement exists
+        if (advertisement) {
+            // Destroy the advertisement record
+            await advertisement.destroy();
+            // Redirect to the advertisements page
+            res.redirect('/adminadvertisement');
+        } else {
+            // Respond with a 404 status if not found
+            res.status(404).send('Advertisement not found');
+        }
+    } catch (error) {
+        // Handle errors and respond with a 500 status
+        console.error('Error deleting advertisement:', error);
+        res.status(500).send('Error deleting advertisement');
+    }
+});
+
+
+
 
 
 app.get('/registerPropertyAgent', function(req, res){
