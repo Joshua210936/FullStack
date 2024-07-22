@@ -1116,6 +1116,10 @@ app.get('/adminadvertisement', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+app.get('/advertisement', function(req, res){
+    res.render('Advertisements/advertisement', {layout:'adminMain'});
+});
+
 app.get('/adminPropertiesView', function(req, res){
     res.render('adminPropertiesView', {layout:'adminMain'});
 });
