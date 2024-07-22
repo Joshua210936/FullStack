@@ -7,6 +7,7 @@ const app = express();
 const path = require('path');
 const methodOverride = require('method-override');
 const Handlebars = require('handlebars');
+const multer = require('multer');
 
 //Database
 const fullstackDB = require('./config/DBConnection');
@@ -19,8 +20,9 @@ const Listed_Properties = require('./models/Listed_Properties');
 const Agent = require('./models/Agent');
 const Customer = require('./models/custUser');
 const Schedule = require('./models/schedule');
-const Amenity = require('./models/propertyAmenities')
+const Amenity = require('./models/propertyAmenities');
 
+const Advertisement = require('./models/Advertisement')
 
 //Routers
 const guestRoute = require("./routes/guest_routes");
@@ -105,7 +107,33 @@ app.get('/',function(req,res){ //home page
 
 //     res.render('customerHome', { user: req.session.user, layout: 'userMain' });
 // });
+// for image
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images/'); // Save files to public/images
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname)); // Rename the file to avoid conflicts
+    },
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = /jpeg|jpg|png/;
+        const extName = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimeType = allowedTypes.test(file.mimetype);
 
+        if (mimeType && extName) {
+            return cb(null, true);
+        } else {
+            cb(new Error('Only JPG, JPEG, and PNG images are allowed'));
+        }
+    }
+});
+
+const upload = multer({ storage: storage });
+// Database sync
+Advertisement.belongsTo(Agent, { foreignKey: 'agent_id', as: 'agent' });
+Agent.hasMany(Advertisement, { foreignKey: 'agent_id', as: 'advertisements' });
+
+//
 app.get('/adminHome', function(req, res){
     res.render('adminHome', {layout:'adminMain'});
 });
@@ -223,7 +251,7 @@ app.post('/login', function (req, res) {
         });
 });
 
-app.get('/register', (req, res) => { // User Registration page
+app.get('/register', (req, res) => { // User    tration page
     res.render('Login/userReg',{layout:'main'});
 });
 
@@ -1079,30 +1107,75 @@ app.delete('/deleteAgent/:id', async (req, res) => {
 
 
 
-app.get('/advertisement', function(req, res){
-    res.render('Advertisements/advertisement', {layout:'adminMain'});
-});
+app.get('/adminadvertisement', async (req, res) => {
+    try {
+        const advertisements = await Advertisement.findAll({
+            include: [Agent] 
+        });
+        
+        const agents = await Agent.findAll();
 
-app.get('/adminFeedback', function(req, res){
-    Feedback.findAll({
-        order: [
-            ['feedback_id', 'DESC']
-        ],
-        raw:true
-    })
-    .then((feedback)=>{
-        console.log(feedback)
-        res.render('Contact Us/adminFeedback', {layout:'adminMain', feedback:feedback});
-    })
+        res.render('Advertisements/adminadvertisement', {
+            layout: 'adminMain',
+            advertisements, 
+            agents
+        });
+    } catch (error) {
+        console.error('Error retrieving advertisements:', error);
+        res.status(500).send('Server error');
+    }
 });
-
 app.get('/adminPropertiesView', function(req, res){
     res.render('adminPropertiesView', {layout:'adminMain'});
 });
 
-app.get('/addAdvertisement', function(req, res){
-    res.render('Advertisements/addAdvertisement', {layout:'adminMain'});
+app.get('/addAdvertisement', async (req, res) => {
+    try {
+        const agents = await Agent.findAll();
+
+        const Agents = agents.map(agent => {
+            return agent.get({ plain: true });
+        });
+
+        res.render('Advertisements/addAdvertisement', {
+            layout: 'main', 
+            agents: Agents
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
 });
+
+
+app.post('/addAdvertisement', upload.single('advertisementImage'), async (req, res) => {
+    try {
+        const { ad_title, ad_content, agent_id, ad_description, date_started, date_end } = req.body;
+
+        const ad_image = req.file ? req.file.filename : 'placeholder.png';
+
+        const descriptionJson = ad_description.split(',')
+            .map(item => item.trim())
+
+        // Create a new advertisement record
+        const newAd = await Advertisement.create({
+            ad_title,
+            ad_content,
+            ad_image,
+            agent_id,
+            description: descriptionJson,
+            date_started,
+            date_end
+        });
+
+        // Redirect to the admin advertisements page
+        res.redirect('/adminAdvertisements');
+    } catch (error) {
+        console.error('Error adding advertisement:', error);
+        res.status(500).send('Server error');
+    }
+});
+
 
 app.get('/registerPropertyAgent', function(req, res){
     res.render('agentRegister', {layout:'adminMain'});

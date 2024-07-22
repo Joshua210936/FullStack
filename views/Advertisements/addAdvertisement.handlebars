@@ -1,16 +1,58 @@
-<head>
-        <link rel="stylesheet" href="css/addAdvertisement.css">
-</head>
-
-<div class="container-fluid addNewAdvertisement">
+<div class="addAdvertisementContainer">
     <h1>Add New Advertisement</h1>
-    <form action="/submit-advertisement" method="POST" enctype="multipart/form-data">
-        <label for="bannerImage">Banner Image:</label>
-        <input type="file" id="bannerImage" name="bannerImage" accept="image/*" required>
-        <br>
-        <label for="bannerLink">Banner Link:</label>
-        <input type="url" id="bannerLink" name="bannerLink" placeholder="https://example.com" required>
-        <br>
-        <input type="submit" value="Upload Advertisement">
+    <form action="/addAdvertisement" method="POST" enctype="multipart/form-data">
+        
+        <!-- Title -->
+        <div class="form-group">
+            <label for="ad_title">Title:</label>
+            <input type="text" id="ad_title" name="ad_title" class="form-control" required>
+        </div>
+        
+        <!-- Content -->
+        <div class="form-group">
+            <label for="ad_content">Content:</label>
+            <textarea id="ad_content" name="ad_content" class="form-control" required></textarea>
+        </div>
+        
+        <!-- Advertisement Image -->
+        <div class="form-group">
+           <label for="advertisementImage">Advertisement Image:</label>
+<input type="file" id="advertisementImage" name="advertisementImage" class="form-control-file" accept="image/jpeg, image/png">
+
+        </div>
+        
+        <!-- Agent Selection -->
+        <div class="form-group">
+            <label for="agent_id">Select Agent:</label>
+            <select id="agent_id" name="agent_id" class="form-control" required>
+                {{#each agents}}
+                <option value="{{this.agent_id}}">{{this.agent_firstName}} {{this.agent_lastName}}</option>
+                {{/each}}
+            </select>
+        </div>
+        
+        <!-- Description -->
+        <div class="form-group">
+            <label for="ad_description">Description:</label>
+            <textarea id="ad_description" name="ad_description" class="form-control" required></textarea>
+        </div>
+        
+        <!-- Start Date -->
+        <div class="form-group">
+            <label for="date_started">Start Date:</label>
+            <input type="date" id="date_started" name="date_started" class="form-control" required>
+        </div>
+        
+        <!-- End Date -->
+        <div class="form-group">
+            <label for="date_end">End Date:</label>
+            <input type="date" id="date_end" name="date_end" class="form-control" required>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Upload Advertisement">
+        </div>
+        
     </form>
 </div>
