@@ -397,15 +397,70 @@ app.post('/register', async function (req, res) {
 //     }
 // });
 
-app.get('/userSetProfile/:customer_id', async (req, res) => {
-    const customer_id = req.params.customer_id;
-    console.log('Customer ID:', customer_id);
+// app.get('/userSetProfile/:customer_id', async (req, res) => {
+//     // const customer_id = req.params.customer_id;
+//     const customer_id = 1;
+//     console.log('Customer ID:', customer_id);
+//     try {
+//         const customer = await Customer.findByPk(customer_id);
+//         if (customer) {
+//             res.render('Customer/userSetProfile', { 
+//                 layout: 'userMain', 
+//                 customer_id: customer_id,
+//                 customer: customer.get({ plain: true })
+//             });
+//         } else {
+//             res.status(404).json({ message: 'Customer not found' });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: 'Error fetching customer details', error });
+//     }
+// });
+
+
+
+// app.post('/userSetProfile/:customer_id', async (req, res) => {
+//     const { firstName, lastName, phoneNumber, birthday } = req.body;
+//     const customer_id = req.params.customer_id;
+    
+//     console.log('Received customer ID:', customer_id); // Log customer ID
+//     console.log('Received update data:', { firstName, lastName, phoneNumber, birthday }); // Log update data
+    
+//     try {
+//         const customer = await Customer.findByPk(customer_id);
+//         if (customer) {
+//             await Customer.update(
+//                 {
+//                     Customer_fName: firstName,
+//                     Customer_lName: lastName,
+//                     Customer_Phone: phoneNumber,
+//                     Customer_Birthday: birthday,
+//                 },
+//                 {
+//                     where: {
+//                         Customer_id: customer_id
+//                     }
+//                 }
+//             );
+//             res.redirect(`/userSetProfile/${customer_id}`);
+//         } else {
+//             res.status(404).send("Customer not found");
+//         }
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send("Error updating customer profile");
+//     }
+// });
+
+// GET route to retrieve the first customer profile
+app.get('/userSetProfile', async (req, res) => {
     try {
-        const customer = await Customer.findByPk(customer_id);
+        // Find the first customer
+        const customer = await Customer.findOne({ order: [['Customer_id', 'ASC']] });
         if (customer) {
             res.render('Customer/userSetProfile', { 
                 layout: 'userMain', 
-                customer_id: customer_id,
+                customer_id: customer.Customer_id,
                 customer: customer.get({ plain: true })
             });
         } else {
@@ -416,16 +471,13 @@ app.get('/userSetProfile/:customer_id', async (req, res) => {
     }
 });
 
-
-
+// POST route to update the customer profile by customer_id
 app.post('/userSetProfile/:customer_id', async (req, res) => {
     const { firstName, lastName, phoneNumber, birthday } = req.body;
-    const customer_id = req.params.customer_id;
-    
-    console.log('Received customer ID:', customer_id); // Log customer ID
-    console.log('Received update data:', { firstName, lastName, phoneNumber, birthday }); // Log update data
+    const customer_id = req.params.customer_id; // Retrieve the customer_id from the URL
     
     try {
+        // Find the customer by ID
         const customer = await Customer.findByPk(customer_id);
         if (customer) {
             await Customer.update(
