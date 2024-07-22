@@ -9,7 +9,7 @@
             <div class="form-header">
                 <h1>Property Listing Form</h1>
             </div>
-            <form action="/agentListProperty" method="post" class="addPropertyForm">
+            <form id="propertyForm" action="/agentListProperty" method="post" class="addPropertyForm">
                 <!-- Property Details Section -->
                 <div class="form-header">
                     <h2>Property Details</h2>
@@ -148,4 +148,14 @@
             const currentDate = new Date();
             listedDateInput.value = formatDate(currentDate);
         });
+
+        document.getElementById('propertyForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        
+        // Display the alert
+        alert('Property Listed Successfully!');
+        
+        // Optionally submit the form programmatically after the alert
+        this.submit();
+    });
     </script>
