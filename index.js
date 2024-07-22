@@ -1347,7 +1347,8 @@ app.post('/editAdvertisement/:ad_id', upload.single('ad_image'), async (req, res
         // Determine the image path to use
         const ad_image = req.file ? req.file.filename : req.body.existing_image;
 
-        const normalizedAdImage = ad_image.startsWith('../') ? ad_image.replace(/^\.\.\//, '') : ad_image;
+        // Check if ad_image is defined before normalizing the path
+        const normalizedAdImage = ad_image && ad_image.startsWith('../') ? ad_image.replace(/^\.\.\//, '') : ad_image;
 
         const descriptionJson = ad_description
             .split(',')
@@ -1381,6 +1382,7 @@ app.post('/editAdvertisement/:ad_id', upload.single('ad_image'), async (req, res
         res.status(500).send('Server error');
     }
 });
+
 
 
 app.post('/deleteAdvertisement/:id', async (req, res) => {
