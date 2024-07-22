@@ -26,6 +26,9 @@ body {
 
 .container {
   padding: 20px; /* Add padding from the each side */
+}
+
+.adminDashboard{
   background-color: white;
 }
 

@@ -22,7 +22,6 @@ const Customer = require('./models/custUser');
 const Schedule = require('./models/schedule');
 const Amenity = require('./models/propertyAmenities');
 
-const Advertisement = require('./models/Advertisement')
 
 //Routers
 const guestRoute = require("./routes/guest_routes");
@@ -129,9 +128,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-// Database sync
-Advertisement.belongsTo(Agent, { foreignKey: 'agent_id', as: 'agent' });
-Agent.hasMany(Advertisement, { foreignKey: 'agent_id', as: 'advertisements' });
 
 //
 app.get('/adminHome', function(req, res){
