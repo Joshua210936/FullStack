@@ -47,7 +47,6 @@ Handlebars.registerHelper('parseJson', function (context) {
 app.use('/user', userRoute);
 app.use('/admin', adminRoute);
 app.use('/feedback', feedbackRoute);
-
 app.use(bodyParser.urlencoded({extended:true})); 
 app.use(express.static(path.join(__dirname, '/public'))); 
 app.use(flash());
@@ -106,6 +105,7 @@ app.get('/',function(req,res){ //home page
 
 //     res.render('customerHome', { user: req.session.user, layout: 'userMain' });
 // });
+
 // for image
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -216,30 +216,43 @@ app.post('/login', function (req, res) {
     errorList = [];
     let { email, password } = req.body;
 
-    // Find the customer with the given email
-    Customer.findOne({ where: { Customer_Email: email } }) 
-        .then(user => {
-            if (!user) {
-                errorList.push({ text: 'User not found' });
-                return res.status(404).send({ message: 'User not found' });
-            }
+    // Admin credentials
+    const adminEmail = 'admin@gmail.com';
+    const adminPassword = 'Admin12345';
 
-            // Check if the password is correct
-            if (user.Customer_Password !== password) {
-                errorList.push({ text: 'Incorrect password' });
-                return res.status(401).send({ message: 'Incorrect password' });
-            }
+    if (email === adminEmail && password === adminPassword) {
+        // Admin login
+        req.session.isAdmin = true;
+        req.session.userID = 'admin'; // You can store any identifier for the admin user
+        console.log('Admin logged in');
+        return res.redirect('/adminHome'); // Redirect to the admin home page
+    } else {
+        // Find the customer with the given email
+        Customer.findOne({ where: { Customer_Email: email } })
+            .then(user => {
+                if (!user) {
+                    errorList.push({ text: 'User not found' });
+                    return res.status(404).send({ message: 'User not found' });
+                }
 
-            // Successful login
-            req.session.user = user; // Store user information in session
-            const user_id = user.Customer_id;
-            console.log(user_id) 
-            res.redirect('/customerHome');
-        })
-        .catch(err => {
-            console.log('Error during login: ', err);
-           return res.status(500).send({ message: 'Error occurred', error: err });
-        });
+                // Check if the password is correct
+                if (user.Customer_Password !== password) {
+                    errorList.push({ text: 'Incorrect password' });
+                    return res.status(401).send({ message: 'Incorrect password' });
+                }
+
+                // Successful customer login
+                req.session.isAdmin = false;
+                req.session.userID = user.Customer_id; // Store user information in session
+                const user_id = user.Customer_id;
+                console.log(user_id);
+                res.redirect('/customerHome');
+            })
+            .catch(err => {
+                console.log('Error during login: ', err);
+                return res.status(500).send({ message: 'Error occurred', error: err });
+            });
+    }
 });
 
 app.get('/register', (req, res) => { // User    tration page
@@ -404,6 +417,7 @@ app.get('/userSetProfile/:customer_id', async (req, res) => {
 });
 
 
+
 app.post('/userSetProfile/:customer_id', async (req, res) => {
     const { firstName, lastName, phoneNumber, birthday } = req.body;
     const customer_id = req.params.customer_id;
@@ -519,6 +533,7 @@ app.post('/agentRegister', function(req,res){
         
     })
     .then(agent => {
+        res.redirect('/agentLogin');
         res.status(201).send({ message: 'Agent registered successfully!', agent });
       })
     .catch(err => {
@@ -528,21 +543,41 @@ app.post('/agentRegister', function(req,res){
 
 
 
-app.get('/agentSetprofile', (req, res) => {
-    // Assuming you have the agent's ID stored in the session
-    const agentId = req.session.agentId; // or however you track the logged-in agent
+// app.get('/agentSetprofile', (req, res) => {
+//     // Assuming you have the agent's ID stored in the session
+//     const agentId = req.session.agentId; // or however you track the logged-in agent
     
-    Agent.findByPk(agentId)
-        .then(agent => {
-            res.render('Property Agent/agentSetprofile', { 
-                layout: 'userMain', 
-                agent // Pass the agent data to the template
+//     Agent.findByPk(agentId)
+//         .then(agent => {
+//             res.render('Property Agent/agentSetprofile', { 
+//                 layout: 'userMain', 
+//                 agent // Pass the agent data to the template
+//             });
+//         })
+//         .catch(err => {
+//             res.status(500).send({ message: 'Error fetching agent data', error: err });
+//         });
+// });
+
+app.get('/agentSetProfile/:agent_id', async (req, res) => { // Agent Set profile page
+    const agent_id = req.params.agent_id;
+    console.log('Agent ID:', agent_id);
+    try {
+        const agent = await Agent.findByPk(agent_id);
+        if (agent) {
+            res.render('Property Agent/agentSetProfile', { 
+                layout: 'main', 
+                agent_id: agent_id,
+                agent: agent.get({ plain: true })
             });
-        })
-        .catch(err => {
-            res.status(500).send({ message: 'Error fetching agent data', error: err });
-        });
+        } else {
+            res.status(404).json({ message: 'Agent not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching agent details', error });
+    }
 });
+    
 
 app.post('/agentProfileUpdate', (req, res) => {
     const agentId = req.session.agentId; // or however you track the logged-in agent

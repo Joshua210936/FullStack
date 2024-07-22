@@ -6,8 +6,8 @@
     <div class="container">
         <aside class="sidebar">
             <div class="profile-section">
-                <img src="{{this.agent_image}}" alt="Profile Picture" class="profile-picture">
-                <h2>{{this.agent_firstName}} {{this.agent_lastName}}</h2>
+                <img src="{{agent.agent_image}}" alt="Profile Picture" class="profile-picture">
+                <h2>{{agent.agent_firstName}} {{agent.agent_lastName}}</h2>
             </div>
             <nav class="sidebar-nav">
                 <ul>
@@ -23,31 +23,31 @@
                 <form action="/agentProfileUpdate" method="post" enctype="multipart/form-data">
                     <div class="input-group">
                         <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="{{this.agent_firstName}}">
+                        <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="{{agent.agent_firstName}}">
                     </div>
                     <div class="input-group">
                         <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" value="{{this.agent_lastName}}">
+                        <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" value="{{agent.agent_lastName}}">
                     </div>
                     <div class="input-group">
                         <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="{{this.agent_phoneNumber}}">
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="{{agent.agent_phoneNumber}}">
                     </div>
                     <div class="input-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Enter your email" value="{{this.agent_email}}">
+                        <input type="email" id="email" name="email" placeholder="Enter your email" value="{{agent.agent_email}}">
                     </div>
                     <div class="input-group">
                         <label for="agency_license">Agency License Number</label>
-                        <input type="text" id="agency_license" name="agency_license" placeholder="Enter your agency license number" value="{{this.agent_licenseNo}}">
+                        <input type="text" id="agency_license" name="agency_license" placeholder="Enter your agency license number" value="{{agent.agent_licenseNo}}">
                     </div>
                     <div class="input-group">
                         <label for="agency_registration">Agency Registration Number</label>
-                        <input type="text" id="agency_registration" name="agency_registration" placeholder="Enter your agency registration number" value="{{this.agent_registrationNo}}">
+                        <input type="text" id="agency_registration" name="agency_registration" placeholder="Enter your agency registration number" value="{{agent.agent_registrationNo}}">
                     </div>
                     <div class="input-group">
                         <label for="bio">Agent Bio</label>
-                        <textarea id="bio" name="bio" placeholder="Write a short bio about yourself">{{this.agent_bio}}</textarea>
+                        <textarea id="bio" name="bio" placeholder="Write a short bio about yourself">{{agent.agent_bio}}</textarea>
                     </div>
                     <div class="input-group">
                         <label for="agentPictures">Upload Profile Picture</label>
