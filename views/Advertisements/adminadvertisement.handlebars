@@ -1,0 +1,36 @@
+ <div class="advertisementsList">
+            <h2>Existing Advertisements</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Content</th>
+                        <th>Image</th>
+                        <th>Agent</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each advertisements}}
+                    <tr>
+                        <td>{{this.ad_title}}</td>
+                        <td>{{this.ad_content}}</td>
+                        <td><img src="/images/{{this.ad_image}}" alt="Advertisement Image" class="img-thumbnail" style="max-width: 100px;"></td>
+                        <td>{{#with (lookup ../agents this.agent_id)}}{{this.agent_firstName}} {{this.agent_lastName}}{{/with}}</td>
+                        <td>{{#each this.description}}{{this}}, {{/each}}</td>
+                        <td>{{this.date_started}}</td>
+                        <td>{{this.date_end}}</td>
+                        <td>
+                            <a href="/editAdvertisement/{{this.ad_id}}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="/deleteAdvertisement/{{this.ad_id}}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>

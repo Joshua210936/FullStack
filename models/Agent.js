@@ -43,4 +43,5 @@ const Agent = db.define('agent', {
     } 
 });
 
+
 module.exports = Agent;
