@@ -9,7 +9,7 @@
             <div class="form-header">
                 <h1>Update {{propertyDetail.Property_Name}} (Property ID: {{propertyDetail.Property_ID}})</h1>
             </div>
-            <form action="/agentUpdatePropertyForm/{{propertyDetail.Property_ID}}" method="post" class="addPropertyForm">
+            <form action="/agentUpdatePropertyForm/{{propertyDetail.Property_ID}}" method="post" class="addPropertyForm" onsubmit="return handleSubmit()">
                 <!-- Property Details Section -->
                 <div class="form-header">
                     <h2>Property Details</h2>
@@ -140,5 +140,9 @@
     function removeAmenity(id) {
         const amenity = document.getElementById(id);
         amenity.remove();
+    }
+    function handleSubmit() {
+    alert('Your property details have been updated successfully!');
+    return true; // Proceed with form submission
     }
     </script>

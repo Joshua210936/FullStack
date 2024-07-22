@@ -7,6 +7,7 @@ const app = express();
 const path = require('path');
 const methodOverride = require('method-override');
 const Handlebars = require('handlebars');
+const multer = require('multer');
 
 //Database
 const fullstackDB = require('./config/DBConnection');
@@ -19,7 +20,7 @@ const Listed_Properties = require('./models/Listed_Properties');
 const Agent = require('./models/Agent');
 const Customer = require('./models/custUser');
 const Schedule = require('./models/schedule');
-const Amenity = require('./models/propertyAmenities')
+const Amenity = require('./models/propertyAmenities');
 
 
 //Routers
@@ -105,27 +106,37 @@ app.get('/',function(req,res){ //home page
 
 //     res.render('customerHome', { user: req.session.user, layout: 'userMain' });
 // });
+// for image
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images/'); // Save files to public/images
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname)); // Rename the file to avoid conflicts
+    },
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = /jpeg|jpg|png/;
+        const extName = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimeType = allowedTypes.test(file.mimetype);
 
+        if (mimeType && extName) {
+            return cb(null, true);
+        } else {
+            cb(new Error('Only JPG, JPEG, and PNG images are allowed'));
+        }
+    }
+});
+
+const upload = multer({ storage: storage });
+
+//
 app.get('/adminHome', function(req, res){
     res.render('adminHome', {layout:'adminMain'});
 });
 
-// app.get('/customerHome' ,function(req,res){ //customer page
-//     res.render('customerHome',{layout:'userMain'})
-// });
-
-app.get('/customerHome', (req, res) => {
-    if (req.session.user) {
-        res.render('customerHome', {
-            layout: 'userMain',
-            customer: req.session.user // pass the session user data to the template
-        });
-    } else {
-        console.log('User not logged in');
-        res.redirect('/login');
-    }
+app.get('/customerHome' ,function(req,res){ //customer page
+    res.render('customerHome',{layout:'userMain'})
 });
-
 
 app.get('/agentHome', function(req, res){
     res.render('agentHome', {layout:'agentMain'});
@@ -153,28 +164,23 @@ app.get('/buyHouse', async (req, res) => {
 app.get('/propertyDescription/:id', async function(req, res) { 
     try {
         const propertyID = req.params.id;
-        
-        // Fetch property details by ID
+
         const property = await Listed_Properties.findByPk(propertyID);
         if (!property) {
             return res.status(404).send('Property not found');
         }
 
-        // Calculate price per square foot
         const pricePerSquareFoot = (property.Property_Price / property.Square_Footage).toFixed(2);
 
-        // Fetch property amenities by property ID
         const amenities = await Amenity.findAll({
             where: { Property_ID: propertyID }
         });
 
-        // Fetch agent details by agent ID (foreign key)
         const agent = await Agent.findByPk(property.agent_id);
         if (!agent) {
             return res.status(404).send('Agent not found');
         }
 
-        // Render the property description page
         res.render('propertyDescription', {
             layout: 'main',
             propertyDetail: property.dataValues, // Pass the property object
@@ -206,84 +212,37 @@ app.get('/login', (req,res) => { // User Login page
     res.render('Login/userlogin', {layout:'main'});
 });
 
-// app.post('/login', function (req, res) {
-//     errorList = [];
-//     let { email, password } = req.body;
-
-//     // Find the customer with the given email
-//     Customer.findOne({ where: { Customer_Email: email } }) 
-//         .then(user => {
-//             if (!user) {
-//                 errorList.push({ text: 'User not found' });
-//                 return res.status(404).send({ message: 'User not found' });
-//             }
-
-//             // Check if the password is correct
-//             if (user.Customer_Password !== password) {
-//                 errorList.push({ text: 'Incorrect password' });
-//                 return res.status(401).send({ message: 'Incorrect password' });
-//             }
-
-//             // Successful login
-//             req.session.user = user; // Store user information in session
-//             const user_id = user.Customer_id;
-//             console.log(user_id) 
-//             res.redirect('/customerHome');
-//         })
-//         .catch(err => {
-//             console.log('Error during login: ', err);
-//            return res.status(500).send({ message: 'Error occurred', error: err });
-//         });
-// });
-
-app.post('/login', async (req, res) => {
+app.post('/login', function (req, res) {
     errorList = [];
-    const { email, password } = req.body;
+    let { email, password } = req.body;
 
-    try {
-        console.log('Login attempt:', email);
+    // Find the customer with the given email
+    Customer.findOne({ where: { Customer_Email: email } }) 
+        .then(user => {
+            if (!user) {
+                errorList.push({ text: 'User not found' });
+                return res.status(404).send({ message: 'User not found' });
+            }
 
-        const user = await Customer.findOne({ where: { Customer_Email: email } });
-        console.log('User found:', user);
+            // Check if the password is correct
+            if (user.Customer_Password !== password) {
+                errorList.push({ text: 'Incorrect password' });
+                return res.status(401).send({ message: 'Incorrect password' });
+            }
 
-        if (!user) {
-            errorList.push({ text: 'User not found' });
-            return res.status(404).send({ message: 'User not found' });
-        }
-
-        if (user.Customer_Password !== password) {
-            errorList.push({ text: 'Incorrect password' });
-            return res.status(401).send({ message: 'Incorrect password' });
-        }
-
-        req.session.save(() => {
-            req.session.user = {
-                id: user.Customer_id,
-                Customer_fName: user.Customer_fName,
-                Customer_lName: user.Customer_lName,
-                Customer_Phone: user.Customer_Phone,
-                Customer_Email: user.Customer_Email,
-                Customer_Birthday: user.Customer_Birthday,
-            };
-            console.log('Logged in user ID:', req.session.user.id); 
+            // Successful login
+            req.session.user = user; // Store user information in session
+            const user_id = user.Customer_id;
+            console.log(user_id) 
             res.redirect('/customerHome');
+        })
+        .catch(err => {
+            console.log('Error during login: ', err);
+           return res.status(500).send({ message: 'Error occurred', error: err });
         });
-    } catch (err) {
-        console.log('Error during login: ', err);
-        return res.status(500).send({ message: 'Error occurred', error: err });
-    }
 });
 
-app.get('/session-test', (req, res) => {
-    if (req.session.user) {
-        res.send(`Logged in as: ${req.session.user.Customer_Email}`);
-    } else {
-        res.send('Not logged in');
-    }
-});
-
-
-app.get('/register', (req, res) => { // User Registration page
+app.get('/register', (req, res) => { // User    tration page
     res.render('Login/userReg',{layout:'main'});
 });
 
@@ -356,50 +315,91 @@ app.post('/register', async function (req, res) {
     }
 });
 
-// app.get('/userSetProfile/:customer_id', async (req, res) => {
-//     const customer_id = req.params.customer_id;
-//     console.log('Customer ID:', customer_id);
-//     try {
-//         const customer = await Customer.findByPk(customer_id);
-//         if (customer) {
-//             res.render('Customer/userSetProfile', { 
-//                 layout: 'userMain',
-//                 customer: customer.get({ plain: true })
-//             });
-//         } else {
-//             res.status(404).json({ message: 'Customer not found' });
+
+// app.post('/register', async function (req, res) {
+//     let errorsList = [];
+//     let { firstName, lastName, phoneNumber, email, birthday, password, confirmPassword } = req.body;
+//     if (!email) {
+//         return res.status(400).send("One or more required payloads were not provided.")
+
+//     }
+
+//     const data = await Customer.findAll({
+//         attributes: ["Customer_Email"]
+//     });
+//     console.log(data);
+//     // Check if password and confirmPassword match
+//     if (password !== confirmPassword) {
+//         errorsList.push({ text: 'Passwords do not match' });
+//         return res.status(400).send({ message: 'Passwords do not match' });
+//     }
+
+//     // Check if email already exists
+//     var exists = false;
+//     for (var cust of data) {
+//         if (cust.toJSON().Customer_Email == email) {
+//             // return res.status(400).send("Email already exists.")
+//             errorsList.push({ text: 'Email already exists' });
+            
 //         }
-//     } catch (error) {
-//         res.status(500).json({ message: 'Error fetching customer details', error });
+//     }
+
+//     // Check if phone number is valid
+//     const phoneNumberPattern = /^[89]\d{7}$/;
+//     if (!phoneNumberPattern.test(phoneNumber)) {
+//         errorsList.push({ message: 'Phone number must be 8 digits and start with 8 or 9' });
+//     }
+
+//     // Check if password is valid
+//     const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+//     if (!passwordPattern.test(password)) {
+//         errorsList.push({ message: 'Password must be at least 8 characters long, include at least one capital letter, and one number' });
+//     }
+
+//     if (errorsList.length > 0) {
+//         let msg_error = "";
+//         for (let i = 0; i < errorsList.length; i++) {
+//             console.log(errorsList[i]);
+//             msg_error += errorsList[i].text + "\n";
+//         }
+
+//         res.render('Login/userReg',{layout:'main', error_msg:msg_error});
+//     } else {
+//         // Create new customer
+//         Customer.create({
+//             Customer_fName: firstName,
+//             Customer_lName: lastName,
+//             Customer_Phone: phoneNumber,
+//             Customer_Email: email,
+//             Customer_Birthday: birthday,
+//             Customer_Password: password,
+//         })
+//             .then(user => {
+//                 // Redirect to login page
+//                 res.redirect('/login');
+//             })
+//             .catch(err => {
+//                 res.status(400).send({ message: 'Error registering user', error: err });
+//             });
 //     }
 // });
 
 app.get('/userSetProfile/:customer_id', async (req, res) => {
     const customer_id = req.params.customer_id;
     console.log('Customer ID:', customer_id);
-
-    // Check if the session user is trying to access their own profile
-    if (req.session.user && req.session.user.id == customer_id) {
-        try {
-            const customer = await Customer.findOne({
-                where: {
-                    id: customer_id
-                }
+    try {
+        const customer = await Customer.findByPk(customer_id);
+        if (customer) {
+            res.render('Customer/userSetProfile', { 
+                layout: 'userMain', 
+                customer_id: customer_id,
+                customer: customer.get({ plain: true })
             });
-
-            if (customer) {
-                res.render('Customer/userSetProfile', { 
-                    layout: 'userMain',
-                    customer: customer.get({ plain: true })
-                });
-            } else {
-                res.status(404).json({ message: 'Customer not found' });
-            }
-        } catch (error) {
-            res.status(500).json({ message: 'Error fetching customer details', error });
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
         }
-    } else {
-        res.status(403).json({ message: 'Unauthorized access' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching customer details', error });
     }
 });
 
@@ -488,7 +488,7 @@ app.post('/agentLogin', function (req, res) {
             }
 
             // Successful login
-            // req.session.agent = agent; // Store agent information in session
+            req.session.agent = agent; // Store agent information in session
             res.redirect('/agentHome');
         })
         .catch(err => {
@@ -1098,6 +1098,24 @@ app.delete('/deleteAgent/:id', async (req, res) => {
 
 
 
+app.get('/adminadvertisement', async (req, res) => {
+    try {
+        const advertisements = await Advertisement.findAll({
+            include: [Agent] 
+        });
+        
+        const agents = await Agent.findAll();
+
+        res.render('Advertisements/adminadvertisement', {
+            layout: 'adminMain',
+            advertisements, 
+            agents
+        });
+    } catch (error) {
+        console.error('Error retrieving advertisements:', error);
+        res.status(500).send('Server error');
+    }
+});
 app.get('/advertisement', function(req, res){
     res.render('Advertisements/advertisement', {layout:'adminMain'});
 });
@@ -1106,9 +1124,53 @@ app.get('/adminPropertiesView', function(req, res){
     res.render('adminPropertiesView', {layout:'adminMain'});
 });
 
-app.get('/addAdvertisement', function(req, res){
-    res.render('Advertisements/addAdvertisement', {layout:'adminMain'});
+app.get('/addAdvertisement', async (req, res) => {
+    try {
+        const agents = await Agent.findAll();
+
+        const Agents = agents.map(agent => {
+            return agent.get({ plain: true });
+        });
+
+        res.render('Advertisements/addAdvertisement', {
+            layout: 'main', 
+            agents: Agents
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
 });
+
+
+app.post('/addAdvertisement', upload.single('advertisementImage'), async (req, res) => {
+    try {
+        const { ad_title, ad_content, agent_id, ad_description, date_started, date_end } = req.body;
+
+        const ad_image = req.file ? req.file.filename : 'placeholder.png';
+
+        const descriptionJson = ad_description.split(',')
+            .map(item => item.trim())
+
+        // Create a new advertisement record
+        const newAd = await Advertisement.create({
+            ad_title,
+            ad_content,
+            ad_image,
+            agent_id,
+            description: descriptionJson,
+            date_started,
+            date_end
+        });
+
+        // Redirect to the admin advertisements page
+        res.redirect('/adminAdvertisements');
+    } catch (error) {
+        console.error('Error adding advertisement:', error);
+        res.status(500).send('Server error');
+    }
+});
+
 
 app.get('/registerPropertyAgent', function(req, res){
     res.render('agentRegister', {layout:'adminMain'});
