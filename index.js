@@ -8,6 +8,7 @@ const path = require('path');
 const methodOverride = require('method-override');
 const Handlebars = require('handlebars');
 const multer = require('multer');
+const fs = require('fs');
 
 //Database
 const fullstackDB = require('./config/DBConnection');
@@ -21,6 +22,7 @@ const Agent = require('./models/Agent');
 const Customer = require('./models/custUser');
 const Schedule = require('./models/schedule');
 const Amenity = require('./models/propertyAmenities');
+const Advertisement = require('./models/advertisement');
 
 
 //Routers
@@ -41,6 +43,9 @@ Handlebars.registerHelper('json', function (context) {
 });
 Handlebars.registerHelper('parseJson', function (context) {
     return JSON.parse(context);
+});
+Handlebars.registerHelper('eq', function(a, b) {
+    return a === b;
 });
 
 //routers
@@ -94,9 +99,64 @@ app.set('view engine','handlebars');
 
 app.set('views', path.join(__dirname, 'views'));
 
-app.get('/',function(req,res){ //home page
-    res.render('home',{layout:'main'})
+app.get('/', async (req, res) => {
+    try {
+
+        const advertisements = await Advertisement.findAll({
+            include: [{
+                model: Agent,
+                as: 'agent'
+            }]
+        });
+
+        const formatDate = (date) => {
+            if (!date) return '';
+            const d = new Date(date);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const year = d.getFullYear();
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        };
+
+        const advertisementsWithParsedDescription = advertisements.map(ad => {
+            try {
+                const adData = ad.toJSON();
+                const description = JSON.stringify(adData.description).replace(/'/g, '"') || '[]';
+                const parsedDescription = JSON.parse(description);
+
+                
+                return {
+                    ...adData,
+                    description: parsedDescription,
+                    date_started: formatDate(adData.date_started),
+                    date_end: formatDate(adData.date_end),
+                    
+                    
+                };
+            } catch (error) {
+                console.error('Error parsing description JSON:', error);
+                return {
+                    ...ad.toJSON(),
+                    description: [],
+                    date_started: '',
+                    date_end: ''
+                };
+            }
+        });
+
+        res.render('home', {
+            layout: 'main',
+            advertisements: advertisementsWithParsedDescription
+        });
+    } catch (error) {
+        console.error('Error retrieving advertisement:', error);
+        res.status(500).send('Server error');
+    }
 });
+
+
 
 // app.get('/customer', function (req, res) {
 //     // if (!req.session.user) {
@@ -112,7 +172,18 @@ const storage = multer.diskStorage({
         cb(null, 'public/images/'); // Save files to public/images
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Rename the file to avoid conflicts
+        const filePath = path.join('public/images/', file.originalname);
+
+        // Check if file exists
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+                // File does not exist, proceed with the upload
+                cb(null, file.originalname);
+            } else {
+                // File exists, use the existing file name
+                cb(null, file.originalname);
+            }
+        });
     },
     fileFilter: (req, file, cb) => {
         const allowedTypes = /jpeg|jpg|png/;
@@ -128,13 +199,12 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
 //
 app.get('/adminHome', function(req, res){
     res.render('adminHome', {layout:'adminMain'});
 });
 
-app.get('/customerHome' ,function(req,res){ //customer page
+app.get('/customerHome' ,function(req,res){ 
     res.render('customerHome',{layout:'userMain'})
 });
 
@@ -1106,21 +1176,57 @@ app.delete('/deleteAgent/:id', async (req, res) => {
 app.get('/adminadvertisement', async (req, res) => {
     try {
         const advertisements = await Advertisement.findAll({
-            include: [Agent] 
+            include: [{
+                model: Agent,
+                as: 'agent'
+            }]
         });
-        
-        const agents = await Agent.findAll();
+
+        const formatDate = (date) => {
+            if (!date) return '';
+            const d = new Date(date);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const year = d.getFullYear();
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        };
+
+        const advertisementsWithParsedDescription = advertisements.map(ad => {
+            try {
+                const adData = ad.toJSON();
+                const description = JSON.stringify(adData.description).replace(/'/g, '"') || '[]';
+                const parsedDescription = JSON.parse(description);
+
+                return {
+                    ...adData,
+                    description: parsedDescription,
+                    date_started: formatDate(adData.date_started),
+                    date_end: formatDate(adData.date_end)
+                };
+            } catch (error) {
+                console.error('Error parsing description JSON:', error);
+                return {
+                    ...ad.toJSON(),
+                    description: [],
+                    date_started: '',
+                    date_end: ''
+                };
+            }
+        });
 
         res.render('Advertisements/adminadvertisement', {
             layout: 'adminMain',
-            advertisements, 
-            agents
+            advertisements: advertisementsWithParsedDescription
         });
     } catch (error) {
         console.error('Error retrieving advertisements:', error);
         res.status(500).send('Server error');
     }
 });
+
+
 app.get('/adminPropertiesView', function(req, res){
     res.render('adminPropertiesView', {layout:'adminMain'});
 });
@@ -1165,12 +1271,114 @@ app.post('/addAdvertisement', upload.single('advertisementImage'), async (req, r
         });
 
         // Redirect to the admin advertisements page
-        res.redirect('/adminAdvertisements');
+        res.redirect('/adminadvertisement');
     } catch (error) {
         console.error('Error adding advertisement:', error);
         res.status(500).send('Server error');
     }
 });
+
+app.get('/editAdvertisement/:ad_id', async (req, res) => {
+    try {
+        const ad_id = req.params.ad_id;
+        const advertisement = await Advertisement.findOne({
+            where: { ad_id },
+            include: [{
+                model: Agent,
+                as: 'agent'
+            }]
+        });
+
+        if (!advertisement) {
+            return res.status(404).send('Advertisement not found');
+        }
+        const agents = await Agent.findAll();
+        const adData = advertisement.toJSON();
+        const description = JSON.stringify(adData.description).replace(/'/g, '"') || '[]';
+        const parsedDescription = JSON.parse(description);
+
+        res.render('editAdvertisement', {
+            layout: 'main',
+            advertisement: {
+                ...adData,
+                description: parsedDescription
+            },
+            agents: agents.map(agent => agent.toJSON())
+        });
+    } catch (error) {
+        console.error('Error retrieving advertisement:', error);
+        res.status(500).send('Server error');
+    }
+});
+
+app.post('/editAdvertisement/:ad_id', upload.single('ad_image'), async (req, res) => {
+    try {
+        const ad_id = req.params.ad_id;
+        const { ad_title, ad_content, agent_id, ad_description = '', date_started, date_end } = req.body;
+
+        // Determine the image path to use
+        const ad_image = req.file ? req.file.filename : req.body.existing_image;
+
+        const normalizedAdImage = ad_image.startsWith('../') ? ad_image.replace(/^\.\.\//, '') : ad_image;
+
+        const descriptionJson = ad_description
+            .split(',')
+            .map(item => item.trim());
+    
+        // Find the advertisement by its ID
+        const advertisement = await Advertisement.findByPk(ad_id);
+    
+        if (!advertisement) {
+            return res.status(404).send('Advertisement not found');
+        }
+    
+        // Update the advertisement record
+        const updated = await advertisement.update({
+            ad_title,
+            ad_content,
+            ad_image: normalizedAdImage, // Use the normalized path
+            agent_id,
+            description: descriptionJson,
+            date_started,
+            date_end
+        });
+    
+        if (updated) {
+            res.redirect('/adminadvertisement');
+        } else {
+            res.status(400).send('Failed to update advertisement');
+        }
+    } catch (error) {
+        console.error('Error updating advertisement:', error);
+        res.status(500).send('Server error');
+    }
+});
+
+
+app.post('/deleteAdvertisement/:id', async (req, res) => {
+    try {
+        // Find the advertisement by primary key (ID)
+        const advertisement = await Advertisement.findByPk(req.params.id);
+
+        // Check if the advertisement exists
+        if (advertisement) {
+            // Destroy the advertisement record
+            await advertisement.destroy();
+            // Redirect to the advertisements page
+            res.redirect('/adminadvertisement');
+        } else {
+            // Respond with a 404 status if not found
+            res.status(404).send('Advertisement not found');
+        }
+    } catch (error) {
+        // Handle errors and respond with a 500 status
+        console.error('Error deleting advertisement:', error);
+        res.status(500).send('Error deleting advertisement');
+    }
+});
+
+
+
 
 
 app.get('/registerPropertyAgent', function(req, res){

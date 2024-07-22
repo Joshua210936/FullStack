@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require('../config/DBConfig');
+const Agent = require('./Agent');
 
 const Advertisement = db.define('advertisement', {
     ad_id: {
@@ -39,5 +40,6 @@ const Advertisement = db.define('advertisement', {
         defaultValue: 'active'
     }
 });
-
+Advertisement.belongsTo(Agent, { foreignKey: 'agent_id'});
+Agent.hasMany(Advertisement, { foreignKey: 'agent_id' });
 module.exports = Advertisement;

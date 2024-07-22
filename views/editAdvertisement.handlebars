@@ -1,0 +1,39 @@
+<h2>Edit Advertisement</h2>
+<form action="/editAdvertisement/{{advertisement.ad_id}}" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="ad_title">Title</label>
+        <input type="text" class="form-control" id="ad_title" name="ad_title" value="{{advertisement.ad_title}}" required>
+    </div>
+    <div class="form-group">
+        <label for="ad_content">Content</label>
+        <textarea class="form-control" id="ad_content" name="ad_content" required>{{advertisement.ad_content}}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="ad_image">Image</label>
+        <input type="file" class="form-control-file" id="ad_image" name="ad_image">
+        <img src="/images/{{advertisement.ad_image}}" alt="Advertisement Image" class="img-thumbnail" style="max-width: 100px;">
+    </div>
+    <div class="form-group">
+        <label for="agent_id">Agent</label>
+        <select class="form-control" id="agent_id" name="agent_id">
+            {{#each agents}}
+            <option value="{{this.agent_id}}" {{#if (eq this.agent_id ../advertisement.agent.agent_id)}}selected{{/if}}>
+                {{this.agent_firstName}} {{this.agent_lastName}}
+            </option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="ad_description">Description</label>
+        <textarea class="form-control" id="ad_description" name="ad_description" required>{{advertisement.description}}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="date_started">Start Date</label>
+        <input type="datetime-local" class="form-control" id="date_started" name="date_started" value="{{advertisement.date_started}}" required>
+    </div>
+    <div class="form-group">
+        <label for="date_end">End Date</label>
+        <input type="datetime-local" class="form-control" id="date_end" name="date_end" value="{{advertisement.date_end}}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
