@@ -838,7 +838,7 @@ app.post('/schedule', function(req,res){
 });
 
 app.get('/agent/4/appointments', async (req, res) => {
-    const agentId = 4;
+    const agentId = 1;
 
     try {
         const appointments = await Schedule.findAll({
@@ -865,7 +865,7 @@ app.get('/agent/4/appointments', async (req, res) => {
 
 app.get('/customer/:id/appointments', async (req, res) => {
     try {
-        const customerId = 2; // Hardcoded customer ID
+        const customerId = 1; // Hardcoded customer ID
 
         // Fetch schedules for the customer
         const schedules = await Schedule.findAll({
