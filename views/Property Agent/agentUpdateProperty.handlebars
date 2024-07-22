@@ -25,9 +25,15 @@
                         <p class="desctext">S$ {{this.Property_Price}}</p>
                         <div></div>
                         <div>
+                            {{#if this.Property_Status}}
                             <button type="button" class="btn btn-danger toggle-status" data-id="{{this.Property_ID}}" style="padding:10px;float:left;margin-left:10px;">
-                                {{#if this.Property_Status}}De-List{{else}}Re-List{{/if}}
+                                De-List
                             </button>
+                            {{else}}
+                            <button type="button" class="btn btn-success toggle-status" data-id="{{this.Property_ID}}" style="padding:10px;float:left;margin-left:10px;"> 
+                                Re-List
+                            </button>
+                            {{/if}}
                             <span style="padding:10px;">Status: {{#if this.Property_Status}}Listed{{else}}De-Listed{{/if}}</span>
                             <a href="/agentUpdatePropertyForm/{{this.Property_ID}}">
                                 <button type="button" class="btn btn-primary" id="updateButton" style="padding:10px;float:right;margin-right:10px;">Update</button>
