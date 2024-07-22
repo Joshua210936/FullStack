@@ -52,7 +52,7 @@ const Listed_Properties = db.define('listed_properties', {
         type: sequelize.STRING
     },
     Property_Description:{
-        type: sequelize.STRING
+        type: sequelize.STRING(1000)
     },
     agent_id: {
         type: sequelize.INTEGER,
