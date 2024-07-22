@@ -1,5 +1,5 @@
 body {
-    padding-top: 60px; /* Adjust based on your navbar height */
+    padding-top: 60px;
 }
 
 .tabcontent {
@@ -9,44 +9,51 @@ body {
     border-radius: 10px;
 }
 
-/* Show the default tab content */
 #allFeedback {
     display: block;
 }
 
-/* Style for vertical button groups */
 .btn-group-vertical {
     display: flex;
-    flex-direction: column; /* Stack buttons vertically */
-    gap: 10px; /* Space between stacked buttons */
+    flex-direction: column;
+    gap: 5px; /* Reduced gap for tighter spacing */
 }
 
-/* Specific button colors */
-
 .btn-success {
-    background-color: #28a745; /* Success color */
+    background-color: #28a745;
     color: white;
 }
 
 .btn-primary {
-    background-color: #007bff; /* Primary color */
+    background-color: #007bff;
     color: white;
 }
 
-.table td .btn-group-vertical {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    width: 100px; /* Set a fixed width for the button group */
+/* New styles for equal button sizes */
+.table td {
+    vertical-align: middle; /* Center content vertically */
 }
 
-.table td .btn-group-vertical .btn,
+.table td .btn-group-vertical,
 .table td .btn {
-    width: 100%;
-    margin-bottom: 5px;
-    text-align: center;
+    width: 100px; /* Fixed width for all buttons */
+}
+
+.table td .btn {
+    height: 38px; /* Fixed height for all buttons */
+    padding: 6px 12px; /* Standard padding */
+    margin-bottom: 0; /* Remove bottom margin */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
 }
 
 .table td form {
-    margin-bottom: 0;
+    margin-bottom: 5px; /* Small gap between buttons when stacked */
+}
+
+/* Ensure single buttons align with button groups */
+.table td .btn:only-child {
+    margin-bottom: 5px;
 }

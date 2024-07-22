@@ -39,7 +39,7 @@ router.get('/adminDashboard', async (req, res) => {
         const propertySold = await Listed_Properties.findAll({
             attributes: [
                 [fn('COUNT', col('Property_ID')), 'soldPropertyCount'],
-                [fn('SUM', col('Property_Price')), 'soldPropertyRevenue']
+                [fn('SUM', literal('Property_Price * 0.05')), 'soldPropertyRevenue']
             ],
             where: {
                 Property_Status: true,
@@ -64,7 +64,7 @@ router.get('/adminDashboard', async (req, res) => {
         const propertySoldByMonth = await Listed_Properties.findAll({
             attributes: [
                 [fn('DATE_FORMAT', col('Property_ListedDate'), '%Y-%m'), 'month'],
-                [fn('SUM', col('Property_Price')), 'monthlyRevenue']
+                [fn('SUM', literal('Property_Price * 0.05')), 'monthlyRevenue']
             ],
             where: {
                 Property_Status: true,

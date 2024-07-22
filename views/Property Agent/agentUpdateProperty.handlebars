@@ -25,12 +25,18 @@
                         <p class="desctext">S$ {{this.Property_Price}}</p>
                         <div></div>
                         <div>
+                            {{#if this.Property_Status}}
                             <button type="button" class="btn btn-danger toggle-status" data-id="{{this.Property_ID}}" style="padding:10px;float:left;margin-left:10px;">
-                                {{#if this.Property_Status}}De-List{{else}}Re-List{{/if}}
+                                De-List
                             </button>
+                            {{else}}
+                            <button type="button" class="btn btn-success toggle-status" data-id="{{this.Property_ID}}" style="padding:10px;float:left;margin-left:10px;"> 
+                                Re-List
+                            </button>
+                            {{/if}}
                             <span style="padding:10px;">Status: {{#if this.Property_Status}}Listed{{else}}De-Listed{{/if}}</span>
                             <a href="/agentUpdatePropertyForm/{{this.Property_ID}}">
-                                <button type="button" class="btn btn-primary" style="padding:10px;float:right;margin-right:10px;">Update</button>
+                                <button type="button" class="btn btn-primary" id="updateButton" style="padding:10px;float:right;margin-right:10px;">Update</button>
                             </a>
                         </div>
                     </div>
@@ -46,27 +52,34 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const buttons = document.querySelectorAll('.toggle-status');
-        buttons.forEach(button => {
-            button.addEventListener('click', async (event) => {
-                const propertyId = event.target.dataset.id;
-                try {
-                    const response = await fetch(`/togglePropertyStatus/${propertyId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    const result = await response.json();
-                    if (result.success) {
-                        window.location.reload();
-                    } else {
-                        console.error('Failed to toggle property status:', result.message);
+    const buttons = document.querySelectorAll('.toggle-status');
+    buttons.forEach(button => {
+        button.addEventListener('click', async (event) => {
+            const propertyId = event.target.dataset.id;
+            const action = event.target.innerText.trim(); // Get the button text to determine action
+            const confirmationMessage = `Are you sure you want to ${action.toLowerCase()} this property?`;
+
+            if (!confirm(confirmationMessage)) {
+                return; // If user cancels, exit the function
+            }
+
+            try {
+                const response = await fetch(`/togglePropertyStatus/${propertyId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
-                } catch (error) {
-                    console.error('Error:', error);
+                });
+                const result = await response.json();
+                if (result.success) {
+                    window.location.reload();
+                } else {
+                    console.error('Failed to toggle property status:', result.message);
                 }
-            });
+            } catch (error) {
+                console.error('Error:', error);
+            }
         });
     });
+});
 </script>

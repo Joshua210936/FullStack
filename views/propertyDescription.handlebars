@@ -7,11 +7,10 @@
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY0zEGiZRJ6kmm79kgqTkxuGnkXgJ0zhg&loading=async&callback=initMap">
     </script>
-    <script src="../js/propertyDescription.js"></script>
     <script>
-        // Embed workshops data into a JavaScript variable
-        const properties = {{{json properties}}};
+        const propertyDetail = {{{json propertyDetail}}};
     </script>
+    <script src="../js/propertyDescription.js"></script>
 </head>
     <div class="title">
         <h1>{{propertyDetail.Property_Name}} - {{propertyDetail.Property_Address}}</h1>

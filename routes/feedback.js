@@ -68,13 +68,14 @@ router.post('/feedbackForm', async function (req, res) {
         };
 
         if (AgentID && AgentID.trim() !== '') {
-            feedbackData.agentAgentId = AgentID;
+            feedbackData.agent_id = AgentID;
         }
 
         try {
             const result = await Feedback.create(feedbackData);
             console.log('Insert successful:', result);
-            res.render('Contact Us/contactUs', { layout: 'main' });
+            let msg_sucess = "Feedback submitted successfully";
+            res.render('Contact Us/contactUs', { layout: 'main', success_msg:msg_sucess});
         } catch (err) {
             console.error("Error creating feedback:", err);
             errorList.push("Error occurred while creating feedback");
@@ -95,7 +96,7 @@ function renderFormWithErrors(res, errors, formData) {
 
 router.put('/saveFeedback/:id', (req, res) => {
     console.log("In saveFeedback");
-    let feedback_status = 'saved';
+    let feedback_status = 'Saved';
     Feedback.update({
         feedback_status
     }, {
@@ -103,8 +104,37 @@ router.put('/saveFeedback/:id', (req, res) => {
             feedback_id: req.params.id
         }
     }).then((feedback) => {
-        res.redirect("/adminFeedback");
+        res.redirect("/feedback/adminFeedback");
     }).catch(err => console.log(err))
+});
+
+router.put('/unsaveFeedback/:id', (req, res) => {
+    console.log("In saveFeedback");
+    let feedback_status = 'Normal';
+    Feedback.update({
+        feedback_status
+    }, {
+        where: {
+            feedback_id: req.params.id
+        }
+    }).then((feedback) => {
+        res.redirect("/feedback/adminFeedback");
+    }).catch(err => console.log(err))
+});
+
+router.get('/adminFeedback', function(req, res){
+    Feedback.findAll({
+        include: [{
+            model: Agent,
+            as: 'agent',
+            attributes: ['agent_firstName'],
+            required: false  // This makes the join optional
+        }]
+    })
+    .then((feedback)=>{
+        console.log(feedback)
+        res.render('Contact Us/adminFeedback', {layout:'adminMain', feedback:feedback});
+    })
 });
 
 module.exports = router;

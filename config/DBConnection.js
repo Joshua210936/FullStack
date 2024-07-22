@@ -1,9 +1,9 @@
 const mySQLDB = require('./DBConfig');
-const customer = require('../models/custUser');
-const feedback = require('../models/Feedback');
-const listed_properties = require('../models/Listed_Properties');
-const agent = require('../models/Agent');
-const schedule = require('../models/schedule');
+const Customer = require('../models/custUser');
+const Feedback = require('../models/Feedback');
+const ListedProperties = require('../models/Listed_Properties');
+const Agent = require('../models/Agent');
+const Schedule = require('../models/schedule');
 
 const setUpDB = (drop) => {
     mySQLDB.authenticate()
@@ -11,16 +11,19 @@ const setUpDB = (drop) => {
             console.log('Fullstack DB database connected');
         })
         .then(() => {
-            agent.hasMany(feedback);
-            agent.hasMany(listed_properties);
+            // Define associations with foreign keys
+            Agent.hasMany(Feedback, { foreignKey: 'agent_id' });
+            Feedback.belongsTo(Agent, { foreignKey: 'agent_id' });
 
-            mySQLDB.sync({
-                force: drop
-            }).then(() => {
-                console.log('Create table if none exists')
-            }).catch(err => console.log(err));
+            Agent.hasMany(ListedProperties, { foreignKey: 'agent_id' });
+            ListedProperties.belongsTo(Agent, { foreignKey: 'agent_id' });
+
+            return mySQLDB.sync({ force: drop });
         })
-        .catch(err => console.log('Error: ' +  err));
+        .then(() => {
+            console.log('Create table if none exists');
+        })
+        .catch(err => console.log('Error: ' + err));
 };
 
 module.exports = { setUpDB };
