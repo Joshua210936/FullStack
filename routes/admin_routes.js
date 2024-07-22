@@ -64,10 +64,10 @@ router.get('/adminDashboard', async (req, res) => {
         const propertySoldByMonth = await Listed_Properties.findAll({
             attributes: [
                 [fn('DATE_FORMAT', col('Property_ListedDate'), '%Y-%m'), 'month'],
-                [fn('SUM', fn('TIMES', col('Property_Price'), 0.05)), 'monthlyRevenue']
+                [fn('SUM', col('Property_Price')), 'monthlyRevenue']
             ],
             where: {
-                Property_Status: false,
+                Property_Status: true,
                 Property_ListedDate: {
                     [Op.between]: [startOfMonth, endOfMonth]
                 }
