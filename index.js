@@ -1102,19 +1102,6 @@ app.get('/advertisement', function(req, res){
     res.render('Advertisements/advertisement', {layout:'adminMain'});
 });
 
-app.get('/adminFeedback', function(req, res){
-    Feedback.findAll({
-        order: [
-            ['feedback_id', 'DESC']
-        ],
-        raw:true
-    })
-    .then((feedback)=>{
-        console.log(feedback)
-        res.render('Contact Us/adminFeedback', {layout:'adminMain', feedback:feedback});
-    })
-});
-
 app.get('/adminPropertiesView', function(req, res){
     res.render('adminPropertiesView', {layout:'adminMain'});
 });
