@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/adminFeedback.css">
     <script src="handlebarFunctions.js" defer></script>
@@ -59,30 +60,39 @@
                     <tbody>
                         {{#each feedback}}
                         <tr>
-                            <td>{{this.feedback_id}}</td>
-                            <td>{{this.feedback_type}}</td>
-                            <td>{{this.feedback_name}}</td>
-                            <td>{{this.feedback_email}}</td>
-                            <td>{{concat this.feedback_rating "/5"}}</td>
-                            <td>{{formatDate feedback_date 'DD MMM YYYY'}}</td>
-                            <td class="text-center">{{this.agentAgentId}}</td>
-                            <td>{{this.feedback_description}}</td>
-                            <td>{{this.feedback_status}}</td>
+                            <td>{{this.dataValues.feedback_id}}</td>
+                            <td>{{this.dataValues.feedback_type}}</td>
+                            <td>{{this.dataValues.feedback_name}}</td>
+                            <td>{{this.dataValues.feedback_email}}</td>
+                            <td>{{concat this.dataValues.feedback_rating "/5"}}</td>
+                            <td>{{formatDate this.dataValues.feedback_date 'DD MMM YYYY'}}</td>
+                            <td class="text-center">
+                                {{#if this.agent}}
+                                {{this.agent.dataValues.agent_firstName}}
+                                {{else}}
+                                N/A
+                                {{/if}}</td>
+                            <td>{{this.dataValues.feedback_description}}</td>
+                            <td>{{this.dataValues.feedback_status}}</td>
                             <td>
-                                {{#ifEquals this.feedback_status "Normal"}}
-                                    <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
-                                    <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post" class="d-inline">
+                                {{#ifEquals this.dataValues.feedback_status "Normal"}}
+                                <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
+                                    <form action="/feedback/saveFeedback/{{this.dataValues.feedback_id}}?_method=PUT" method="post"
+                                        class="d-inline">
                                         <input type="hidden" name="_method" value="PUT">
                                         <button type="submit" class="btn btn-success">Save</button>
                                     </form>
                                 </div>
                                 {{else}}
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
-                                        <form action="/feedback/unsaveFeedback/{{this.feedback_id}}?_method=PUT" method="post" class="d-inline">
-                                        <input type="hidden" name="_method" value="PUT">
-                                        <button type="submit" class="btn btn-success">Unsave</button>
-                                    </form>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
+                                <form action="/feedback/unsaveFeedback/{{this.dataValues.feedback_id}}?_method=PUT" method="post"
+                                    class="d-inline">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <button type="submit" class="btn btn-success">Unsave</button>
+                                </form>
                                 {{/ifEquals}}
                             </td>
                         </tr>
@@ -104,7 +114,7 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                       <th class="text-center">Feedback ID</th>
+                            <th class="text-center">Feedback ID</th>
                             <th class="text-center">Feedback Type</th>
                             <th class="text-center">Name</th>
                             <th class="text-center">Email</th>
@@ -118,32 +128,41 @@
                     </thead>
                     <tbody>
                         {{#each feedback}}
-                        {{#ifEquals this.feedback_type "Report an issue"}}
+                        {{#ifEquals this.dataValues.feedback_type "Report an issue"}}
                         <tr>
-                            <td>{{this.feedback_id}}</td>
-                            <td>{{this.feedback_type}}</td>
-                            <td>{{this.feedback_name}}</td>
-                            <td>{{this.feedback_email}}</td>
-                            <td>{{concat this.feedback_rating "/5"}}</td>
-                            <td>{{formatDate feedback_date 'DD MMM YYYY'}}</td>
-                            <td class="text-center">{{this.agentAgentId}}</td>
-                            <td>{{this.feedback_description}}</td>
-                            <td>{{this.feedback_status}}</td>
+                            <td>{{this.dataValues.feedback_id}}</td>
+                            <td>{{this.dataValues.feedback_type}}</td>
+                            <td>{{this.dataValues.feedback_name}}</td>
+                            <td>{{this.dataValues.feedback_email}}</td>
+                            <td>{{concat this.dataValues.feedback_rating "/5"}}</td>
+                            <td>{{formatDate this.dataValues.feedback_date 'DD MMM YYYY'}}</td>
+                            <td class="text-center">
+                                {{#if this.agent}}
+                                {{this.agent.dataValues.agent_firstName}}
+                                {{else}}
+                                N/A
+                                {{/if}}</td>
+                            <td>{{this.dataValues.feedback_description}}</td>
+                            <td>{{this.dataValues.feedback_status}}</td>
                             <td>
-                                {{#ifEquals this.feedback_status "Normal"}}
-                                    <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
-                                    <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post" class="d-inline">
+                                {{#ifEquals this.dataValues.feedback_status "Normal"}}
+                                <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
+                                    <form action="/feedback/saveFeedback/{{this.dataValues.feedback_id}}?_method=PUT" method="post"
+                                        class="d-inline">
                                         <input type="hidden" name="_method" value="PUT">
                                         <button type="submit" class="btn btn-success">Save</button>
                                     </form>
                                 </div>
                                 {{else}}
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
-                                        <form action="/feedback/unsaveFeedback/{{this.feedback_id}}?_method=PUT" method="post" class="d-inline">
-                                        <input type="hidden" name="_method" value="PUT">
-                                        <button type="submit" class="btn btn-success">Unsave</button>
-                                    </form>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
+                                <form action="/feedback/unsaveFeedback/{{this.dataValues.feedback_id}}?_method=PUT" method="post"
+                                    class="d-inline">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <button type="submit" class="btn btn-success">Unsave</button>
+                                </form>
                                 {{/ifEquals}}
                             </td>
                         </tr>
@@ -166,7 +185,7 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                       <th class="text-center">Feedback ID</th>
+                            <th class="text-center">Feedback ID</th>
                             <th class="text-center">Feedback Type</th>
                             <th class="text-center">Name</th>
                             <th class="text-center">Email</th>
@@ -180,33 +199,42 @@
                     </thead>
                     <tbody>
                         {{#each feedback}}
-                        {{#ifEquals this.feedback_type "Send a suggestion"}}
+                        {{#ifEquals this.dataValues.feedback_type "Send a suggestion"}}
                         <tr>
-                            <tr>
-                            <td>{{this.feedback_id}}</td>
-                            <td>{{this.feedback_type}}</td>
-                            <td>{{this.feedback_name}}</td>
-                            <td>{{this.feedback_email}}</td>
-                            <td>{{concat this.feedback_rating "/5"}}</td>
-                            <td>{{formatDate feedback_date 'DD MMM YYYY'}}</td>
-                            <td class="text-center">{{this.agentAgentId}}</td>
-                            <td>{{this.feedback_description}}</td>
-                            <td>{{this.feedback_status}}</td>
+                        <tr>
+                            <td>{{this.dataValues.feedback_id}}</td>
+                            <td>{{this.dataValues.feedback_type}}</td>
+                            <td>{{this.dataValues.feedback_name}}</td>
+                            <td>{{this.dataValues.feedback_email}}</td>
+                            <td>{{concat this.dataValues.feedback_rating "/5"}}</td>
+                            <td>{{formatDate this.dataValues.feedback_date 'DD MMM YYYY'}}</td>
+                            <td class="text-center">
+                                {{#if this.agent}}
+                                {{this.agent.dataValues.agent_firstName}}
+                                {{else}}
+                                N/A
+                                {{/if}}</td>
+                            <td>{{this.dataValues.feedback_description}}</td>
+                            <td>{{this.dataValues.feedback_status}}</td>
                             <td>
-                                {{#ifEquals this.feedback_status "Normal"}}
-                                    <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
-                                    <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post" class="d-inline">
+                                {{#ifEquals this.dataValues.feedback_status "Normal"}}
+                                <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
+                                    <form action="/feedback/saveFeedback/{{this.dataValues.feedback_id}}?_method=PUT" method="post"
+                                        class="d-inline">
                                         <input type="hidden" name="_method" value="PUT">
                                         <button type="submit" class="btn btn-success">Save</button>
                                     </form>
                                 </div>
                                 {{else}}
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
-                                        <form action="/feedback/unsaveFeedback/{{this.feedback_id}}?_method=PUT" method="post" class="d-inline">
-                                        <input type="hidden" name="_method" value="PUT">
-                                        <button type="submit" class="btn btn-success">Unsave</button>
-                                    </form>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
+                                <form action="/feedback/unsaveFeedback/{{this.dataValues.feedback_id}}?_method=PUT" method="post"
+                                    class="d-inline">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <button type="submit" class="btn btn-success">Unsave</button>
+                                </form>
                                 {{/ifEquals}}
                             </td>
                         </tr>
@@ -229,7 +257,7 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                       <th class="text-center">Feedback ID</th>
+                            <th class="text-center">Feedback ID</th>
                             <th class="text-center">Feedback Type</th>
                             <th class="text-center">Name</th>
                             <th class="text-center">Email</th>
@@ -243,33 +271,41 @@
                     </thead>
                     <tbody>
                         {{#each feedback}}
-                        {{#ifEquals this.feedback_type "Other"}}
+                        {{#ifEquals this.dataValues.feedback_type "Other"}}
                         <tr>
-                            <tr>
-                            <td>{{this.feedback_id}}</td>
-                            <td>{{this.feedback_type}}</td>
-                            <td>{{this.feedback_name}}</td>
-                            <td>{{this.feedback_email}}</td>
-                            <td>{{concat this.feedback_rating "/5"}}</td>
-                            <td>{{formatDate feedback_date 'DD MMM YYYY'}}</td>
-                            <td class="text-center">{{this.agentAgentId}}</td>
-                            <td>{{this.feedback_description}}</td>
-                            <td>{{this.feedback_status}}</td>
-                                                        <td>
-                                {{#ifEquals this.feedback_status "Normal"}}
-                                    <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
-                                    <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post" class="d-inline">
+                            <td>{{this.dataValues.feedback_id}}</td>
+                            <td>{{this.dataValues.feedback_type}}</td>
+                            <td>{{this.dataValues.feedback_name}}</td>
+                            <td>{{this.dataValues.feedback_email}}</td>
+                            <td>{{concat this.dataValues.feedback_rating "/5"}}</td>
+                            <td>{{formatDate this.dataValues.feedback_date 'DD MMM YYYY'}}</td>
+                            <td class="text-center">
+                                {{#if this.agent}}
+                                {{this.agent.dataValues.agent_firstName}}
+                                {{else}}
+                                N/A
+                                {{/if}}</td>
+                            <td>{{this.dataValues.feedback_description}}</td>
+                            <td>{{this.dataValues.feedback_status}}</td>
+                            <td>
+                                {{#ifEquals this.dataValues.feedback_status "Normal"}}
+                                <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
+                                    <form action="/feedback/saveFeedback/{{this.dataValues.feedback_id}}?_method=PUT" method="post"
+                                        class="d-inline">
                                         <input type="hidden" name="_method" value="PUT">
                                         <button type="submit" class="btn btn-success">Save</button>
                                     </form>
                                 </div>
                                 {{else}}
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
-                                        <form action="/feedback/unsaveFeedback/{{this.feedback_id}}?_method=PUT" method="post" class="d-inline">
-                                        <input type="hidden" name="_method" value="PUT">
-                                        <button type="submit" class="btn btn-success">Unsave</button>
-                                    </form>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
+                                <form action="/feedback/unsaveFeedback/{{this.dataValues.feedback_id}}?_method=PUT" method="post"
+                                    class="d-inline">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <button type="submit" class="btn btn-success">Unsave</button>
+                                </form>
                                 {{/ifEquals}}
                             </td>
                         </tr>
@@ -288,11 +324,11 @@
         <div class="wrapper">
             <div class="displayFeedback" id="displayIssues">
                 {{#if feedback}}
-                <h3>Suggestions</h3>
+                <h3>Saved Feedback</h3>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                       <th class="text-center">Feedback ID</th>
+                            <th class="text-center">Feedback ID</th>
                             <th class="text-center">Feedback Type</th>
                             <th class="text-center">Name</th>
                             <th class="text-center">Email</th>
@@ -306,32 +342,41 @@
                     </thead>
                     <tbody>
                         {{#each feedback}}
-                        {{#ifEquals this.feedback_status "Saved"}}
+                        {{#ifEquals this.dataValues.feedback_status "Saved"}}
                         <tr>
-                            <td>{{this.feedback_id}}</td>
-                            <td>{{this.feedback_type}}</td>
-                            <td>{{this.feedback_name}}</td>
-                            <td>{{this.feedback_email}}</td>
-                            <td>{{concat this.feedback_rating "/5"}}</td>
-                            <td>{{formatDate feedback_date 'DD MMM YYYY'}}</td>
-                            <td class="text-center">{{this.agentAgentId}}</td>
-                            <td>{{this.feedback_description}}</td>
-                            <td>{{this.feedback_status}}</td>
-                                                        <td>
-                                {{#ifEquals this.feedback_status "Normal"}}
-                                    <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
-                                    <form action="/feedback/saveFeedback/{{this.feedback_id}}?_method=PUT" method="post" class="d-inline">
+                            <td>{{this.dataValues.feedback_id}}</td>
+                            <td>{{this.dataValues.feedback_type}}</td>
+                            <td>{{this.dataValues.feedback_name}}</td>
+                            <td>{{this.dataValues.feedback_email}}</td>
+                            <td>{{concat this.dataValues.feedback_rating "/5"}}</td>
+                            <td>{{formatDate this.dataValues.feedback_date 'DD MMM YYYY'}}</td>
+                            <td class="text-center">
+                                {{#if this.agent}}
+                                {{this.agent.dataValues.agent_firstName}}
+                                {{else}}
+                                N/A
+                                {{/if}}</td>
+                            <td>{{this.dataValues.feedback_description}}</td>
+                            <td>{{this.dataValues.feedback_status}}</td>
+                            <td>
+                                {{#ifEquals this.dataValues.feedback_status "Normal"}}
+                                <div class="btn-group-vertical" role="group" aria-label="Action Buttons">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
+                                    <form action="/feedback/saveFeedback/{{this.dataValues.feedback_id}}?_method=PUT" method="post"
+                                        class="d-inline">
                                         <input type="hidden" name="_method" value="PUT">
                                         <button type="submit" class="btn btn-success">Save</button>
                                     </form>
                                 </div>
                                 {{else}}
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
-                                        <form action="/feedback/unsaveFeedback/{{this.feedback_id}}?_method=PUT" method="post" class="d-inline">
-                                        <input type="hidden" name="_method" value="PUT">
-                                        <button type="submit" class="btn btn-success">Unsave</button>
-                                    </form>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#feedbackModal" data-feedback='{{json this}}'>View</button>
+                                <form action="/feedback/unsaveFeedback/{{this.dataValues.feedback_id}}?_method=PUT" method="post"
+                                    class="d-inline">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <button type="submit" class="btn btn-success">Unsave</button>
+                                </form>
                                 {{/ifEquals}}
                             </td>
                         </tr>

@@ -1,6 +1,6 @@
 const sequelize = require('sequelize');
-
 const db = require('../config/DBConfig');
+const Agent = require('./Agent'); // Import the Agent model
 
 const Feedback = db.define('feedback', {
     feedback_id: {
@@ -9,7 +9,7 @@ const Feedback = db.define('feedback', {
         autoIncrement: true
     },
     feedback_type: {
-        type : sequelize.STRING
+        type: sequelize.STRING
     },
     feedback_name: {
         type: sequelize.STRING
@@ -29,6 +29,14 @@ const Feedback = db.define('feedback', {
     feedback_status: {
         type: sequelize.STRING
     },
+    agent_id: {
+        type: sequelize.INTEGER,
+        allowNull: true
+    }
 });
+
+// Define associations
+Agent.hasMany(Feedback, { foreignKey: 'agent_id' });
+Feedback.belongsTo(Agent, { foreignKey: 'agent_id' });
 
 module.exports = Feedback;

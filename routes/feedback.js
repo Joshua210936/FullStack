@@ -68,7 +68,7 @@ router.post('/feedbackForm', async function (req, res) {
         };
 
         if (AgentID && AgentID.trim() !== '') {
-            feedbackData.agentAgentId = AgentID;
+            feedbackData.agent_id = AgentID;
         }
 
         try {
@@ -104,7 +104,7 @@ router.put('/saveFeedback/:id', (req, res) => {
             feedback_id: req.params.id
         }
     }).then((feedback) => {
-        res.redirect("/adminFeedback");
+        res.redirect("/feedback/adminFeedback");
     }).catch(err => console.log(err))
 });
 
@@ -118,16 +118,18 @@ router.put('/unsaveFeedback/:id', (req, res) => {
             feedback_id: req.params.id
         }
     }).then((feedback) => {
-        res.redirect("/adminFeedback");
+        res.redirect("/feedback/adminFeedback");
     }).catch(err => console.log(err))
 });
 
 router.get('/adminFeedback', function(req, res){
     Feedback.findAll({
-        order: [
-            ['feedback_id', 'DESC']
-        ],
-        raw:true
+        include: [{
+            model: Agent,
+            as: 'agent',
+            attributes: ['agent_firstName'],
+            required: false  // This makes the join optional
+        }]
     })
     .then((feedback)=>{
         console.log(feedback)
