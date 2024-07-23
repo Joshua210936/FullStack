@@ -1,5 +1,5 @@
 const mySQLDB = require('./DBConfig');
-const Customer = require('../models/custUser');
+const Customer = require('../models/Customer');
 const Feedback = require('../models/Feedback');
 const ListedProperties = require('../models/Listed_Properties');
 const Agent = require('../models/Agent');

@@ -6,7 +6,7 @@ const moment = require("moment");
 router.use(bodyParser.urlencoded({ extended: true }));
 
 //Database imports
-const Customer = require('../models/custUser');
+const Customer = require('../models/Customer');
 
 router.get('/login', (req, res) => {
     res.render('login', { user: req.session.user });

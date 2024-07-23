@@ -10,7 +10,7 @@ const { Op, fn, col, literal } = require('sequelize');
 const Feedback = require('../models/Feedback');
 const Listed_Properties = require('../models/Listed_Properties');
 const Agent = require('../models/Agent');
-const Customer = require('../models/custUser');
+const Customer = require('../models/Customer');
 const Schedule = require('../models/schedule');
 const Amenity = require('../models/propertyAmenities')
 

@@ -20,7 +20,7 @@ const Advertisement = db.define('advertisement', {
     agent_id: {
         type: Sequelize.INTEGER,
         references: {
-            model: 'agent', 
+            model: 'agents', 
             key: 'agent_id' 
         }
     },
