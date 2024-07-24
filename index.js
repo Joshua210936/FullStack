@@ -36,6 +36,7 @@ const handlebarFunctions = require('./helpers/handlebarFunctions.js');
 const { password } = require('./config/db.js');
 const { error, clear } = require('console');
 const { layouts } = require('chart.js');
+const { Session } = require('inspector');
 
 //JSON for handlebars (idk i need it for my modal)
 Handlebars.registerHelper('json', function (context) {
@@ -75,7 +76,7 @@ app.use(session({
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true }
+    cookie: { secure: false }
 }));
 
 // Sets our js files to be the correct MIME type. Dont delete or js files wont be linked due to an error
@@ -194,7 +195,9 @@ app.get('/adminHome', function(req, res){
 });
 
 app.get('/customerHome' ,function(req,res){ 
-    console.log(req.session.customerID);
+    console.log("this is the session id:", req.session.id);
+    console.log('Session:' + JSON.stringify(req.session));
+    console.log('Session:' + req.session.customerID);
     res.render('customerHome',{layout:'userMain'})
 });
 
@@ -272,7 +275,7 @@ app.get('/login', (req,res) => { // User Login page
     res.render('Login/userlogin', {layout:'main'});
 });
 
-app.post('/login', function (req, res) {
+app.post('/login', async function (req, res) {
     errorList = [];
     let { email, password } = req.body;
 
@@ -307,6 +310,9 @@ app.post('/login', function (req, res) {
                 req.session.customerID = customer.Customer_id; // Store customer information in session
                 const customer_id = customer.Customer_id;
                 console.log(req.session.customerID);
+                console.log('Session Test' + JSON.stringify(req.session));
+                console.log("session id in login:", req.session.id);
+                req.session.save();
                 res.redirect('/customerHome');
             })
             .catch(err => {
@@ -320,6 +326,7 @@ app.get('/register', (req, res) => { // User    tration page
     res.render('Login/userReg',{layout:'main'});
 });
 
+// Can move the validation to the html side
 app.post('/register', async function (req, res) {
     let errorsList = [];
     let { firstName, lastName, phoneNumber, email, birthday, password, confirmPassword } = req.body;
@@ -411,10 +418,12 @@ app.get('/userSetProfile', async (req, res) => {
     }
 });
 
-
-app.post('/userSetProfile/:customer_id', async (req, res) => {
+app.post('/userSetProfile', async (req, res) => {
+    console.log(req.body);
     const { firstName, lastName, phoneNumber, birthday } = req.body;
-    const customer_id = req.params.customer_id;
+    const customer_id = req.session.customerID;
+    console.log('Session Test' + JSON.stringify(req.session));
+    console.log("session id in set profile:", req.session.customerID);
     
     console.log('Received customer ID:', customer_id); // Log customer ID
     console.log('Received update data:', { firstName, lastName, phoneNumber, birthday }); // Log update data
@@ -435,7 +444,7 @@ app.post('/userSetProfile/:customer_id', async (req, res) => {
                     }
                 }
             );
-            res.redirect(`/userSetProfile/${customer_id}`);
+            res.redirect(`/userSetProfile`);
         } else {
             res.status(404).send("Customer not found");
         }
@@ -447,14 +456,15 @@ app.post('/userSetProfile/:customer_id', async (req, res) => {
 
 // User Delete Route
 // Need update this route to delete the user
-app.post('/deleteUser/:customer_id', async (req, res) => {
-    const customer_id = req.params.customer_id;
+// Need to implement "Are you sure?" & make them enter password to confirm delete
+app.post('/deleteUser', async (req, res) => {
+    const customer_id = req.session.customer_id;
     console.log('Received customer ID:', customer_id);
     try {
         const customer = await Customer.findByPk(customer_id);
         if (customer) {
             await customer.destroy();
-            res.redirect('/customerHome'); // Redirect to an appropriate page after deletion
+            res.redirect('/login'); // Redirect to an appropriate page after deletion
         } else {
             res.status(404).json({ message: 'Customer not found' });
         }
