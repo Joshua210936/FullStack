@@ -836,29 +836,116 @@ app.get('/propertyAgentProfile/:id', function (req, res) {
 
 
 
-app.get('/schedule', function(req, res){
-    res.render('schedule', {layout:'userMain'});
+app.get('/schedule', async (req, res) => {
+    const { propertyId, agentId } = req.query;
+
+    if (!propertyId || !agentId) {
+        return res.status(400).send({ message: 'Property ID or Agent ID is missing' });
+    }
+
+    try {
+        // Fetch property details
+        const property = await Listed_Properties.findByPk(propertyId, {
+            attributes: ['Property_ID', 'Property_Name', 'Property_Description', 'Property_Price', 'Square_Footage', 'Property_Bedrooms', 'Property_Bathrooms', 'Property_Image']
+        });
+
+        if (!property) {
+            return res.status(404).send({ message: 'Property not found' });
+        }
+
+        // Fetch agent details
+        const agent = await Agent.findByPk(agentId, {
+            attributes: ['agent_id', 'agent_firstName', 'agent_lastName', 'agent_email', 'agent_phoneNumber', 'agent_image']
+        });
+
+        if (!agent) {
+            return res.status(404).send({ message: 'Agent not found' });
+        }
+
+        // Create plain objects
+        const propertyDetail = {
+            Property_ID: property.Property_ID,
+            Property_Name: property.Property_Name,
+            Property_Description: property.Property_Description,
+            Property_Price: property.Property_Price,
+            Square_Footage: property.Square_Footage,
+            Property_Bedrooms: property.Property_Bedrooms,
+            Property_Bathrooms: property.Property_Bathrooms,
+            Property_Image: property.Property_Image
+        };
+
+        const agentDetail = {
+            agent_id: agent.agent_id,
+            agent_firstName: agent.agent_firstName,
+            agent_lastName: agent.agent_lastName,
+            agent_email: agent.agent_email,
+            agent_phoneNumber: agent.agent_phoneNumber,
+            agent_image: agent.agent_image
+        };
+
+        // Render template with plain objects
+        res.render('schedule', {
+            layout: 'userMain',
+            propertyDetail,
+            agentDetail
+        });
+    } catch (err) {
+        console.error('Error fetching property or agent details:', err);
+        res.status(500).send({ message: 'Error fetching property or agent details', error: err });
+    }
 });
 
-app.post('/schedule', function(req,res){
-    let{ customerId, agentId, propertyId, appointmentDate, appointmentTime} = req.body;
-    
-    Schedule.create({
-        customer_id: customerId,
-        agent_id: agentId,
-        property_id: propertyId,
-        date_selected: appointmentDate,
-        time_selected: appointmentTime,
-        
-       
-    })
-    .then(property => {
-        res.status(201).send({ message: 'Schedule insert successful!', property });
-      })
-    .catch(err => {
-    res.status(400).send({ message: 'Error inserting schedule', error: err });
-    });
+
+
+
+
+app.post('/schedule', async (req, res) => {
+    const customerId = req.session.customerID;
+    const { agentId, propertyId, appointmentDate, appointmentTime } = req.body;
+
+    if (!customerId) {
+        return res.status(400).send({ message: 'Customer not logged in' });
+    }
+
+    try {
+        // Fetch customer details
+        const customer = await Customer.findByPk(customerId, {
+            attributes: ['Customer_fName', 'Customer_lName', 'Customer_Phone']
+        });
+
+        if (!customer) {
+            return res.status(404).send({ message: 'Customer not found' });
+        }
+
+        // Fetch property details
+        const property = await Listed_Properties.findByPk(propertyId, {
+            attributes: ['Property_Name', 'Property_Description']
+        });
+
+        if (!property) {
+            return res.status(404).send({ message: 'Property not found' });
+        }
+
+        // Create schedule
+        const schedule = await Schedule.create({
+            customer_id: customerId,
+            agent_id: agentId,
+            property_id: propertyId,
+            date_selected: appointmentDate,
+            time_selected: appointmentTime,
+        });
+
+        // Redirect to the customer view appointments page
+        res.redirect('/customer/appointments');
+    } catch (err) {
+        console.error('Error inserting schedule:', err);
+        res.status(400).send({ message: 'Error inserting schedule', error: err });
+    }
 });
+
+
+
+
 
 app.get('/agent/4/appointments', async (req, res) => {
     const agentId = 1;
@@ -886,16 +973,29 @@ app.get('/agent/4/appointments', async (req, res) => {
     }
 });
 
-app.get('/customer/:id/appointments', async (req, res) => {
+app.get('/customer/appointments', async (req, res) => {
     try {
-        const customerId = 1; // Hardcoded customer ID
+        const customerId = req.session.customerID; 
+
+        if (!customerId) {
+            return res.status(401).send('Customer not logged in');
+        }
+
+        // Fetch customer details
+        const customer = await Customer.findByPk(customerId, {
+            attributes: ['Customer_fName', 'Customer_lName']
+        });
+
+        if (!customer) {
+            return res.status(404).send('Customer not found');
+        }
 
         // Fetch schedules for the customer
         const schedules = await Schedule.findAll({
             where: { customer_id: customerId },
             include: [
                 { model: Agent, attributes: ['agent_firstName', 'agent_lastName', 'agent_email'] },
-                { model: Listed_Properties, attributes: ['Property_Description', 'Property_Price', 'Property_Address'] }
+                { model: Listed_Properties, attributes: ['Property_Name', 'Property_Address'] }
             ]
         });
 
@@ -905,13 +1005,18 @@ app.get('/customer/:id/appointments', async (req, res) => {
         // Render the appointments view with Handlebars
         res.render('Customer/customerSchedule', {
             customerId: customerId,
+            customerName: `${customer.Customer_fName} ${customer.Customer_lName}`,
             schedules: schedules.map(schedule => schedule.get({ plain: true }))
         });
+
     } catch (error) {
-        console.error('Error fetching schedules:', error);
+        console.error('Error fetching schedules or customer details:', error);
         res.status(500).send('Server Error');
     }
 });
+
+
+
 
 app.get('/schedule/:id', async (req, res) => {
     try {
@@ -926,7 +1031,7 @@ app.get('/schedule/:id', async (req, res) => {
     }
 });
 
-// Update schedule
+// Route to update a schedule
 app.put('/schedule/:id', async (req, res) => {
     try {
         const { date_selected, time_selected } = req.body;
@@ -944,12 +1049,11 @@ app.put('/schedule/:id', async (req, res) => {
     }
 });
 
-// Route to handle the deletion of a schedule
+// Route to delete a schedule
 app.delete('/schedule/:id', async (req, res) => {
     const scheduleId = req.params.id;
 
     try {
-        // Find and delete the schedule by ID
         const result = await Schedule.destroy({
             where: { schedule_id: scheduleId }
         });
@@ -964,6 +1068,64 @@ app.delete('/schedule/:id', async (req, res) => {
         res.status(500).send({ message: 'Error deleting schedule.', error: err });
     }
 });
+
+// Admin User Management
+app.get('/adminUsersView', function(req, res){
+    Customer.findAll()
+    .then((customers)=>{
+        res.render('adminUsersView', {
+            layout:'adminMain', 
+            customers:customers.map(customer=>{
+                customer = customer.get({plain:true});
+                return customer;    
+            })
+        });
+    })
+    .catch(err => {
+        console.error('Error fetching customers:', err);
+        res.status(500).send('Internal Server Error');
+    });
+});
+
+app.get('/customers', async (req, res) => {
+    try {
+        const customers = await Customer.findAll();
+        res.json(customers);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching customers', error });
+    }
+});
+
+app.get('/getCustomer/:id', async (req, res) => {
+    const customerId = req.params.id;
+    try {
+        const customer = await Customer.findByPk(customerId);
+        if (customer) {
+            res.json(customer);
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching Customer details', error });
+    }
+});
+
+// Admin delete customer
+app.delete('/adminDeleteCustomer/:id', async (req, res) => {
+    const customerId = req.params.id;
+    try {
+        const customer = await Customer.findByPk(customerId);
+        if (customer) {
+            await customer.destroy();
+            res.json({ message: 'customer deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting Customer', error });
+    }
+});
+
 
 // Admin User Management
 app.get('/adminUsersView', function(req, res){

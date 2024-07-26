@@ -221,7 +221,10 @@
     <div class="col">
         <h1>Like this property?</h1>
         <div>Arrange a date to meet with the agent now!</div>
-        <a class="hover_settings" href="/schedule"><div class="schedule_button">Schedule</div></a>
+
+        <a href="/schedule?propertyId={{propertyDetail.Property_ID}}&agentId={{propertyDetail.agent_id}}">
+                <button class="schedule_button">Schedule</button>
+            </a>
         </div>
     </div>
 </div>

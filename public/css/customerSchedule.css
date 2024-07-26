@@ -1,8 +1,103 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Ensure content flows from top to bottom */
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 1440px;
+    margin: 20px auto; /* Add spacing at the top */
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.profile-section h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 10px 0 5px;
+}
+
+.profile-section p {
+    font-size: 14px;
+    color: #888;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 10px;
+}
+
+.sidebar-nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.sidebar-nav a:hover {
+    background: #f0f0f0;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Ensure content flows vertically */
+    align-items: center; /* Center content horizontally */
+}
+
 /* Table Container */
+.table-container {
+    width: 80%;
+    max-width: 1000px;
+    background: white;
+    padding: 30px;
+    box-shadow: 0px 4px 64px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    border: 0.5px solid #878787;
+    margin: 20px auto; /* Center and add margin around */
+}
+
+/* Table Styles */
 table {
-    width: 90%;
-    margin: 20px auto;
-    border-collapse: collapse;
+    width: 100%;
+    border-collapse: separate; /* Use separate border model */
+    border-spacing: 0 10px; /* Add space between rows */
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -11,17 +106,19 @@ table {
 /* Table Header and Cells */
 table th, 
 table td {
-    padding: 14px;
+    padding: 20px; /* Increase padding */
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
 
+/* Table Header Styles */
 table th {
     background-color: #007bff;
     color: white;
     font-weight: bold;
 }
 
+/* Table Cell Styles */
 table td {
     color: #333;
 }
@@ -40,8 +137,8 @@ table tr:hover {
     background-color: #e0e0e0;
 }
 
-/* Edit Button */
-.edit-btn {
+/* Edit and Delete Buttons */
+.edit-btn, .delete-btn {
     background-color: #007bff;
     color: white;
     border: none;
@@ -51,23 +148,11 @@ table tr:hover {
     transition: background-color 0.3s;
 }
 
-.edit-btn:hover {
+.edit-btn:hover, .delete-btn:hover {
     background-color: #0056b3;
 }
 
-.delete-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
 
-.delete-btn:hover {
-    background-color: #0056b3;
-}
 /* Modal Styles */
 .modal {
     display: none;
@@ -87,57 +172,58 @@ table tr:hover {
     margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 50%;
+    width: 60%; /* Increase the width to make the modal slightly bigger */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.close {
+/* Modal Close Button */
+.modal .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
+.modal .close:hover,
+.modal .close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
 }
-
-form label {
-    display: block;
-    margin: 10px 0 5px;
-}
-
-form input,
-form select {
+/* Form Button Styles */
+.formbutton {
     width: 100%;
-    padding: 10px;
-    margin: 5px 0 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    font-size: 16px;
-}
-
-form select:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-form button {
-    background-color: #007bff;
-    color: white;
+    padding: 15px;
+    background: #007bff;
     border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background 0.3s;
+    box-sizing: border-box;
 }
 
-form button:hover {
-    background-color: #0056b3;
+.formbutton:hover {
+    background: #0056b3;
 }
+
+.formbuttondelete {
+    width: 100%;
+    height: 45px;
+    background: #dc3545;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.formbuttondelete:hover {
+    background: #a71d2a;
+}
+
