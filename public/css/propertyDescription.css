@@ -155,7 +155,7 @@
 .mapfilter {
     height:10%;
     width:100%;
-    margin-left:15vh;
+    margin-left:14vh;
     margin-right:auto;
     text-align: center;
 }
@@ -278,4 +278,25 @@
     background-color: #71ccfa; /* Maintain the hover effect color */
     border: 0.1px solid black;
     transform: scale(1); /* No shrinking effect */
+}
+
+.addresstext {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#traveltime {
+    display:none;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
 }
