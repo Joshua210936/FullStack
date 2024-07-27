@@ -9,6 +9,8 @@ const methodOverride = require('method-override');
 const Handlebars = require('handlebars');
 const multer = require('multer');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
+const otpGenerator = require('otp-generator');
 
 //Database
 const fullstackDB = require('./config/DBConnection');
@@ -37,6 +39,7 @@ const { password } = require('./config/db.js');
 const { error, clear } = require('console');
 const { layouts } = require('chart.js');
 const { Session } = require('inspector');
+const { formatDate } = require('./helpers/handlebarFunctions.js');
 
 //JSON for handlebars (idk i need it for my modal)
 Handlebars.registerHelper('json', function (context) {
@@ -78,6 +81,15 @@ app.use(session({
     saveUninitialized: false,
     cookie: { secure: false }
 }));
+
+// For Reset Password
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'sigma0properties@gmail.com',
+        pass: 'jqux gnod pbgs oqpe'
+    }
+});
 
 // Sets our js files to be the correct MIME type. Dont delete or js files wont be linked due to an error
 app.use(express.static('public/js', {
@@ -454,6 +466,78 @@ app.post('/userSetProfile', async (req, res) => {
         res.status(500).send("Error updating customer profile");
     }
 });
+
+// ---------------------- Reset Password --------------------------
+// Route to render forget password page
+app.get('/forgetpassword', (req, res) => {
+    res.render('Login/forgetpassword', { layout: 'main' });
+});
+
+// Route to handle OTP request
+app.post('/requestOTP', async (req, res) => {
+    const { email } = req.body;
+    const customer = await Customer.findOne({ where: { Customer_Email: email } });
+
+    if (!customer) {
+        return res.status(404).send({ message: 'Customer not found' });
+    }
+
+    // Generate OTP and expiration time
+    const otp = otpGenerator.generate(6, { upperCase: false, specialChars: false });
+    const otpExpiration = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes from now
+
+    await customer.update({
+        Customer_OTP: otp,
+        OTP_Expiration: otpExpiration
+    });
+
+    // Send OTP email
+    const mailOptions = {
+        from: 'sigma0properties@gmail.com',
+        to: email,
+        subject: 'Your OTP for password reset',
+        text: `Your OTP for password reset is: ${otp}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending OTP email:', error);
+            return res.status(500).send({ message: 'Error sending OTP email' });
+        } else {
+            console.log('OTP email sent:', info.response);
+            res.redirect('/verifyOTP');
+        }
+    });
+});
+
+// Route to render verify OTP page
+app.get('/verifyOTP', (req, res) => {
+    res.render('Login/verifyOTP', { layout: 'main' });
+});
+
+// Route to handle OTP verification and password reset
+app.post('/verifyOTP', async (req, res) => {
+    const { email, otp, newPassword } = req.body;
+    const customer = await Customer.findOne({ where: { Customer_Email: email } });
+
+    if (!customer) {
+        return res.status(404).send({ message: 'Customer not found' });
+    }
+
+    if (customer.Customer_OTP !== otp || new Date() > customer.OTP_Expiration) {
+        return res.status(400).send({ message: 'Invalid or expired OTP' });
+    }
+
+    // Update password and clear OTP fields
+    await customer.update({
+        Customer_Password: newPassword,
+        Customer_OTP: null,
+        OTP_Expiration: null
+    });
+
+    res.redirect('/login');
+});
+// ---------------------- Reset Password --------------------------
 
 // User Delete Route
 // Need update this route to delete the user
