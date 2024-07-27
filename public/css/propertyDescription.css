@@ -153,10 +153,9 @@
 }
 
 .mapfilter {
-    border: 1px solid;
     height:10%;
     width:100%;
-    margin-left:auto;
+    margin-left:15vh;
     margin-right:auto;
     text-align: center;
 }
@@ -244,4 +243,39 @@
     width:80%;
     margin-left:auto;
     margin-right:auto;
+}
+
+.filter-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    border: 0.1px solid;
+    border-radius: 50px;
+    background-color: #CDEEFF; /* Primary color */
+    color: black;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width:140px;
+}
+
+.filter-btn:hover {
+    background-color: #71ccfa; /* Darker shade of primary color for hover effect */
+}
+
+.filter-btn:active {
+    transform: scale(0.98); /* Slightly shrink the button when clicked */
+}
+
+.filter-btn:focus {
+    outline: none; /* Remove default focus outline */
+}
+
+/* New styles for active state */
+.filter-btn.active {
+    background-color: #71ccfa; /* Maintain the hover effect color */
+    border: 0.1px solid black;
+    transform: scale(1); /* No shrinking effect */
 }
