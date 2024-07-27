@@ -35,6 +35,15 @@ const Advertisement = db.define('advertisement', {
         type: Sequelize.DATE,
         allowNull: false
     },
+    clicks: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+    },
+    pricePerClick: {
+        type: Sequelize.FLOAT,
+        allowNull: false
+    },
     status: {
         type: Sequelize.STRING,
         defaultValue: 'active'

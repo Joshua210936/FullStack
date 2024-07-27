@@ -1360,7 +1360,7 @@ app.get('/addAdvertisement', async (req, res) => {
 
 app.post('/addAdvertisement', upload.single('advertisementImage'), async (req, res) => {
     try {
-        const { ad_title, ad_content, agent_id, ad_description, date_started, date_end } = req.body;
+        const { ad_title, ad_content, agent_id, ad_description, date_started, date_end, clicks, pricePerClick } = req.body;
 
         const ad_image = req.file ? req.file.filename : 'placeholder.png';
 
@@ -1375,7 +1375,9 @@ app.post('/addAdvertisement', upload.single('advertisementImage'), async (req, r
             agent_id,
             description: descriptionJson,
             date_started,
-            date_end
+            date_end,
+            clicks,
+            pricePerClick
         });
 
         // Redirect to the admin advertisements page
