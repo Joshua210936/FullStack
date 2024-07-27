@@ -629,7 +629,6 @@ app.get('/agentPropertyOptions', function(req, res){
 
 app.get('/agentListProperty', function(req, res){
     const agent_ID = req.session.agentID;
-    console.log(agent_ID)
     res.render('Property Agent/agentListProperty', {
         layout: 'main',
         agent_ID: agent_ID, // Convert to plain objects 

@@ -1,3 +1,26 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search-input');
+    const propertiesContainer = document.querySelector('.properties-container');
+
+    searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase();
+
+        // Get all property items
+        const propertyItems = propertiesContainer.querySelectorAll('.buyitem');
+
+        propertyItems.forEach(item => {
+            const address = item.querySelector('.propertyaddress').textContent.toLowerCase();
+
+            // Show or hide property items based on the search term
+            if (address.includes(searchTerm) || searchTerm === '') {
+                item.style.display = 'block'; // Show property
+            } else {
+                item.style.display = 'none'; // Hide property
+            }
+        });
+    });
+});
+
 document.addEventListener('DOMContentLoaded', (event) => {
     const modal = document.getElementById('filterModal');
     const filterButton = document.querySelector('.filter-icon');
