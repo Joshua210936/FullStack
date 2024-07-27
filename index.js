@@ -962,16 +962,20 @@ app.post('/schedule', async (req, res) => {
 
 
 
+app.get('/agent/appointments', async (req, res) => {
+    const agentId = req.session.agentID;
 
-app.get('/agent/4/appointments', async (req, res) => {
-    const agentId = 1;
+    if (!agentId) {
+        console.log('No agent ID found in session');
+        return res.status(401).send({ message: 'Unauthorized' });
+    }
 
     try {
         const appointments = await Schedule.findAll({
             where: { agent_id: agentId },
             include: [
                 { model: Customer, attributes: ['Customer_fName', 'Customer_Email'] },
-                { model: Listed_Properties, attributes: ['Property_Description', 'Property_Price', 'Property_Address'] }
+                { model: Listed_Properties, attributes: ['Property_Name', 'Property_Price', 'Property_Address'] }
             ]
         });
 
@@ -988,6 +992,7 @@ app.get('/agent/4/appointments', async (req, res) => {
         res.status(500).send({ message: 'Error retrieving appointments', error: err });
     }
 });
+
 
 app.get('/customer/appointments', async (req, res) => {
     try {
