@@ -202,6 +202,7 @@ app.get('/customerHome' ,function(req,res){
 });
 
 app.get('/agentHome', function(req, res){
+    console.log('Agent Session:' + req.session.agentID);
     res.render('agentHome', {layout:'agentMain'});
 });
 
@@ -484,44 +485,48 @@ app.get('/logout', function (req, res) {
 });
 
 // Agent Login and Registration
-app.get('/agentLogin', (req,res) => { // User Login page
+app.get('/agentLogin', (req,res) => { // Agent Login page
     res.render('Login/agentLogin', {layout:'main'});
 });
 
-app.post('/agentLogin', function (req, res) {
+app.post('/agentLogin', async function (req, res) {
     errorList = [];
     let { email, password } = req.body;
 
-    // Find the customer with the given email
-    Agent.findOne({ where: { agent_email: email } }) 
-        .then(agent => {
-            if (!agent) {
-                errorList.push({ text: 'agent not found' });
-                return res.status(404).send({ message: 'agent not found' });
-            }
+    try {
+        // Find the agent with the given email
+        const agent = await Agent.findOne({ where: { agent_email: email } });
 
-            // Check if the password is correct
-            if (agent.agent_password !== password) {
-                errorList.push({ text: 'Incorrect password' });
-                return res.status(401).send({ message: 'Incorrect password' });
-            }
+        if (!agent) {
+            errorList.push({ text: 'Agent not found' });
+            console.log('Agent not found');
+            return res.status(404).send({ message: 'Agent not found' });
+        }
 
-            // Successful login
-            req.session.agent = agent; // Store agent information in session
-            res.redirect('/agentHome');
-        })
-        .catch(err => {
-            console.log('Error during login: ', err);
-           return res.status(500).send({ message: 'Error occurred', error: err });
-        });
+        // Check if the password is correct
+        if (agent.agent_password !== password) {
+            errorList.push({ text: 'Incorrect password' });
+            return res.status(401).send({ message: 'Incorrect password' });
+        }
+
+        // Successful login
+        req.session.isAdmin = false;
+        req.session.agentID = agent.agent_id; // Store agent information in session
+        console.log('Agent logged in:', req.session.agentID);
+        req.session.save();
+        res.redirect('/agentHome');
+    } catch (err) {
+        console.log('Error during login: ', err);
+        return res.status(500).send({ message: 'Error occurred', error: err });
+    }
 });
 
 app.get('/agentRegister', (req, res) => { // User Registration page
-    res.render('Login/agentReg', {layout:'main'});
+    res.render('Login/agentReg', {layout:'agentMain'});
 });
 
 app.post('/agentRegister', function(req,res){
-    let{ firstName, lastName, phone, email, agency_license, agency_registration, bio, agentPictures, password, confirmPassword, status} = req.body;
+    let{ firstName, lastName, phone, email, agency_license, agency_registration, bio, agentPictures, password, status} = req.body;
     
     Agent.create({
         agent_firstName: firstName,
@@ -533,7 +538,6 @@ app.post('/agentRegister', function(req,res){
         agent_bio: bio,
         agent_image: agentPictures,
         agent_password: password,
-        agent_confirmpassword: confirmPassword,
         status: status
         
     })
@@ -546,15 +550,17 @@ app.post('/agentRegister', function(req,res){
     });
 });
 
-
-app.get('/agentSetProfile/:agent_id', async (req, res) => { // Agent Set profile page
-    const agent_id = req.params.agent_id;
+app.get('/agentSetProfile', async (req, res) => { // Agent Set profile page
+    const agent_id = req.session.agentID;
     console.log('Agent ID:', agent_id);
+
     try {
         const agent = await Agent.findByPk(agent_id);
+        console.log(agent);
+
         if (agent) {
-            res.render('Property Agent/agentSetProfile', { 
-                layout: 'main', 
+            res.render('Property Agent/agentSetProfile', {
+                layout: 'agentMain',
                 agent_id: agent_id,
                 agent: agent.get({ plain: true })
             });
@@ -566,30 +572,40 @@ app.get('/agentSetProfile/:agent_id', async (req, res) => { // Agent Set profile
     }
 });
     
+app.post('/agentSetProfile', async (req, res) => {
+    console.log(req.body);
+    const { firstName, lastName, phoneNumber, birthday } = req.body;
+    const agent_id = req.session.agentID;
+    console.log('Session Test' + JSON.stringify(req.session));
+    console.log("Session ID in set profile:", req.session.agentID);
 
-app.post('/agentProfileUpdate', (req, res) => {
-    const agentId = req.session.agentId; // or however you track the logged-in agent
-    const { firstName, lastName, phone, email, agency_license, agency_registration, bio } = req.body;
-    const agentPictures = req.file ? req.file.filename : req.body.existingPicture; // Handle file upload
+    console.log('Received agent ID:', agent_id); // Log agent ID
+    console.log('Received update data:', { firstName, lastName, phoneNumber, birthday }); // Log update data
 
-    Agent.update({
-        agent_firstName: firstName,
-        agent_lastName: lastName,
-        agent_phoneNumber: phone,
-        agent_email: email,
-        agent_licenseNo: agency_license,
-        agent_registrationNo: agency_registration,
-        agent_bio: bio,
-        agent_image: agentPictures
-    }, {
-        where: { agent_id: agentId }
-    })
-    .then(() => {
-        res.status(200).send({ message: 'Profile updated successfully!' });
-    })
-    .catch(err => {
-        res.status(400).send({ message: 'Error updating profile', error: err });
-    });
+    try {
+        const agent = await Agent.findByPk(agent_id);
+        if (agent) {
+            await Agent.update(
+                {
+                    agent_fName: firstName,
+                    agent_lName: lastName,
+                    agent_phone: phoneNumber,
+                    agent_birthday: birthday,
+                },
+                {
+                    where: {
+                        agent_id: agent_id
+                    }
+                }
+            );
+            res.redirect(`/agentSetProfile`);
+        } else {
+            res.status(404).send("Agent not found");
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error updating agent profile");
+    }
 });
 
 
