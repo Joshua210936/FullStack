@@ -628,7 +628,13 @@ app.get('/agentPropertyOptions', function(req, res){
 });
 
 app.get('/agentListProperty', function(req, res){
-    res.render('Property Agent/agentListProperty', {layout:'main'});
+    const agent_ID = req.session.agentID;
+    console.log(agent_ID)
+    res.render('Property Agent/agentListProperty', {
+        layout: 'main',
+        agent_ID: agent_ID, // Convert to plain objects 
+        json: JSON.stringify // Pass JSON.stringify to the template
+    });
 });
 
 app.post('/agentListProperty', async function(req,res){
@@ -682,7 +688,7 @@ app.post('/agentListProperty', async function(req,res){
 
 app.get('/agentUpdateProperty', async (req, res) => {
     try {
-        const agentId = 1; // Replace with actual agent ID from session
+        const agentId = req.session.agentID;
 
         if (!agentId) {
             return res.status(400).send('Agent ID is required');

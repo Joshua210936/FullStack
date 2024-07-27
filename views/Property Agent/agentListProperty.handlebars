@@ -89,9 +89,9 @@
                     <label for="description">Description</label>
                     <textarea id="description" name="description" placeholder="Enter Property Description"></textarea>
                 </div>
-                <div class="input-group">
+                <div class="input-group" style="display: none;">
                     <label for="agentID">TEMPORARY(Agent ID)</label>
-                    <textarea id="agentID" name="agentID" placeholder="Enter Agent ID"></textarea>
+                    <input type="hidden" id="agentID" name="agentID" value="{{this.agent_ID}}">
                 </div>
 
                 <!-- Amenities Section -->
