@@ -11,8 +11,8 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="#">My Profile</a></li>
-                    <li><a href="#">Reset Password</a></li>
-                    <li><a href="#">Appointment</a></li>
+                    <li><a href="/forgetpassword">Reset Password</a></li>
+                    <li><a href="/customer/appointments">Appointment</a></li>
                 </ul>
             </nav>
         </aside>
@@ -30,11 +30,11 @@
                     </div>
                     <div class="input-group">
                         <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" value="{{customer.Customer_Phone}}">
+                        <input type="tel" id="phone" name="phoneNumber" placeholder="Enter your phone number" value="{{customer.Customer_Phone}}">
                     </div>
                     <div class="input-group">
                         <label for="birthday">Birthday</label>
-                        <input type="date" id="birthday" name="birthday" placeholder="Enter your birthday" value="{{customer.Customer_Birthday}}">
+                        <input type="date" id="birthday" name="birthday" placeholder="Enter your birthday" value="{{formatDate customer.Customer_Birthday 'DD-MM-YYYY'}}">
                     </div>
                     <div class="input-group">
                         <label for="email">Email</label>

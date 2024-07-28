@@ -2,11 +2,11 @@
     <title>Browse Houses</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="/css/buyhouse.css">
-    <script src="js/buyHouse.js" defer></script>
     <script>
         // Embed workshops data into a JavaScript variable
         const properties = {{{json properties}}};
     </script>
+    <script src="js/buyHouse.js" defer></script>
 </head> 
  
  
@@ -19,8 +19,8 @@
                     <form>
                         <div class="search">
                             <span class="search-icon material-symbols-outlined">search</span>
-                            <input class="search-input" type="search" placeholder="Search Location">
-                            <button class="filter-icon" ><span class="material-symbols-outlined">tune</span>  </button>
+                            <input id="search-input" class="search-input" type="search" placeholder="Search Location">
+                            <button type="button" class="filter-icon"><span class="material-symbols-outlined">tune</span></button>
                         </div> 
                     </form>
                     {{#if properties.length}}
@@ -33,7 +33,7 @@
                                     </div>
                                     <div class="housedesc">
                                         <h2 class="desctext">{{this.Property_Name}}</h2>
-                                        <p class="desctext">{{this.Property_Address}}</p>
+                                        <p class="desctext propertyaddress">{{this.Property_Address}}</p>
                                         <p class="desctext">S$ {{this.Property_Price}}</p>
                                         <div>
                                             {{this.Property_Bedrooms}} Bedroom - {{this.Property_Bathrooms}} Bathroom - {{this.Square_Footage}} sqft - S$650 psf

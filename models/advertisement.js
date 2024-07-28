@@ -20,7 +20,7 @@ const Advertisement = db.define('advertisement', {
     agent_id: {
         type: Sequelize.INTEGER,
         references: {
-            model: 'agent', 
+            model: 'agents', 
             key: 'agent_id' 
         }
     },
@@ -33,6 +33,15 @@ const Advertisement = db.define('advertisement', {
     },
     date_end: {
         type: Sequelize.DATE,
+        allowNull: false
+    },
+    clicks: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+    },
+    pricePerClick: {
+        type: Sequelize.FLOAT,
         allowNull: false
     },
     status: {

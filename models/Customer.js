@@ -27,6 +27,12 @@ const Customer = db.define('customer', {
     Customer_Password: {
         type: sequelize.STRING
     },
+    Customer_OTP: {
+        type: sequelize.STRING
+    },
+    OTP_Expiration: {
+        type: sequelize.DATE
+    }
 });
 
 module.exports = Customer;

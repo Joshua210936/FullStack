@@ -10,7 +10,6 @@
     <script>
         const propertyDetail = {{{json propertyDetail}}};
     </script>
-    <script src="../js/propertyDescription.js"></script>
 </head>
     <div class="title">
         <h1>{{propertyDetail.Property_Name}} - {{propertyDetail.Property_Address}}</h1>
@@ -185,35 +184,32 @@
 </div>
 
 <div class="container">
-  <div class="row">
-    <div class="col">
-        <h1>Location</h1>
-        <div class="mapfilter">
-            <div class="input-group">
-                        <label for="property-type">Filter:</label>
-                        <ul id="property-type" class="property-type clearfix">
-                            <li>
-                                <input type="radio" id="schools" name="property-type" value="Schools" />
-                                <label for="schools">Schools</label>
-                            </li>
-                            <li>
-                                <input type="radio" id="Medical" name="property-type" value="Medical" />
-                                <label for="Medical">Medical</label>
-                            </li>
-                            <li>
-                                <input type="radio" id="MRT" name="property-type" value="MRT" />
-                                <label for="MRT">MRT</label>
-                            </li>
-                        </ul>
+    <div class="row">
+        <div class="col">
+            <h1>Location</h1>
+            <div class="mapfilter">
+                <div class="input-group">
+                    <div id="property-type" class="property-type clearfix">
+                        <button id="medical" class="filter-btn" data-map-id="7eb9cb155077df0">All</button>
+                        <button id="schools" class="filter-btn" data-map-id="cd5bd73c25b6a51f">Schools</button>
+                        <button id="medical" class="filter-btn" data-map-id="ac3967414f6653bd">Family Living</button>
+                        <button id="mrt" class="filter-btn" data-map-id="5d3652e0f5583cc2">Amenities</button>
                     </div>
-        </div>
+                </div>
+            </div>
             <div class="container">
                 <div class="flex-container">
                     <div id="map"></div>
+                    <br>
+                    <label for="addresstext">Type an address to see travel distance:</label>
+                    <input type="text" class="addresstext" id="addresstext"> 
+                    <div>
+                        <span id="traveltime"></span>
+                    </div>
                 </div>
             </div>
         </div>
-</div>
+    </div>
 </div>
 
 <div class="container">
@@ -221,8 +217,13 @@
     <div class="col">
         <h1>Like this property?</h1>
         <div>Arrange a date to meet with the agent now!</div>
-        <a class="hover_settings" href="/schedule"><div class="schedule_button">Schedule</div></a>
+
+        <a href="/schedule?propertyId={{propertyDetail.Property_ID}}&agentId={{propertyDetail.agent_id}}">
+                <button class="schedule_button">Schedule</button>
+            </a>
         </div>
     </div>
 </div>
 <div class="col col-lg-2"></div>
+
+<script src="../js/propertyDescription.js"></script>
