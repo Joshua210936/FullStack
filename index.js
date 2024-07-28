@@ -910,11 +910,15 @@ app.get('/findAgents', function (req, res) {
     });
 });
 
+
 app.get('/propertyAgentProfile/:id', function (req, res) {
     const agentId = req.params.id;
 
     Agent.findByPk(agentId, {
-        include: [{ model: Listed_Properties }]
+        include: [
+            { model: Listed_Properties }, // Assuming you have this model defined
+            { model: Feedback, as: 'feedbacks' } // Include feedback data with alias
+        ]
     })
     .then(agent => {
         if (!agent) {
@@ -924,7 +928,7 @@ app.get('/propertyAgentProfile/:id', function (req, res) {
         // Convert agent to a plain object for rendering
         agent = agent.get({ plain: true });
         
-        console.log('Fetched agent:', agent); // Add this line
+        console.log('Fetched agent:', agent); // Log agent data
 
         // Render the propertyAgentProfile template with the agent's data
         res.render('Property Agent/propertyAgentProfile', {
@@ -937,6 +941,7 @@ app.get('/propertyAgentProfile/:id', function (req, res) {
         res.status(500).send('Internal Server Error');
     });
 });
+
 
 
 
