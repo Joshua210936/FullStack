@@ -54,6 +54,7 @@
         <a href="/login"><button class="login-btn btn btn-light my-2 my-sm-0" data-dropdown-button>Login</button></a>
         <a href="/register"><button class="login-btn btn btn-light my-2 my-sm-0" data-dropdown-button>Sign Up</button></a>
 </nav>
+
     <div class="container" style="margin-bottom:80px;">
         <div class="row">
             <div class="col">
@@ -115,62 +116,29 @@
     </div>
 
     <div class="container">
-        <h1>Ratings:</h1>
-        <div>(3) Reviews 
-            <div class="stars">5
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-            </div>
-            <div class="reviewbox">
-                <div>
-                    <div><img src="/images/pfp.png" height="40" width="40"> Chee Cheong Fan</div>
-                    <div class="stars reviewcontent">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                    </div>
-                    <div class="reviewcontent">
-                        Working with Marcus was an absolute pleasure! His deep knowledge of the Singapore property market and keen attention to our needs made the entire process smooth and stress-free. Marcus was always available to answer our questions, provided insightful advice, and guided us with professionalism and care. Thanks to his expertise, we found our dream home quickly and at a great price. Highly recommend Marcus to anyone looking for a top-notch real estate agent!
+        <h1>Feedback:</h1>
+        {{#if agent.feedbacks.length}}
+            {{#each agent.feedbacks}}
+                <div class="reviewbox">
+                    <div>
+                        <div>
+                         {{this.feedback_name}}
+                        </div>
+                        <div class="reviewcontent">
+                            <span class="review-label">Rating:</span> <span class="review-text">{{this.feedback_rating}}/5</span>
+                        </div>
+                        <div class="reviewcontent">
+                            <span class="review-label">Description:</span> <span class="review-text">{{this.feedback_description}}</span>
+                        </div>
+                        <div class="reviewcontent">
+                            <span class="review-label">Date:</span> <span class="review-text">{{this.feedback_date}}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="reviewbox">
-            <div>
-                <div><img src="/images/pfp.png" height="40" width="40"> Chee Cheong Fan's Sister</div>
-                <div class="stars reviewcontent">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                </div>
-                <div class="reviewcontent">
-                    Working with Marcus was an absolute pleasure! His deep knowledge of the Singapore property market and keen attention to our needs made the entire process smooth and stress-free. Marcus was always available to answer our questions, provided insightful advice, and guided us with professionalism and care. Thanks to his expertise, we found our dream home quickly and at a great price. Highly recommend Marcus to anyone looking for a top-notch real estate agent!
-                </div>
-            </div>
-        </div>
-        <div class="reviewbox">
-            <div>
-                <div><img src="/images/pfp.png" height="40" width="40"> Chee Cheong Fan's Mother</div>
-                <div class="stars reviewcontent">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                </div>
-                <div class="reviewcontent">
-                    Working with Marcus was an absolute pleasure! His deep knowledge of the Singapore property market and keen attention to our needs made the entire process smooth and stress-free. Marcus was always available to answer our questions, provided insightful advice, and guided us with professionalism and care. Thanks to his expertise, we found our dream home quickly and at a great price. Highly recommend Marcus to anyone looking for a top-notch real estate agent!
-                </div>
-            </div>
-        </div>
-        <a href="#"><button id="cta-button" style="background-color:white;text-align:center;margin-top:20px;">Review</button></a>
+            {{/each}}
+        {{else}}
+            <p>No feedback available for this agent.</p>
+        {{/if}}
     </div>
 </body>
 </html>
