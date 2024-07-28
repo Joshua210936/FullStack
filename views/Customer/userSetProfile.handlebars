@@ -10,7 +10,7 @@
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="#">My Profile</a></li>
+                    <li><a href="/userSetProfile">My Profile</a></li>
                     <li><a href="/forgetpassword">Reset Password</a></li>
                     <li><a href="/customer/appointments">Appointment</a></li>
                 </ul>
@@ -19,7 +19,7 @@
         <main class="main-content">
             <div class="register-box">
                 <div class="welcome-text">Set Up Your User Profile</div>
-                <form action="/userSetProfile" method="post" enctype="multipart/form-data">
+                <form method="post" action="/userSetProfile">
                     <div class="input-group">
                         <label for="firstName">First Name</label>
                         <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="{{customer.Customer_fName}}">

@@ -11,7 +11,7 @@
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="#">My Profile</a></li>
+                    <li><a href="/agentSetProfile">My Profile</a></li>
                     <li><a href="/agentSchedule">Manage Listings</a></li>
                     <li><a href="#">Appointment</a></li>
                 </ul>
@@ -20,7 +20,7 @@
         <main class="main-content">
             <div class="register-box">
                 <div class="welcome-text">Set Up Your Agent Profile</div>
-                <form action="/agentProfileUpdate" method="post" enctype="multipart/form-data">
+                <form action="/agentSetProfile" method="post">
                     <div class="input-group">
                         <label for="firstName">First Name</label>
                         <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="{{agent.agent_firstName}}">
@@ -38,20 +38,20 @@
                         <input type="email" id="email" name="email" placeholder="Enter your email" value="{{agent.agent_email}}">
                     </div>
                     <div class="input-group">
-                        <label for="agency_license">Agency License Number</label>
-                        <input type="text" id="agency_license" name="agency_license" placeholder="Enter your agency license number" value="{{agent.agent_licenseNo}}">
+                        <label for="licenseNo">Agency License Number</label>
+                        <input type="text" id="licenseNo" name="licenseNo" placeholder="Enter your agency license number" value="{{agent.agent_licenseNo}}">
                     </div>
                     <div class="input-group">
-                        <label for="agency_registration">Agency Registration Number</label>
-                        <input type="text" id="agency_registration" name="agency_registration" placeholder="Enter your agency registration number" value="{{agent.agent_registrationNo}}">
+                        <label for="registrationNo">Agency Registration Number</label>
+                        <input type="text" id="registrationNo" name="registrationNo" placeholder="Enter your agency registration number" value="{{agent.agent_registrationNo}}">
                     </div>
                     <div class="input-group">
                         <label for="bio">Agent Bio</label>
                         <textarea id="bio" name="bio" placeholder="Write a short bio about yourself">{{agent.agent_bio}}</textarea>
                     </div>
                     <div class="input-group">
-                        <label for="agentPictures">Upload Profile Picture</label>
-                        <input type="file" id="agentPictures" name="agentPictures" accept="image/*">
+                        <label for="agentImage">Upload Profile Picture</label>
+                        <input type="file" id="agentImage" name="agentImage" accept="image/*">
                     </div>
                     <button type="submit" class="formbutton">Update Profile</button>
                 </form>
