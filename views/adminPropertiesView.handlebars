@@ -14,25 +14,72 @@
             text-align:center;
         }
     </style>
+    <script>
+        // Embed workshops data into a JavaScript variable
+        const properties = {{{json properties}}};
+    </script>
 </head>
 
 <div class="container">
-    <h1 >Properties:</h1>
-    <div class="buyitem">
-            <div class="houseimg">
-                <img src="images/hdb1.jpg" class="buyitemimage">
-            </div>
-            <div class="housedesc">
-                <h2 class="desctext">212B Punggol Walk</h2> 
-                <p class="desctext">212B Punggol Walk -  822212, Hougang / Punggol</p>
-                <p class="desctext">S$ 650,000</p>
-                <div>
-                    3 Bedroom - 2 Bathroom - 1000 sqft - S$650 psf 
-                </div>
-                <div>
-                    HDB - Built: 2014 - Resale 
-                </div>
-                <a class="hover_settings" href="#" style="margin-bottom:20px;"><div class="aboutme_button">DeList Property</div></a>
-            </div>
-    </div>
+    <h1 >All Properties:</h1>
+    {{#if properties.length}}
+                    <div class="properties-container">
+                        {{#each properties}}
+                            <div class="adminbuyitem">
+                                    <div class="houseimg">
+                                        <img src="images/{{this.Property_Image}}" alt="images/{{this.Property_Image}}" class="buyitemimage">
+                                    </div>
+                                    <div class="housedesc">
+                                        <h2 class="desctext">{{this.Property_Name}} <span style="float:right;">ID = {{this.Property_ID}}</span></h2>
+                                        <p class="desctext propertyaddress">{{this.Property_Address}}</p>
+                                        <p>
+                                            {{#if this.Property_Status}}
+                                            <div>Property Status: Listed</div>
+                                            {{else}}
+                                            <div>Property Status: De-Listed</div>
+                                            {{/if}}
+                                        </p>
+                                        <p class="desctext">Listed By: {{agent.agent_firstName}} {{agent.agent_lastName}} (Agent ID: {{agent.agent_id}})</p>
+                                        <div>
+                                            Agent Details:
+                                        </div>
+                                        <div>
+                                            HP: {{agent.agent_phoneNumber}}
+                                        </div>
+                                        <div>
+                                            Email: {{agent.agent_email}}
+                                            <span style="float:right;"><button type="button" class="btn btn-danger deletebutton" data-property-id="{{this.Property_ID}}" onclick="deleteProperty({{this.Property_ID}})">Delete</button></span>
+                                        </div>
+                                    </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                    {{else}}
+                    <div>
+                        Currently No Available Properties
+                    </div>
+                    {{/if}}
 </div>
+
+<script>
+    function deleteProperty(propertyId) {
+        if (confirm("Are you sure you want to PERMENANTLY delete this property?")) {
+            fetch(`/delete-property/${propertyId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Property deleted successfully!');
+                    location.reload(); // Reload the page to reflect the deletion
+                } else {
+                    alert('Failed to delete property.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    }
+</script>

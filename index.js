@@ -1450,8 +1450,41 @@ app.get('/adminadvertisement', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
-app.get('/adminPropertiesView', function(req, res){
-    res.render('adminPropertiesView', {layout:'adminMain'});
+
+app.delete('/delete-property/:id', async (req, res) => {
+    try {
+        const propertyId = req.params.id;
+        await Listed_Properties.destroy({ where: { Property_ID: propertyId } });
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting property:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete property.' });
+    }
+});
+
+app.get('/adminPropertiesView', async function(req, res){
+    try {
+        const properties = await Listed_Properties.findAll({
+            include: [{
+                model: Agent,
+                required: true // Only fetch properties that have an associated agent
+            }]
+        });
+
+        res.render('adminPropertiesView', {
+            layout: 'adminMain',
+            properties: properties.map(property => ({
+                ...property.get({ plain: true }),
+                agent: property.agent.get({ plain: true })
+            })),
+            json: JSON.stringify // Pass JSON.stringify to the template
+        });
+    } catch (error) {
+        console.error('Error fetching properties:', error);
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error');
+        }
+    }
 });
 
 app.get('/addAdvertisement', async (req, res) => {
