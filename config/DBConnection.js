@@ -4,6 +4,7 @@ const Feedback = require('../models/Feedback');
 const ListedProperties = require('../models/Listed_Properties');
 const Agent = require('../models/Agent');
 const Schedule = require('../models/schedule');
+const advertisementClicks = require('../models/advertisementClicks');
 
 const setUpDB = (drop) => {
     mySQLDB.authenticate()

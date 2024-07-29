@@ -12,7 +12,9 @@ const Listed_Properties = require('../models/Listed_Properties');
 const Agent = require('../models/Agent');
 const Customer = require('../models/Customer');
 const Schedule = require('../models/schedule');
-const Amenity = require('../models/propertyAmenities')
+const Amenity = require('../models/propertyAmenities');
+const Advertisement = require('../models/propertyAmenities');
+const advertisementClicks = require('../models/advertisementClicks');
 
 router.get('/test', (req, res) => {
     console.log('router connected successfully')
@@ -56,7 +58,7 @@ router.get('/adminDashboard', async (req, res) => {
         if (isNaN(soldPropertyRevenue)) {
             console.log("No properties sold");
             soldPropertyRevenue = "No properties sold";
-        };
+        }
 
         console.log("soldPropertyCount " + soldPropertyCount);
         console.log("soldPropertyRevenue " + soldPropertyRevenue);
@@ -64,7 +66,7 @@ router.get('/adminDashboard', async (req, res) => {
         const propertySoldByMonth = await Listed_Properties.findAll({
             attributes: [
                 [fn('DATE_FORMAT', col('Property_ListedDate'), '%Y-%m'), 'month'],
-                [fn('SUM', literal('Property_Price * 0.05')), 'monthlyRevenue']
+                [fn('SUM', literal('Property_Price * 0.05')), 'monthlyBrokerageRevenue']
             ],
             where: {
                 Property_Status: true,
@@ -72,33 +74,81 @@ router.get('/adminDashboard', async (req, res) => {
                     [Op.between]: [startOfMonth, endOfMonth]
                 }
             },
-            group: [literal('DATE_FORMAT(Property_ListedDate, "%Y-%m")')],
-            order: [[literal('DATE_FORMAT(Property_ListedDate, "%Y-%m")'), 'ASC']],
+            group: [fn('DATE_FORMAT', col('Property_ListedDate'), '%Y-%m')],
+            order: [[fn('DATE_FORMAT', col('Property_ListedDate'), '%Y-%m'), 'ASC']],
             raw: true
         });
 
-        const monthlyRevenue = propertySoldByMonth.map(ps => ({
+        const monthlyBrokerageRevenue = propertySoldByMonth.map(ps => ({
             month: ps.month,
-            revenue: parseFloat(ps.monthlyRevenue) || 0
+            brokerageRevenue: parseFloat(ps.monthlyBrokerageRevenue) || 0
         }));
+
+        console.log("Monthly Brokerage Revenue:", JSON.stringify(monthlyBrokerageRevenue, null, 2));
+
+        const monthlyAdRevenue = await advertisementClicks.findAll({
+            attributes: [
+                [fn('DATE_FORMAT', col('monthPeriod'), '%Y-%m'), 'month'],
+                [fn('SUM', literal('clicks * pricePerClick')), 'monthlyAdRevenue']
+            ],
+            group: [fn('DATE_FORMAT', col('monthPeriod'), '%Y-%m')],
+            order: [[fn('DATE_FORMAT', col('monthPeriod'), '%Y-%m'), 'ASC']],
+            raw: true
+        });
+
+        const monthlyAdvertisementRevenue = monthlyAdRevenue.map(ps => ({
+            month: ps.month,
+            adRevenue: parseFloat(ps.monthlyAdRevenue) || 0
+        }));
+
+        console.log("Monthly Advertisement Revenue:", JSON.stringify(monthlyAdvertisementRevenue, null, 2));
+
+        // Combine monthlyBrokerageRevenue and monthlyAdvertisementRevenue
+        const combinedRevenue = [];
+        const months = new Set([
+            ...monthlyBrokerageRevenue.map(r => r.month),
+            ...monthlyAdvertisementRevenue.map(r => r.month)
+        ]);
+
+        months.forEach(month => {
+            const brokerageEntry = monthlyBrokerageRevenue.find(r => r.month === month) || { brokerageRevenue: 0 };
+            const adEntry = monthlyAdvertisementRevenue.find(r => r.month === month) || { adRevenue: 0 };
+
+            combinedRevenue.push({
+                month: month,
+                brokerageRevenue: brokerageEntry.brokerageRevenue,
+                adRevenue: adEntry.adRevenue,
+                totalRevenue: brokerageEntry.brokerageRevenue + adEntry.adRevenue
+            });
+        });
+
+        console.log("Combined Revenue:", JSON.stringify(combinedRevenue, null, 2));
 
         // Process revenue data for the past 6 months
         const revenueData = [];
         for (let i = 5; i >= 0; i--) {
             const month = moment().subtract(i, 'months').format('YYYY-MM');
-            const revenueEntry = monthlyRevenue.find(entry => entry.month === month);
+            const revenueEntry = combinedRevenue.find(entry => entry.month === month);
             revenueData.push({
                 month: month,
-                revenue: revenueEntry ? revenueEntry.revenue : 0
+                revenue: revenueEntry ? revenueEntry.totalRevenue : 0
             });
         }
+
+        console.log("Revenue Data for the Past 6 Months:", JSON.stringify(revenueData, null, 2));
+
 
         const averageRatingToday = todayFeedback ? parseFloat(todayFeedback.averageRating).toFixed(2) : "No feedback today";
         console.log('Average Rating for today:', averageRatingToday);
 
-        const dates = propertySoldByMonth.map(fb => fb.date);
+        const dates = propertySoldByMonth.map(fb => fb.month);
 
         const custUser = await Customer.findOne({
+            attributes: [[fn('COUNT', col('Customer_id')), 'custCount']],
+            raw: true
+        });
+
+        const advertisementRevenue = await Customer.findOne({
             attributes: [[fn('COUNT', col('Customer_id')), 'custCount']],
             raw: true
         });
@@ -133,4 +183,5 @@ router.get('/adminDashboard', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 module.exports = router;

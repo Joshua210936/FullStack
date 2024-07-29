@@ -35,7 +35,7 @@
                     <div class="custom-div">
                         <p>Revenue earned this month:</p>
                         <br>
-                        <h3>${{{soldPropertyRevenue}}}</h3>
+                        <h3>${{{revenueData}}}</h3>
                     </div>
                 </div>
             </div>
@@ -54,8 +54,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const ctx = document.getElementById('revenueChart').getContext('2d');
-            const revenueData = JSON.parse('{{{revenueData}}}');
+            const revenueData = JSON.parse('{{{revenueData}}}');  // Ensure this contains the combined revenue
             
+            // Debugging: log revenueData to check contents
+            console.log("Revenue Data for Chart:", revenueData);
+
             new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -82,7 +85,8 @@
                             title: {
                                 display: true,
                                 text: 'Revenue'
-                            }
+                            },
+                            beginAtZero: true
                         }
                     }
                 }

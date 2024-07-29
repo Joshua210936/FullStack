@@ -25,7 +25,7 @@ const Customer = require('./models/Customer');
 const Schedule = require('./models/schedule');
 const Amenity = require('./models/propertyAmenities');
 const Advertisement = require('./models/advertisement');
-
+const advertisementClicks = require('./models/advertisementClicks');
 
 //Routers
 const guestRoute = require("./routes/guest_routes");
