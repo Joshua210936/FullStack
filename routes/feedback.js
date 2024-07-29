@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const session = require('express-session');
+const nodemailer = require('nodemailer');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(cookieParser());
@@ -22,6 +23,14 @@ router.get('/contactUs', function (req, res) {
 
 router.get('/feedbackForm', function (req, res) {
     res.render('Contact Us/feedbackForm');
+});
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'sigma0properties@gmail.com',
+        pass: 'jqux gnod pbgs oqpe'
+    }
 });
 
 router.post('/feedbackForm', async function (req, res) {
@@ -129,12 +138,36 @@ router.get('/adminFeedback', function(req, res){
             as: 'agent',
             attributes: ['agent_firstName'],
             required: false  // This makes the join optional
-        }]
+        }],
+        order: [['feedback_id', 'DESC']]
     })
     .then((feedback)=>{
         console.log(feedback)
         res.render('Contact Us/adminFeedback', {layout:'adminMain', feedback:feedback});
     })
+});
+
+router.post('/sendFeedbackResponse', async function (req, res) {
+    let { email, emailContent } = req.body;
+    console.log("Recipient: " + email);
+    console.log("Content: " + emailContent);
+
+    const mailOptions = {
+        from: 'sigma0properties@gmail.com',
+        to: email, // Use the email from the form
+        subject: 'Reply to feedback',
+        text: emailContent // Use the content from the form
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending email:', error);
+            return res.status(500).send({ message: 'Error sending email' });
+        } else {
+            console.log('Email sent:', info.response);
+            res.redirect('/feedback/adminFeedback');
+        }
+    });
 });
 
 module.exports = router;
