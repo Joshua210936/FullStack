@@ -443,6 +443,23 @@ app.post('/register', async function (req, res) {
             Customer_Password: password,
         });
 
+        // Send account registration success email
+        const mailOptions = {
+            from: 'sigma0properties@gmail.com',
+            to: email,
+            subject: 'Account Successfully Registered',
+            text: 'Your account has been successfully registered.'
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending registration email:', error);
+                return res.status(500).send({ message: 'Error sending registration email' });
+            } else {
+                console.log('Registration email sent:', info.response);
+            }
+        });
+
         // Redirect to login page upon successful registration
         res.redirect('/login');
     } catch (err) {
@@ -670,7 +687,6 @@ app.post('/agentRegister', function(req,res){
     })
     .then(agent => {
         res.redirect('/agentLogin');
-        res.status(201).send({ message: 'Agent registered successfully!', agent });
       })
     .catch(err => {
     res.status(400).send({ message: 'Error registering agent', error: err });
