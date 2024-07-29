@@ -15,6 +15,7 @@ const Schedule = require('../models/schedule');
 const Amenity = require('../models/propertyAmenities');
 const Advertisement = require('../models/propertyAmenities');
 const advertisementClicks = require('../models/advertisementClicks');
+const { Json } = require('sequelize/lib/utils');
 
 router.get('/test', (req, res) => {
     console.log('router connected successfully')
@@ -27,6 +28,7 @@ router.get('/adminDashboard', async (req, res) => {
         const endOfDay = moment().endOf('day').toDate();
         const startOfMonth = moment().startOf('month').toDate();
         const endOfMonth = moment().endOf('month').toDate();
+        const currentMonth = moment().format('YYYY-MM');
 
         const todayFeedback = await Feedback.findOne({
             attributes: [[fn('AVG', col('feedback_rating')), 'averageRating']],
@@ -124,6 +126,15 @@ router.get('/adminDashboard', async (req, res) => {
 
         console.log("Combined Revenue:", JSON.stringify(combinedRevenue, null, 2));
 
+        const currentMonthRevenue = combinedRevenue.find(entry => entry.month === currentMonth) || {
+            month: currentMonth,
+            brokerageRevenue: 0,
+            adRevenue: 0,
+            totalRevenue: 0
+        };
+
+        console.log("Combined Revenue for Current Month:", JSON.stringify(currentMonthRevenue, null, 2));
+
         // Process revenue data for the past 6 months
         const revenueData = [];
         for (let i = 5; i >= 0; i--) {
@@ -176,7 +187,8 @@ router.get('/adminDashboard', async (req, res) => {
             agentCount: agentCount,
             soldPropertyCount: soldPropertyCount,
             soldPropertyRevenue: soldPropertyRevenue,
-            revenueData: JSON.stringify(revenueData)
+            revenueData: JSON.stringify(revenueData),
+            currentMonthRevenue: currentMonthRevenue.totalRevenue,
         });
     } catch (err) {
         console.error('Error fetching data:', err);
