@@ -33,7 +33,7 @@ const Schedule = db.define('schedule', {
         }
     },
     date_selected: {
-        type: sequelize.DATE
+        type: sequelize.DATEONLY
     },
     time_selected: {
         type: sequelize.TIME

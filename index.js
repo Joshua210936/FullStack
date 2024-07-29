@@ -82,6 +82,48 @@ app.use(session({
     cookie: { secure: false }
 }));
 
+// For Navbar
+app.use((req, res, next) => {
+    res.locals.userType = null;
+
+    if (req.session.customerID) {
+        res.locals.userType = 'customer';
+    } else if (req.session.agentID) {
+        res.locals.userType = 'agent';
+    } else if (req.session.adminID) {
+        res.locals.userType = 'admin';
+    }
+
+    next();
+});
+
+// const hbs = exphbs.create({
+//     helpers: {
+//         renderNavbar: function (userType) {
+//             switch (userType) {
+//                 case 'customer':
+//                     return '_userNavbar';
+//                 case 'agent':
+//                     return '_agentNavbar';
+//                 case 'admin':
+//                     return '_adminNavbar';
+//                 default:
+//                     return '_guestNavbar';
+//             }
+//         }
+//     }
+// });
+
+// Set up Handlebars with custom helpers
+const hbs = exphbs.create({
+    helpers: handlebarFunctions,
+    defaultLayout: 'main',
+    partialsDir: ['views/partials/']
+});
+
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+
 // For Reset Password
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -210,12 +252,12 @@ app.get('/customerHome' ,function(req,res){
     console.log("this is the session id:", req.session.id);
     console.log('Session:' + JSON.stringify(req.session));
     console.log('Session:' + req.session.customerID);
-    res.render('customerHome',{layout:'userMain'})
+    res.render('customerHome',{layout:'main'})
 });
 
 app.get('/agentHome', function(req, res){
     console.log('Agent Session:' + req.session.agentID);
-    res.render('agentHome', {layout:'agentMain'});
+    res.render('agentHome', {layout:'main'});
 });
 
 app.get('/buyHouse', async (req, res) => {
@@ -419,7 +461,7 @@ app.get('/userSetProfile', async (req, res) => {
 
         if (customer) {
             res.render('Customer/userSetProfile', {
-                layout: 'userMain',
+                layout: 'main',
                 customer_id: customer_id,
                 customer: customer.get({ plain: true })
             });
@@ -432,8 +474,9 @@ app.get('/userSetProfile', async (req, res) => {
 });
 
 app.post('/userSetProfile', async (req, res) => {
-    console.log(req.body);
+    console.log("this is the request body:",req.body);
     const { firstName, lastName, phoneNumber, birthday } = req.body;
+
     const customer_id = req.session.customerID;
     console.log('Session Test' + JSON.stringify(req.session));
     console.log("session id in set profile:", req.session.customerID);
@@ -606,21 +649,21 @@ app.post('/agentLogin', async function (req, res) {
 });
 
 app.get('/agentRegister', (req, res) => { // User Registration page
-    res.render('Login/agentReg', {layout:'agentMain'});
+    res.render('Login/agentReg', {layout:'main'});
 });
 
 app.post('/agentRegister', function(req,res){
-    let{ firstName, lastName, phone, email, agency_license, agency_registration, bio, agentPictures, password, status} = req.body;
+    let{ firstName, lastName, phone, email, licenseNo, registrationNo, bio, agentImage, password, status} = req.body;
     
     Agent.create({
         agent_firstName: firstName,
         agent_lastName: lastName,
         agent_phoneNumber: phone,
         agent_email: email,
-        agent_licenseNo: agency_license,
-        agent_registrationNo: agency_registration,
+        agent_licenseNo: licenseNo,
+        agent_registrationNo: registrationNo,
         agent_bio: bio,
-        agent_image: agentPictures,
+        agent_image: agentImage,
         agent_password: password,
         status: status
         
@@ -644,7 +687,7 @@ app.get('/agentSetProfile', async (req, res) => { // Agent Set profile page
 
         if (agent) {
             res.render('Property Agent/agentSetProfile', {
-                layout: 'agentMain',
+                layout: 'main',
                 agent_id: agent_id,
                 agent: agent.get({ plain: true })
             });
@@ -655,26 +698,30 @@ app.get('/agentSetProfile', async (req, res) => { // Agent Set profile page
         res.status(500).json({ message: 'Error fetching agent details', error });
     }
 });
-    
+
 app.post('/agentSetProfile', async (req, res) => {
     console.log(req.body);
-    const { firstName, lastName, phoneNumber, birthday } = req.body;
+    const { firstName, lastName, phoneNumber, email, licenseNo, registrationNo, bio, agentImage  } = req.body;
     const agent_id = req.session.agentID;
     console.log('Session Test' + JSON.stringify(req.session));
     console.log("Session ID in set profile:", req.session.agentID);
 
     console.log('Received agent ID:', agent_id); // Log agent ID
-    console.log('Received update data:', { firstName, lastName, phoneNumber, birthday }); // Log update data
+    console.log('Received update data:', { firstName, lastName, phoneNumber,  }); // Log update data
 
     try {
         const agent = await Agent.findByPk(agent_id);
         if (agent) {
             await Agent.update(
                 {
-                    agent_fName: firstName,
-                    agent_lName: lastName,
-                    agent_phone: phoneNumber,
-                    agent_birthday: birthday,
+                    agent_firstName: firstName,
+                    agent_lastName: lastName,
+                    agent_phoneNumber: phoneNumber,
+                    agent_email: email,
+                    agent_licenseNo: licenseNo,
+                    agent_registrationNo: registrationNo,
+                    agent_bio: bio,
+                    agent_image: agentImage
                 },
                 {
                     where: {
@@ -682,7 +729,8 @@ app.post('/agentSetProfile', async (req, res) => {
                     }
                 }
             );
-            res.redirect(`/agentSetProfile`);
+            console.log('Agent updated:');
+            res.redirect(`/agentHome`);
         } else {
             res.status(404).send("Agent not found");
         }
@@ -694,7 +742,7 @@ app.post('/agentSetProfile', async (req, res) => {
 
 
 app.get('/agentSchedule', (req,res) => { // Agent Set profile page
-    res.render('Property Agent/agentSchedule', {layout:'userMain'});
+    res.render('Property Agent/agentSchedule', {layout:'main'});
 });
 
 
@@ -1450,8 +1498,41 @@ app.get('/adminadvertisement', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
-app.get('/adminPropertiesView', function(req, res){
-    res.render('adminPropertiesView', {layout:'adminMain'});
+
+app.delete('/delete-property/:id', async (req, res) => {
+    try {
+        const propertyId = req.params.id;
+        await Listed_Properties.destroy({ where: { Property_ID: propertyId } });
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting property:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete property.' });
+    }
+});
+
+app.get('/adminPropertiesView', async function(req, res){
+    try {
+        const properties = await Listed_Properties.findAll({
+            include: [{
+                model: Agent,
+                required: true // Only fetch properties that have an associated agent
+            }]
+        });
+
+        res.render('adminPropertiesView', {
+            layout: 'adminMain',
+            properties: properties.map(property => ({
+                ...property.get({ plain: true }),
+                agent: property.agent.get({ plain: true })
+            })),
+            json: JSON.stringify // Pass JSON.stringify to the template
+        });
+    } catch (error) {
+        console.error('Error fetching properties:', error);
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error');
+        }
+    }
 });
 
 app.get('/addAdvertisement', async (req, res) => {

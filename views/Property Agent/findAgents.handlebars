@@ -16,6 +16,7 @@
         {{#each agents}}
         <div class="agent" data-agent-name="{{this.agent_firstName}} {{this.agent_lastName}}">
             <div class="agent-info">
+                <img src="../images/{{this.agent_image}}" alt="Agent Image">
                 <h3>{{this.agent_firstName}} {{this.agent_lastName}}</h3>
                 <p>Agent License Number: {{this.agent_licenseNo}}</p>
                 <a href="/propertyAgentProfile/{{this.agent_id}}"><button class="agentform-buttonsubmit">View Profile</button></a>

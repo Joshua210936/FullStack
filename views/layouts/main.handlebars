@@ -16,7 +16,9 @@
 </head>
     <body>
         <div class="gradient">
-            {{>_guestNavbar}}
+            {{#renderNavbar userType}}
+                {{> (lookup . 'partial') }}
+            {{/renderNavbar}}
             <div>
                 {{> _msg}}
                 {{> _errors}}

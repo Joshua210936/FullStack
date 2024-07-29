@@ -21,9 +21,6 @@ const Customer = db.define('customer', {
         type: sequelize.STRING,
         unique: true
     },
-    Customer_Birthday: {
-        type: sequelize.DATE
-    },
     Customer_Password: {
         type: sequelize.STRING
     },

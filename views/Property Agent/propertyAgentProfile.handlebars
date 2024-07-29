@@ -58,12 +58,12 @@
     <div class="container" style="margin-bottom:80px;">
         <div class="row">
             <div class="col">
-                <img src="/images/agent1.jpg" height="200" width="200" style="border:1px solid;">
+                <img src="../images/{{agent.agent_image}}" height="200" width="200" style="border:1px solid;">
             </div>
             <div class="col">
                 <h3>{{agent.agent_firstName}} {{agent.agent_lastName}}</h3>
                 <div style="margin-bottom:30px;margin-top:30px;">
-                    <img src="/images/propnex.png" height="50" width="50" style="border:1px solid;"> {{agent.company}}
+                    <img src="/images/propnex.png" height="50" width="50" style="border:1px solid;">
                 </div>
                 <div>
                     Agency License No. {{agent.agent_licenseNo}}
@@ -74,17 +74,14 @@
             </div>
             <div class="col">
                 <a href="mailto:{{agent.agent_email}}"><button id="cta-button">Contact</button></a>
-                <br>
-                <a href="/agent-reviews/{{agent.id}}"><button id="cta-button">Review</button></a>
+                
+    
             </div>
         </div>
     </div>
 
     <div class="container" style="margin-bottom:80px;">
         <h1>About Me</h1>
-        <div>
-            {{agent.experience}} year(s) with {{agent.currentCompany}}
-        </div>
         <br>
         <div>
             {{agent.agent_bio}}

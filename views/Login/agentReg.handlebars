@@ -9,7 +9,7 @@
     <div class="illustration"></div>
     <div class="register-box">
         <div class="welcome-text">Create an Agent Account</div>
-        <form method="post">
+        <form method="post" action="/agentRegister">
             <div class="input-group">
                 <label for="firstName">First Name</label>
                 <input type="text" id="firstName" name="firstName" placeholder="Enter your first name">
@@ -40,7 +40,7 @@
                 <label for="confirmPassword">Confirm Password</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password">
             </div>
-            <button type="submit" class="formbutton" onclick="window.location.href='/agentLogin'">Register</button>
+            <button type="submit" class="formbutton">Register</button>
         </form>
     </div>
 </div>
