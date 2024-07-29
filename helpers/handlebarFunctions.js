@@ -13,4 +13,17 @@ module.exports = {
         return moment(date).utc(true).format(targetFormat)
     },
 
+    renderNavbar: function(userType, options) {
+        switch (userType) {
+            case 'customer':
+                return options.fn({partial: '_userNavbar'});
+            case 'agent':
+                return options.fn({partial: '_agentNavbar'});
+            case 'admin':
+                return options.fn({partial: '_adminNavbar'});
+            default:
+                return options.fn({partial: '_guestNavbar'});
+        }
+    }
+
 };

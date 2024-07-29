@@ -82,6 +82,48 @@ app.use(session({
     cookie: { secure: false }
 }));
 
+// For Navbar
+app.use((req, res, next) => {
+    res.locals.userType = null;
+
+    if (req.session.customerID) {
+        res.locals.userType = 'customer';
+    } else if (req.session.agentID) {
+        res.locals.userType = 'agent';
+    } else if (req.session.adminID) {
+        res.locals.userType = 'admin';
+    }
+
+    next();
+});
+
+// const hbs = exphbs.create({
+//     helpers: {
+//         renderNavbar: function (userType) {
+//             switch (userType) {
+//                 case 'customer':
+//                     return '_userNavbar';
+//                 case 'agent':
+//                     return '_agentNavbar';
+//                 case 'admin':
+//                     return '_adminNavbar';
+//                 default:
+//                     return '_guestNavbar';
+//             }
+//         }
+//     }
+// });
+
+// Set up Handlebars with custom helpers
+const hbs = exphbs.create({
+    helpers: handlebarFunctions,
+    defaultLayout: 'main',
+    partialsDir: ['views/partials/']
+});
+
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+
 // For Reset Password
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -210,12 +252,12 @@ app.get('/customerHome' ,function(req,res){
     console.log("this is the session id:", req.session.id);
     console.log('Session:' + JSON.stringify(req.session));
     console.log('Session:' + req.session.customerID);
-    res.render('customerHome',{layout:'userMain'})
+    res.render('customerHome',{layout:'main'})
 });
 
 app.get('/agentHome', function(req, res){
     console.log('Agent Session:' + req.session.agentID);
-    res.render('agentHome', {layout:'agentMain'});
+    res.render('agentHome', {layout:'main'});
 });
 
 app.get('/buyHouse', async (req, res) => {
@@ -419,7 +461,7 @@ app.get('/userSetProfile', async (req, res) => {
 
         if (customer) {
             res.render('Customer/userSetProfile', {
-                layout: 'userMain',
+                layout: 'main',
                 customer_id: customer_id,
                 customer: customer.get({ plain: true })
             });
@@ -607,7 +649,7 @@ app.post('/agentLogin', async function (req, res) {
 });
 
 app.get('/agentRegister', (req, res) => { // User Registration page
-    res.render('Login/agentReg', {layout:'agentMain'});
+    res.render('Login/agentReg', {layout:'main'});
 });
 
 app.post('/agentRegister', function(req,res){
@@ -645,7 +687,7 @@ app.get('/agentSetProfile', async (req, res) => { // Agent Set profile page
 
         if (agent) {
             res.render('Property Agent/agentSetProfile', {
-                layout: 'agentMain',
+                layout: 'main',
                 agent_id: agent_id,
                 agent: agent.get({ plain: true })
             });
@@ -700,7 +742,7 @@ app.post('/agentSetProfile', async (req, res) => {
 
 
 app.get('/agentSchedule', (req,res) => { // Agent Set profile page
-    res.render('Property Agent/agentSchedule', {layout:'userMain'});
+    res.render('Property Agent/agentSchedule', {layout:'main'});
 });
 
 
