@@ -170,7 +170,7 @@ router.get('/adminDashboard', async (req, res) => {
         const agent = await Agent.findOne({
             attributes: [[fn('COUNT', col('agent_id')), 'agentCount']],
             where: {
-                status: "unregistered"
+                status: null
             },
             raw: true
         });
